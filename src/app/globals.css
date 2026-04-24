@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-obsidian: #050505;
+  --color-grey-dark: #1a1a1a;
+  --color-grey-medium: #2e2e2e;
+  --color-neon-red: #ff0000;
+  --color-neon-amber: #ffbf00;
+
+  --background: var(--color-obsidian);
+  --foreground: #ededed;
+}
+
+:root {
+  --background: #050505;
+  --foreground: #ededed;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  cursor: crosshair;
+}
+
+/* Custom scrollbar for Code City aesthetic */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-obsidian);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-grey-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-red);
+}
+
+/* Selection color */
+::selection {
+  background: var(--color-neon-red);
+  color: var(--color-obsidian);
+}
