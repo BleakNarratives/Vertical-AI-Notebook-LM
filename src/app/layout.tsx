@@ -36,7 +36,7 @@ export default function RootLayout({
              {/* Boardroom Props */}
              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-24 pointer-events-auto">
                <CoffeeMug />
-               <div className="hidden md:block w-32 h-1 bg-grey-dark border-t border-grey-medium opacity-40 rotate-x-45" title="Laptop Base" />
+               <div className="hidden md:block w-32 h-1 bg-grey-dark border-t border-grey-medium opacity-40 [transform:rotateX(45deg)]" title="Laptop Base" />
              </div>
 
              <EasterEgg />
