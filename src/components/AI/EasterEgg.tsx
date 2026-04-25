@@ -6,8 +6,10 @@ export const EasterEgg: React.FC = () => {
   const [revealed, setRevealed] = useState(false);
 
   return (
-    <div
-      className="fixed bottom-0 left-0 w-4 h-4 cursor-help opacity-0 hover:opacity-10 transition-opacity"
+    <button
+      aria-expanded={revealed}
+      aria-label="Reveal shadow detail"
+      className="fixed bottom-0 left-0 w-4 h-4 cursor-help opacity-0 hover:opacity-10 focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-neon-amber transition-opacity"
       onClick={() => setRevealed(!revealed)}
     >
       {revealed && (
@@ -17,6 +19,6 @@ export const EasterEgg: React.FC = () => {
           - MOLT
         </div>
       )}
-    </div>
+    </button>
   );
 };

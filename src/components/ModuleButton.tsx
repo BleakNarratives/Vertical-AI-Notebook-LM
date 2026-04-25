@@ -18,9 +18,10 @@ export const ModuleButton: React.FC<ModuleButtonProps> = ({
       onClick={onClick}
       className={`
         group relative px-4 py-2 text-xs font-mono uppercase tracking-widest transition-all duration-300
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian
         ${variant === 'primary'
-          ? 'bg-grey-dark text-neon-red border border-grey-medium hover:bg-neon-red hover:text-obsidian hover:shadow-[0_0_15px_rgba(255,0,0,0.5)]'
-          : 'bg-obsidian text-grey-medium border border-grey-dark hover:border-neon-amber hover:text-neon-amber'}
+          ? 'bg-grey-dark text-neon-red border border-grey-medium hover:bg-neon-red hover:text-obsidian hover:shadow-[0_0_15px_rgba(255,0,0,0.5)] focus-visible:ring-neon-red'
+          : 'bg-obsidian text-grey-medium border border-grey-dark hover:border-neon-amber hover:text-neon-amber focus-visible:ring-neon-amber'}
       `}
     >
       <span className="relative z-10">{label}</span>
