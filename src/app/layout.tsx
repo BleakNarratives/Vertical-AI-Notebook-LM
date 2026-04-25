@@ -1,4 +1,5 @@
 import { EasterEgg } from "@/components/AI/EasterEgg";
+import { CoffeeMug } from "@/components/Boardroom/CoffeeMug";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -26,11 +27,18 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main className="flex-1 relative flex flex-col items-center justify-center p-4">
-          {/* Central Obelisk container */}
-          <div className="w-full max-w-4xl min-h-[70vh] border-x border-grey-dark bg-grey-dark/20 relative">
+        <main className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1000px]">
+          {/* Central Obelisk container - with Boardroom Perspective */}
+          <div className="w-full max-w-4xl min-h-[70vh] border-x border-grey-dark bg-grey-dark/20 relative [transform:rotateX(5deg)] transform-gpu shadow-2xl">
              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
              {children}
+
+             {/* Boardroom Props */}
+             <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-24 pointer-events-auto">
+               <CoffeeMug />
+               <div className="hidden md:block w-32 h-1 bg-grey-dark border-t border-grey-medium opacity-40 rotate-x-45" title="Laptop Base" />
+             </div>
+
              <EasterEgg />
              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber to-transparent opacity-30" />
           </div>
