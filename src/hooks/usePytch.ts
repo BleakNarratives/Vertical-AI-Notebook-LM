@@ -2,13 +2,18 @@
 
 import { useState, useCallback } from 'react';
 import { triggerAgent } from '@/lib/agents';
+import { useSentinel } from './useSentinel';
 
 export const usePytch = () => {
   const [isConstructing, setIsConstructing] = useState(false);
+  const { logSecurityEvent, checkRateLimit } = useSentinel();
 
   const wakePytch = useCallback(async () => {
+    if (!checkRateLimit('wakePytch', 3, 60000)) return;
+
     setIsConstructing(true);
     triggerAgent('pytch');
+    logSecurityEvent('Persona Awakened: Pytch', 'LOW');
 
     // Simulate narrative construction
     console.log('Pytch: Weaving the bleak threads of reality...');
@@ -16,7 +21,7 @@ export const usePytch = () => {
 
     console.log('Pytch: The narrative has been solidified. Reality is now compliant.');
     setIsConstructing(false);
-  }, []);
+  }, [logSecurityEvent, checkRateLimit]);
 
   return { wakePytch, isConstructing };
 };
