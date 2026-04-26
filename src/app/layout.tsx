@@ -1,5 +1,8 @@
 import { EasterEgg } from "@/components/AI/EasterEgg";
 import { CoffeeMug } from "@/components/Boardroom/CoffeeMug";
+import { Laptop } from "@/components/Boardroom/Laptop";
+import { Whiteboard } from "@/components/Boardroom/Whiteboard";
+import { VideoViewer } from "@/components/Boardroom/VideoViewer";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -27,16 +30,28 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1000px]">
+        <main className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1200px]">
           {/* Central Obelisk container - with Boardroom Perspective */}
-          <div className="w-full max-w-4xl min-h-[70vh] border-x border-grey-dark bg-grey-dark/20 relative [transform:rotateX(5deg)] transform-gpu shadow-2xl">
+          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-grey-dark/10 relative [transform:rotateX(12deg)] transform-gpu shadow-2xl">
              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
+
+             {/* Perspective Background Elements */}
+             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,transparent_80%,rgba(26,26,26,0.5)_100%)]" />
+
+             <Whiteboard />
+             <VideoViewer />
+
              {children}
 
              {/* Boardroom Props */}
-             <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-24 pointer-events-auto">
+             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-end gap-16 md:gap-32 pointer-events-auto">
+               <div className="flex items-end gap-8 mb-4">
+                 <button type="button" aria-label="View Source Documentation" title="Source Docs" className="w-12 h-16 bg-white/5 border border-grey-medium -rotate-6 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none" />
+                 <button type="button" aria-label="View Reference Images" title="Reference Images" className="w-14 h-18 bg-white/5 border border-grey-medium rotate-3 translate-y-2 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none" />
+               </div>
+
+               <Laptop />
                <CoffeeMug />
-               <div className="hidden md:block w-32 h-1 bg-grey-dark border-t border-grey-medium opacity-40 [transform:rotateX(45deg)]" title="Laptop Base" />
              </div>
 
              <EasterEgg />
