@@ -37,5 +37,41 @@ export const useSentinel = () => {
     return true;
   }, [logSecurityEvent]);
 
-  return { logSecurityEvent, sanitizeInput, validateRequest };
+  /**
+   * checkRateLimit - Simple client-side rate limiting to prevent trigger spamming.
+   */
+  const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
+    if (typeof window === 'undefined') return true;
+
+    const now = Date.now();
+    const storageKey = `sentinel_rl_${key}`;
+    const stored = localStorage.getItem(storageKey);
+    let data = { count: 0, startTime: now };
+
+    try {
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && typeof parsed === 'object') {
+          data = { ...data, ...parsed };
+        }
+      }
+    } catch {
+      localStorage.removeItem(storageKey);
+    }
+
+    if (now - data.startTime > windowMs) {
+      localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      return true;
+    }
+
+    if (data.count < limit) {
+      localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      return true;
+    }
+
+    logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
+    return false;
+  }, [logSecurityEvent]);
+
+  return { logSecurityEvent, sanitizeInput, validateRequest, checkRateLimit };
 };

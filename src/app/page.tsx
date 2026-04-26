@@ -6,9 +6,11 @@ import { useHiggins } from "@/hooks/useHiggins";
 import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
+import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect } from "react";
 
 export default function Home() {
+  useMoltAutomation();
   const { level, isImproving, triggerMolt } = useMolt();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();

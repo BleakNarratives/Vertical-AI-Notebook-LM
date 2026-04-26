@@ -2,20 +2,26 @@
 
 import { useState, useCallback } from 'react';
 import { triggerAgent } from '@/lib/agents';
+import { useSentinel } from './useSentinel';
 
 export const useTwoie = () => {
   const [isExecuting, setIsExecuting] = useState(false);
+  const { logSecurityEvent, checkRateLimit, sanitizeInput } = useSentinel();
 
   const executeTask = useCallback(async (task: string) => {
+    if (!checkRateLimit('executeTask', 5, 30000)) return;
+
+    const safeTask = sanitizeInput(task);
     setIsExecuting(true);
     triggerAgent('twoie');
+    logSecurityEvent(`Execution Initiated: Twoie [Task: ${safeTask.substring(0, 20)}...]`, 'MEDIUM');
 
-    console.log(`Twoie: Executing task: ${task}`);
+    console.log(`Twoie: Executing task: ${safeTask}`);
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log('Twoie: Task finalized. No witnesses.');
     setIsExecuting(false);
-  }, []);
+  }, [logSecurityEvent, checkRateLimit, sanitizeInput]);
 
   return { executeTask, isExecuting };
 };
