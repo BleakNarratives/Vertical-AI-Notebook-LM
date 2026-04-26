@@ -18,7 +18,7 @@ export default function Home() {
   const { logSecurityEvent } = useSentinel();
 
   useEffect(() => {
-    logSecurityEvent('Home module initialized', 'LOW');
+    logSecurityEvent('Home module initialized', 'MEDIUM');
   }, [logSecurityEvent]);
 
   return (

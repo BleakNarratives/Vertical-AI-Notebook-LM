@@ -12,7 +12,7 @@ export const useHiggins = () => {
     setIsProcessing(true);
     triggerAgent('higgins');
 
-    logSecurityEvent('Gateway Protocol initiated via Higgins', 'LOW');
+    logSecurityEvent('Gateway Protocol initiated via Higgins', 'MEDIUM');
 
     // Simulate gateway protocol verification
     console.log('Higgins: Verifying clearance levels...');

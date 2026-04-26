@@ -13,7 +13,7 @@ export const usePytch = () => {
 
     setIsConstructing(true);
     triggerAgent('pytch');
-    logSecurityEvent('Persona Awakened: Pytch', 'LOW');
+    logSecurityEvent('Persona Awakened: Pytch', 'MEDIUM');
 
     // Simulate narrative construction
     console.log('Pytch: Weaving the bleak threads of reality...');
