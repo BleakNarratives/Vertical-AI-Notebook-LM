@@ -46,8 +46,8 @@ export default function RootLayout({
              {/* Boardroom Props */}
              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-end gap-16 md:gap-32 pointer-events-auto">
                <div className="flex items-end gap-8 mb-4">
-                 <button aria-label="View Source Documentation" title="Source Docs" className="w-12 h-16 bg-white/5 border border-grey-medium -rotate-6 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-1 focus-visible:ring-neon-amber outline-none" />
-                 <button aria-label="View Reference Images" title="Reference Images" className="w-14 h-18 bg-white/5 border border-grey-medium rotate-3 translate-y-2 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-1 focus-visible:ring-neon-amber outline-none" />
+                 <button type="button" aria-label="View Source Documentation" title="Source Docs" className="w-12 h-16 bg-white/5 border border-grey-medium -rotate-6 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none" />
+                 <button type="button" aria-label="View Reference Images" title="Reference Images" className="w-14 h-18 bg-white/5 border border-grey-medium rotate-3 translate-y-2 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none" />
                </div>
 
                <Laptop />
