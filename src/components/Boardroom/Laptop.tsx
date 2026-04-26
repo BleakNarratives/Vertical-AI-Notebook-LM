@@ -14,7 +14,7 @@ export const Laptop: React.FC = () => {
           <div className="w-1 h-1 rounded-full bg-neon-red/40" />
           <div className="w-1 h-1 rounded-full bg-neon-amber/40" />
         </div>
-        <div className="flex-1 p-2 font-mono text-[6px] text-left text-grey-medium leading-tight">
+        <div className="flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight">
           <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
           <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
           <div className="mt-1 opacity-40">System Link: ACTIVE</div>
