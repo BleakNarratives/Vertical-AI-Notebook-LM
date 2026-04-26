@@ -49,7 +49,12 @@ export const useSentinel = () => {
     let data = { count: 0, startTime: now };
 
     try {
-      if (stored) data = JSON.parse(stored);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && typeof parsed === 'object') {
+          data = { ...data, ...parsed };
+        }
+      }
     } catch {
       localStorage.removeItem(storageKey);
     }
