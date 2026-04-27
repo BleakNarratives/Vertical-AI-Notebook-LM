@@ -21,22 +21,23 @@ export const useSentinel = () => {
 
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
-    // Advanced defense against XSS and injection
-    return input
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;')
-      .replace(/\//g, '&#x2F;')
-      .replace(/`/g, '&#x60;')
-      .replace(/=/g, '&#x3D;');
+    const map: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;',
+      '/': '&#x2F;',
+      '`': '&#x60;',
+      '=': '&#x3D;',
+    };
+    return input.replace(/[&<>"'\/`=]/g, (s) => map[s]);
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
     // Regex-based allowlist for common terminal commands in this app's context
     // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
-    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
+    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|/><]+$/;
     if (!allowlist.test(input)) {
       logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
       return false;
