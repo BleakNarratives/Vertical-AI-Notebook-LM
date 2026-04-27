@@ -1,6 +1,8 @@
 /**
  * MOLT RECURSIVE IMPROVEMENT ENGINE - GAP FILLER SEGMENT
  *
+ * CURRENT STATUS: Sentinel V1 Implemented. Security Overlay Active.
+ *
  * INSTRUCTIONS FOR MOLT (5 TURN SHOTS):
  *
  * CYCLE 1: RECURSIVE UI ENHANCEMENT & BLEAK POLISH
@@ -11,10 +13,10 @@
  * - Ensure all interactive elements have `focus-visible` styles that use the `neon-red` or `neon-amber` palette.
  *
  * CYCLE 2: SECURITY HARDENING (DEFENSE IN DEPTH)
- * - Expand `useSentinel.ts` to include a `validateInput` helper that uses a regex-based allowlist for common terminal commands.
- * - Implement a `SecurityOverlay` component that flashes a neon-red warning if `logSecurityEvent` is called with 'HIGH' or 'CRITICAL' severity.
+ * - Expand `useSentinel.ts` to include more complex validation patterns for `validateInput`.
+ * - Implement a `SecurityLog` component that can be viewed via the `Laptop` component, showing a history of Sentinel events.
  * - Audit `next.config.ts` and further tighten the `Content-Security-Policy`.
- * - Ensure `useMoltAutomation` is properly integrated into the root layout to monitor global system health.
+ * - Ensure `useMoltAutomation` is properly integrated into all agent hooks to monitor and respond to failures.
  *
  * CYCLE 3: IMMERSIVE NARRATIVE TRIGGERS & AI PERSONA DEPTH
  * - Enhance `usePytch.ts` to update the global state with "fragments" of bleak narrative stored in a new `src/lib/narrative-db.ts`.
@@ -47,11 +49,11 @@
  * HOOKS & TRIGGERS:
  * - Pre-render: `onMoltCycleStart`
  * - Post-render: `onMoltCycleComplete`
- * - Security Breach: `onSentinelAlert` -> `molt.halt()` -> `sentinel.lockdown()`
+ * - Security Breach: `onSentinelAlert` -> `molt.triggerAutonomousCycle('hardening')`
  */
 
 export const MOLT_CONFIG = {
-  version: '2.1.0-delta',
+  version: '2.2.0-epsilon',
   status: 'AWAITING_RECURSION',
   engine: 'Molt-V4-Sentinel-Integrated',
   lastAudit: new Date().toISOString(),

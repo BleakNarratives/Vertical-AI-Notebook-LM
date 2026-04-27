@@ -20,14 +20,29 @@ export const useSentinel = () => {
   }, []);
 
   const sanitizeInput = useCallback((input: string): string => {
-    // Basic defense against XSS by encoding common characters
+    if (!input) return '';
+    // Advanced defense against XSS and injection
     return input
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+      .replace(/'/g, '&#039;')
+      .replace(/\//g, '&#x2F;')
+      .replace(/`/g, '&#x60;')
+      .replace(/=/g, '&#x3D;');
   }, []);
+
+  const validateInput = useCallback((input: string): boolean => {
+    // Regex-based allowlist for common terminal commands in this app's context
+    // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
+    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|/><]+$/;
+    if (!allowlist.test(input)) {
+      logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
+      return false;
+    }
+    return true;
+  }, [logSecurityEvent]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
@@ -73,5 +88,5 @@ export const useSentinel = () => {
     return false;
   }, [logSecurityEvent]);
 
-  return { logSecurityEvent, sanitizeInput, validateRequest, checkRateLimit };
+  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit };
 };
