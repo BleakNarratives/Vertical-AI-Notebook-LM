@@ -36,7 +36,7 @@ export const useSentinel = () => {
   const validateInput = useCallback((input: string): boolean => {
     // Regex-based allowlist for common terminal commands in this app's context
     // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
-    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|/><]+$/;
+    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
       logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
       return false;
