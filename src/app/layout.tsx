@@ -3,6 +3,7 @@ import { CoffeeMug } from "@/components/Boardroom/CoffeeMug";
 import { Laptop } from "@/components/Boardroom/Laptop";
 import { Whiteboard } from "@/components/Boardroom/Whiteboard";
 import { VideoViewer } from "@/components/Boardroom/VideoViewer";
+import { Papers } from "@/components/Boardroom/Papers";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -17,8 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-obsidian selection:bg-neon-red selection:text-obsidian">
+    <html lang="en" className="bg-obsidian selection:bg-neon-red selection:text-obsidian scroll-smooth">
       <body className="min-h-screen flex flex-col overflow-x-hidden">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-neon-red focus:text-obsidian focus:font-mono focus:text-xs uppercase tracking-widest outline-none"
+        >
+          Skip to main content
+        </a>
+
         {/* Obelisk Center Layout */}
         <header className="h-16 border-b border-grey-dark flex items-center px-8 bg-obsidian/80 backdrop-blur-md sticky top-0 z-50">
           <div className="text-neon-red font-mono text-lg tracking-[0.3em] font-bold">
@@ -30,25 +38,28 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1200px]">
+        <main id="main-content" className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:2000px] overflow-hidden">
+          {/* Floor/Table Shadow */}
+          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent opacity-60 pointer-events-none" />
+
           {/* Central Obelisk container - with Boardroom Perspective */}
-          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-grey-dark/10 relative [transform:rotateX(12deg)] transform-gpu shadow-2xl">
+          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-grey-dark/5 relative [transform:rotateX(15deg)_translateZ(0)] transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
 
-             {/* Perspective Background Elements */}
-             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,transparent_80%,rgba(26,26,26,0.5)_100%)]" />
+             {/* Perspective Background Elements - Simulated Table Surface */}
+             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,transparent_0%,rgba(10,10,10,0.8)_100%)]" />
+             <div className="absolute -bottom-20 -left-20 -right-20 h-40 bg-obsidian blur-3xl opacity-50 -z-10" />
 
              <Whiteboard />
              <VideoViewer />
 
-             {children}
+             <div className="relative z-10">
+               {children}
+             </div>
 
              {/* Boardroom Props */}
-             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-end gap-16 md:gap-32 pointer-events-auto">
-               <div className="flex items-end gap-8 mb-4">
-                 <button type="button" aria-label="View Source Documentation" title="Source Docs" className="w-12 h-16 bg-white/5 border border-grey-medium -rotate-6 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none" />
-                 <button type="button" aria-label="View Reference Images" title="Reference Images" className="w-14 h-18 bg-white/5 border border-grey-medium rotate-3 translate-y-2 hover:rotate-0 transition-transform shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none" />
-               </div>
+             <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20">
+               <Papers />
 
                <Laptop />
                <CoffeeMug />
