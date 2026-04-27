@@ -6,10 +6,11 @@ import { useSentinel } from './useSentinel';
 
 export const useTwoie = () => {
   const [isExecuting, setIsExecuting] = useState(false);
-  const { logSecurityEvent, checkRateLimit, sanitizeInput } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, sanitizeInput, validateInput } = useSentinel();
 
   const executeTask = useCallback(async (task: string) => {
     if (!checkRateLimit('executeTask', 5, 30000)) return;
+    if (!validateInput(task)) return;
 
     const safeTask = sanitizeInput(task);
     setIsExecuting(true);
@@ -21,7 +22,7 @@ export const useTwoie = () => {
 
     console.log('Twoie: Task finalized. No witnesses.');
     setIsExecuting(false);
-  }, [logSecurityEvent, checkRateLimit, sanitizeInput]);
+  }, [logSecurityEvent, checkRateLimit, sanitizeInput, validateInput]);
 
   return { executeTask, isExecuting };
 };
