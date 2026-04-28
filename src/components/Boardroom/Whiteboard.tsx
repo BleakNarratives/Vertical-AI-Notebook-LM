@@ -5,6 +5,7 @@ import React from 'react';
 export const Whiteboard: React.FC = () => {
   return (
     <button
+      type="button"
       aria-label="Iteration Whiteboard (Strategy)"
       className="group absolute top-12 -left-12 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none -rotate-3"
     >

@@ -30,7 +30,11 @@ export default function Home() {
         </h1>
         <p className="text-grey-medium font-mono text-sm max-w-md mx-auto">
           Welcome to the Code City. Immersive execution environment for bleak narratives and recursive improvement.
-          {level > 0 && <span className="block mt-2 text-neon-amber animate-pulse">Current Molt Level: {level}</span>}
+          {level > 0 && (
+            <span aria-live="polite" className="block mt-2 text-neon-amber animate-pulse">
+              Current Molt Level: {level}
+            </span>
+          )}
         </p>
       </div>
 
@@ -39,21 +43,25 @@ export default function Home() {
           label={isImproving ? "Improving..." : "Initialize Molt"}
           variant="primary"
           onClick={triggerMolt}
+          isLoading={isImproving}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
           onClick={consultHiggins}
+          isLoading={isHigginsActive}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
           onClick={wakePytch}
+          isLoading={isPytchActive}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
           onClick={triggerSwarm}
+          isLoading={isZeroclawActive}
         />
       </div>
 

@@ -5,6 +5,7 @@ import React from 'react';
 export const Laptop: React.FC = () => {
   return (
     <button
+      type="button"
       aria-label="Access Terminal (Workstation)"
       className="group relative w-48 h-32 transition-transform hover:scale-105 focus:outline-none"
     >
