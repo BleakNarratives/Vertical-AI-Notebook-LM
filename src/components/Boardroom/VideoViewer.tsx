@@ -5,6 +5,7 @@ import React from 'react';
 export const VideoViewer: React.FC = () => {
   return (
     <button
+      type="button"
       aria-label="Remote Feed / Video Monitor"
       className="group absolute top-16 -right-12 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:ring-2 focus-visible:ring-neon-red outline-none rotate-2"
     >

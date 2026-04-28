@@ -5,6 +5,7 @@ import React from 'react';
 export const CoffeeMug: React.FC = () => {
   return (
     <button
+      type="button"
       aria-label="System Settings (Coffee Break)"
       className="group relative w-16 h-12 transition-transform hover:scale-110 focus:outline-none"
     >
