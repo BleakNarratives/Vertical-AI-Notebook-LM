@@ -1,60 +1,53 @@
 /**
  * MOLT RECURSIVE IMPROVEMENT ENGINE - GAP FILLER SEGMENT
  *
- * CURRENT STATUS: Sentinel V1 Implemented. Security Overlay Active.
+ * CURRENT STATUS: Sentinel V2 Enhanced. Agent Rate Limiting & Shadow Triggers Active.
  *
  * INSTRUCTIONS FOR MOLT (5 TURN SHOTS):
  *
- * CYCLE 1: RECURSIVE UI ENHANCEMENT & BLEAK POLISH
- * - Scan `src/components` for any element not adhering to the 'Bleak-Minimalist' aesthetic.
- * - Implement "shadow" UI details: tiny, flickering monospaced labels that appear in the 'obsidian shadows' of containers.
- * - Refine `ModuleButton` to include a more aggressive glitch effect on hover.
- * - Add a subtle CRT scanline overlay to the entire [perspective:1000px] container.
- * - Ensure all interactive elements have `focus-visible` styles that use the `neon-red` or `neon-amber` palette.
+ * CYCLE 1: OBSIDIAN UI GHOSTING (VISUALS)
+ * - Deepen the 'Bleak-Minimalist' immersion by implementing "Ghosting" effects.
+ * - Add a low-opacity, lagging trail to the mouse cursor using CSS or Framer Motion.
+ * - Implement "data leaks" in the UI: tiny, non-interactive snippets of raw code or terminal logs that flicker in the background of the boardroom.
+ * - Refine the `SecurityOverlay` to include a screen-shake effect when a `CRITICAL` alert is triggered.
  *
- * CYCLE 2: SECURITY HARDENING (DEFENSE IN DEPTH)
- * - Expand `useSentinel.ts` to include more complex validation patterns for `validateInput`.
- * - Implement a `SecurityLog` component that can be viewed via the `Laptop` component, showing a history of Sentinel events.
- * - Audit `next.config.ts` and further tighten the `Content-Security-Policy`.
- * - Ensure `useMoltAutomation` is properly integrated into all agent hooks to monitor and respond to failures.
+ * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE)
+ * - Audit the `useSentinel` hook. Implement `validateInput` depth by checking for common LFI/RFI patterns.
+ * - Add a "Lockdown" mode to the `RootLayout` that triggers when 3+ `HIGH` alerts occur within 5 minutes, disabling all non-essential agent buttons.
+ * - Implement secure serialization for any data stored in `localStorage` by the Sentinel layer.
  *
- * CYCLE 3: IMMERSIVE NARRATIVE TRIGGERS & AI PERSONA DEPTH
- * - Enhance `usePytch.ts` to update the global state with "fragments" of bleak narrative stored in a new `src/lib/narrative-db.ts`.
- * - Create a `NarrativeDisplay` component that renders these fragments with a typewriter effect and occasional character distortion (glitch text).
- * - Link `Mrs. Higgins` to a 'Gateway' animation that must complete before the main content is accessible, using Framer Motion for smooth, oppressive transitions.
- * - Update `Persona.tsx` to reflect active states with more complex CSS animations (vibrating borders, chromatic aberration).
+ * CYCLE 3: NARRATIVE RESONANCE & FRAGMENTED PERSONAS
+ * - Update `usePytch` to generate "Shadow Narratives" when `Molt` level is > 3.
+ * - These narratives should be displayed in a hidden sub-terminal within the `Laptop` component.
+ * - Enhance `Mrs. Higgins` with a "Clearance Check" mini-game that users must complete once per session.
  *
- * CYCLE 4: SWARM INTELLIGENCE & DISTRIBUTED UI
- * - Update `useZeroclaw.ts` to simulate a distributed consensus algorithm, logging "consensus reached" events to Sentinel.
- * - Create a visual representation of the swarm using a canvas-based particle system that reacts to mouse movement and system alerts.
- * - Ensure the particles maintain a 'ragtag' aesthetic (irregular shapes, muted colors, sharp edges).
- * - Implement a "Swarm View" toggle that overlays the UI with a matrix of raw data streams.
+ * CYCLE 4: SWARM CONSENSUS & LOGIC REFINEMENT
+ * - Update `useZeroclaw` to implement a "Swarm Consensus" visualizer in the `Whiteboard` component.
+ * - Log "Consensus Divergence" as a `MEDIUM` security event if the swarm logic fails to reach a state within 2 seconds.
+ * - Optimize the `useMoltAutomation` logic to prevent recursive feedback loops during high-severity alerts.
  *
- * CYCLE 5: FINAL OPTIMIZATION, EASTER EGGS & RECURSION PREP
- * - Search the codebase for "obsidian shadows" and hide 3 new Easter eggs within them.
- * - One egg should involve clicking a specific sequence of agent buttons (e.g., Higgins -> Twoie -> Higgins).
- * - Optimize all hooks for performance, ensuring no unnecessary re-renders during recursive cycles by using `useMemo` and `useCallback` aggressively.
- * - Prepare the environment for the next Molt initialization sequence by updating `MOLT_CONFIG.status` to 'OPTIMIZED'.
- * - Add a hidden 'Superuser' mode that can be unlocked by typing 'VOID' on the home page.
+ * CYCLE 5: THE SINGULARITY (FINAL OPTIMIZATION & EASTER EGGS)
+ * - Hide 5 new "Ghost" Easter eggs in the obsidian shadows that only appear when the user remains idle for 60 seconds.
+ * - Implement a 'Terminal Velocity' mode: when typing 'RUN' anywhere, the UI perspective shifts to 0 degrees (flat) and colors invert for 5 seconds.
+ * - Final audit of all hooks for performance; ensure `MOLT_CONFIG.status` transitions to 'SINGULARITY_REACHED'.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({
- *   agency: 'full',
- *   reason: 'recursive-refinement',
- *   target: 'Code City core',
+ *   agency: 'autonomous',
+ *   reason: 'sentinel-v2-enhancement',
+ *   target: 'Code City Singularity',
  *   persistence: true,
  *   autoTrigger: true
  * });
  *
  * HOOKS & TRIGGERS:
- * - Pre-render: `onMoltCycleStart`
- * - Post-render: `onMoltCycleComplete`
- * - Security Breach: `onSentinelAlert` -> `molt.triggerAutonomousCycle('hardening')`
+ * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
+ * - OnLockdown: `molt.enterSafeMode()`
  */
 
 export const MOLT_CONFIG = {
-  version: '2.2.0-epsilon',
-  status: 'AWAITING_RECURSION',
-  engine: 'Molt-V4-Sentinel-Integrated',
+  version: '2.3.0-sentinel-v2',
+  status: 'AWAITING_SINGULARITY',
+  engine: 'Molt-V4-Sentinel-Enhanced',
   lastAudit: new Date().toISOString(),
 };
