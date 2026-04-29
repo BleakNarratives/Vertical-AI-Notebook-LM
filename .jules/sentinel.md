@@ -12,3 +12,8 @@
 **Vulnerability:** Inconsistent rate limiting across agents and lack of automated response to "protocol siege" (spamming).
 **Learning:** Pure rate limiting blocks actions but doesn't necessarily alert the system to intentional abuse. By implementing "Shadow Triggers"—local counters that track attempts *during* rate-limited states—we can distinguish between accidental spam and a "protocol siege".
 **Prevention:** Always implement rate limiting on entry-point agents (like Higgins). Use behavioral counters to elevate alerts from MEDIUM (Rate Limit) to CRITICAL (Shadow Sequence) to autonomously trigger system hardening (Molt).
+
+## 2026-04-28 - [Persistent Lockdown Protocol & Input Depth Defense]
+**Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
+**Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
+**Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).

@@ -12,14 +12,13 @@ export const useHiggins = () => {
   const consultHiggins = useCallback(async () => {
     // Enforce rate limiting: 3 calls per 60 seconds
     if (!checkRateLimit('consultHiggins', 3, 60000)) {
-      setShadowCounter(prev => {
-        const newCount = prev + 1;
-        if (newCount >= 3) { // 3rd attempt while rate-limited
-          logSecurityEvent('SHADOW SEQUENCE DETECTED: Higgins Gateway under siege. Initializing defensive recursion.', 'CRITICAL');
-          return 0; // Reset counter after triggering
-        }
-        return newCount;
-      });
+      const newCount = shadowCounter + 1;
+      if (newCount >= 3) { // 3rd attempt while rate-limited
+        logSecurityEvent('SHADOW SEQUENCE DETECTED: Higgins Gateway under siege. Initializing defensive recursion.', 'CRITICAL');
+        setShadowCounter(0); // Reset counter after triggering
+      } else {
+        setShadowCounter(newCount);
+      }
       return;
     }
 

@@ -1,17 +1,25 @@
 
-> tmp_app@0.1.0 dev
+> tmp_app@0.1.0 dev /app
 > next dev
 
 ▲ Next.js 16.2.4 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-✓ Ready in 615ms
+✓ Ready in 526ms
 
 ○ Compiling / ...
- GET / 200 in 4.7s (next.js: 4.1s, application-code: 624ms)
- GET / 200 in 122ms (next.js: 9ms, application-code: 113ms)
- GET / 200 in 85ms (next.js: 6ms, application-code: 79ms)
- GET / 200 in 87ms (next.js: 4ms, application-code: 82ms)
- GET / 200 in 90ms (next.js: 5ms, application-code: 84ms)
- GET / 200 in 76ms (next.js: 4ms, application-code: 72ms)
- GET / 200 in 101ms (next.js: 4ms, application-code: 98ms)
+ GET / 200 in 4.1s (next.js: 3.6s, application-code: 538ms)
+ GET / 200 in 475ms (next.js: 259ms, application-code: 215ms)
+ GET / 200 in 80ms (next.js: 6ms, application-code: 74ms)
+ GET / 200 in 87ms (next.js: 5ms, application-code: 82ms)
+ GET / 200 in 77ms (next.js: 4ms, application-code: 73ms)
+ GET / 200 in 61ms (next.js: 3ms, application-code: 58ms)
+ GET / 200 in 65ms (next.js: 3ms, application-code: 62ms)
+ GET / 200 in 75ms (next.js: 3ms, application-code: 71ms)
+ GET / 200 in 72ms (next.js: 4ms, application-code: 68ms)
+ GET / 200 in 73ms (next.js: 4ms, application-code: 69ms)
+ GET / 200 in 59ms (next.js: 4ms, application-code: 55ms)
+ GET / 200 in 62ms (next.js: 3ms, application-code: 60ms)
+ GET / 200 in 68ms (next.js: 4ms, application-code: 65ms)
+ GET / 200 in 72ms (next.js: 3ms, application-code: 70ms)
+ GET / 200 in 71ms (next.js: 3ms, application-code: 68ms)

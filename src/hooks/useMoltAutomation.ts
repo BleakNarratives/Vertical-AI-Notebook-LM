@@ -20,7 +20,39 @@ export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
   const { logSecurityEvent } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
+  const [isLockdown, setIsLockdown] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
+
+  // Check for lockdown on mount and during alerts
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const checkLockdown = () => {
+      const stored = localStorage.getItem('sentinel_lockdown');
+      if (stored) {
+        const lockdownExpiry = parseInt(stored, 10);
+        if (Date.now() < lockdownExpiry) {
+          setIsLockdown(true);
+          // Set a timeout to clear lockdown state
+          const remaining = lockdownExpiry - Date.now();
+          setTimeout(() => setIsLockdown(false), remaining);
+        } else {
+          localStorage.removeItem('sentinel_lockdown');
+          setIsLockdown(false);
+        }
+      }
+    };
+
+    checkLockdown();
+  }, []);
+
+  const triggerLockdown = useCallback(() => {
+    const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
+    localStorage.setItem('sentinel_lockdown', expiry.toString());
+    setIsLockdown(true);
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
+  }, [logSecurityEvent]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -40,9 +72,20 @@ export const useMoltAutomation = () => {
   useEffect(() => {
     const handleSecurityAlert = (e: Event) => {
       const securityEvent = e as SecurityAlertEvent;
-      const { severity } = securityEvent.detail;
+      const { severity, event } = securityEvent.detail;
+
       if (severity === 'HIGH' || severity === 'CRITICAL') {
-        attemptAutonomousImprovement(`Security hardening required due to ${severity} alert.`);
+        // Track high-severity alerts for lockdown
+        const alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
+        const now = Date.now();
+        const recentAlerts = [...alerts.filter((a: number) => now - a < 300000), now];
+        localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+
+        if (recentAlerts.length >= 3 && !isLockdown) {
+          triggerLockdown();
+        }
+
+        attemptAutonomousImprovement(`Security hardening required: ${event}`);
       }
     };
 
@@ -50,7 +93,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('security-alert', handleSecurityAlert);
       return () => window.removeEventListener('security-alert', handleSecurityAlert);
     }
-  }, [attemptAutonomousImprovement]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown]);
 
-  return { cyclesRun, isImproving, level };
+  return { cyclesRun, isImproving, level, isLockdown };
 };

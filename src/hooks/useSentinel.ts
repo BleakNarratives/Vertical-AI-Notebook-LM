@@ -34,13 +34,30 @@ export const useSentinel = () => {
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
-    // Regex-based allowlist for common terminal commands in this app's context
-    // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
+    // Basic allowlist check
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
-      logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
+      logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
       return false;
     }
+
+    // Depth check: Block path traversal and LFI patterns
+    const maliciousPatterns = [
+      /\.\.\//,         // Path traversal
+      /etc\/passwd/,    // LFI target
+      /cmd\.exe/,       // RCE attempt
+      /<script/i,       // XSS attempt
+      /javascript:/i,   // Protocol injection
+      /union\s+select/i // SQL injection
+    ];
+
+    for (const pattern of maliciousPatterns) {
+      if (pattern.test(input)) {
+        logSecurityEvent(`CRITICAL: Malicious pattern detected: ${input.substring(0, 15)}...`, 'CRITICAL');
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent]);
 

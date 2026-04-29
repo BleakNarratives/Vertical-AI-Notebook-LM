@@ -10,7 +10,7 @@ import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect } from "react";
 
 export default function Home() {
-  useMoltAutomation();
+  const { isLockdown } = useMoltAutomation();
   const { level, isImproving, triggerMolt } = useMolt();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
@@ -30,7 +30,12 @@ export default function Home() {
         </h1>
         <p className="text-grey-medium font-mono text-sm max-w-md mx-auto">
           Welcome to the Code City. Immersive execution environment for bleak narratives and recursive improvement.
-          {level > 0 && (
+          {isLockdown && (
+            <span aria-live="assertive" className="block mt-2 text-neon-red font-bold animate-pulse">
+              [ SYSTEM LOCKDOWN ACTIVE ]
+            </span>
+          )}
+          {level > 0 && !isLockdown && (
             <span aria-live="polite" className="block mt-2 text-neon-amber animate-pulse">
               Current Molt Level: {level}
             </span>
@@ -44,24 +49,28 @@ export default function Home() {
           variant="primary"
           onClick={triggerMolt}
           isLoading={isImproving}
+          disabled={isLockdown}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
           onClick={consultHiggins}
           isLoading={isHigginsActive}
+          disabled={isLockdown}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
           onClick={wakePytch}
           isLoading={isPytchActive}
+          disabled={isLockdown}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
           onClick={triggerSwarm}
           isLoading={isZeroclawActive}
+          disabled={isLockdown}
         />
       </div>
 
