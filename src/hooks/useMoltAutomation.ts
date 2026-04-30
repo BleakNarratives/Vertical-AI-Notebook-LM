@@ -110,5 +110,5 @@ export const useMoltAutomation = () => {
     }
   }, [attemptAutonomousImprovement, trackSecurityEvent]);
 
-  return { cyclesRun, isImproving, level, isLockdown };
+  return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
 };
