@@ -33,6 +33,23 @@ export const useSentinel = () => {
       .replace(/=/g, '&#x3D;');
   }, []);
 
+  const logShadowAttempt = useCallback((input: string) => {
+    if (typeof window === 'undefined') return;
+    const key = 'sentinel_shadow_logs';
+    try {
+      const logs = JSON.parse(localStorage.getItem(key) || '[]');
+      const newEntry = {
+        timestamp: new Date().toISOString(),
+        // Forensic encoding of malicious payload
+        payload: btoa(input).substring(0, 100),
+      };
+      logs.push(newEntry);
+      localStorage.setItem(key, JSON.stringify(logs.slice(-20)));
+    } catch {
+      localStorage.removeItem(key);
+    }
+  }, []);
+
   const validateInput = useCallback((input: string): boolean => {
     if (!input || input.length > 500) {
       logSecurityEvent('Input rejected: invalid length or empty', 'MEDIUM');
@@ -40,9 +57,10 @@ export const useSentinel = () => {
     }
 
     // Block path traversal and LFI patterns
-    const maliciousPatterns = [/\.\.\//, /\.\.\\/, /\.\.%2f/i, /%2e%2e%2f/i, /\/etc\//, /\/proc\//];
+    const maliciousPatterns = [/\.\.\//, /\.\.\\/, /\.\.%2f/i, /%2e%2e%2f/i, /\/etc\//, /\/proc\//, /file:\/\//, /php:\/\//];
     if (maliciousPatterns.some(pattern => pattern.test(input))) {
       logSecurityEvent(`LFI/Path Traversal attempt blocked: ${input.substring(0, 20)}`, 'CRITICAL');
+      logShadowAttempt(input);
       return false;
     }
 
@@ -54,7 +72,7 @@ export const useSentinel = () => {
       return false;
     }
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, logShadowAttempt]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {

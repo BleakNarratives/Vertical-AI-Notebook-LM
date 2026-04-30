@@ -10,7 +10,8 @@ import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { level, isImproving, triggerMolt, isLockdown } = useMoltAutomation();
+  const { level, isImproving, triggerMolt } = useMolt();
+  const { isLockdown } = useMoltAutomation();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();

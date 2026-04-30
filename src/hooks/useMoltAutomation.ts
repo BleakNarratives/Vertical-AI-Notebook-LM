@@ -67,13 +67,13 @@ export const useMoltAutomation = () => {
 
     localStorage.setItem(key, JSON.stringify(alerts));
 
-    if (alerts.length >= 3 && !isLockdown) {
+    if (alerts.length >= 3) {
       const lockdownExpiry = now + 300000; // 5 minute lockdown
       localStorage.setItem('sentinel_lockdown', lockdownExpiry.toString());
       setIsLockdown(true);
       logSecurityEvent('SYSTEM LOCKDOWN INITIATED: Multiple high-severity breaches detected.', 'CRITICAL');
     }
-  }, [logSecurityEvent, isLockdown]);
+  }, [logSecurityEvent]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -110,5 +110,5 @@ export const useMoltAutomation = () => {
     }
   }, [attemptAutonomousImprovement, trackSecurityEvent]);
 
-  return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
+  return { cyclesRun, isImproving, level, isLockdown };
 };
