@@ -11,10 +11,10 @@
  * - Implement "data leaks" in the UI: tiny, non-interactive snippets of raw code or terminal logs that flicker in the background of the boardroom.
  * - Refine the `SecurityOverlay` to include a screen-shake effect when a `CRITICAL` alert is triggered.
  *
- * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE)
- * - Audit the `useSentinel` hook. Implement `validateInput` depth by checking for common LFI/RFI patterns.
- * - Add a "Lockdown" mode to the `RootLayout` that triggers when 3+ `HIGH` alerts occur within 5 minutes, disabling all non-essential agent buttons.
- * - Implement secure serialization for any data stored in `localStorage` by the Sentinel layer.
+ * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE) - [COMPLETED]
+ * - Audit the `useSentinel` hook. Implement `validateInput` depth by checking for common LFI/RFI patterns. [DONE]
+ * - Add a "Lockdown" mode that triggers when 3+ `HIGH` alerts occur within 5 minutes, disabling agent buttons. [DONE]
+ * - Implement Shadow Logs: Blocked inputs are encoded in Base64 and stored as "Shadow Logs" for forensic audit.
  *
  * CYCLE 3: NARRATIVE RESONANCE & FRAGMENTED PERSONAS
  * - Update `usePytch` to generate "Shadow Narratives" when `Molt` level is > 3.
