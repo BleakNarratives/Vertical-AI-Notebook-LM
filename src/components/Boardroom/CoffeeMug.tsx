@@ -7,7 +7,7 @@ export const CoffeeMug: React.FC = () => {
     <button
       type="button"
       aria-label="System Settings (Coffee Break)"
-      className="group relative w-16 h-12 transition-transform hover:scale-110 focus:outline-none"
+      className="group relative w-16 h-12 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
     >
       {/* Steam animation */}
       <div className="absolute -top-4 left-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
