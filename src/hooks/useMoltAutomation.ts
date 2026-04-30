@@ -73,7 +73,7 @@ export const useMoltAutomation = () => {
       setIsLockdown(true);
       logSecurityEvent('SYSTEM LOCKDOWN INITIATED: Multiple high-severity breaches detected.', 'CRITICAL');
     }
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, isLockdown]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
