@@ -10,8 +10,7 @@ import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect } from "react";
 
 export default function Home() {
-  useMoltAutomation();
-  const { level, isImproving, triggerMolt } = useMolt();
+  const { level, isImproving, triggerMolt, isLockdown } = useMoltAutomation();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
@@ -36,6 +35,11 @@ export default function Home() {
             </span>
           )}
         </p>
+        {isLockdown && (
+          <div aria-live="assertive" className="mt-4 p-2 border border-neon-red bg-neon-red/10 text-neon-red font-mono text-xs animate-pulse">
+            [ SYSTEM LOCKDOWN ACTIVE ] - SECURITY BREACH COUNTERMEASURES ENGAGED
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-md">
@@ -44,24 +48,28 @@ export default function Home() {
           variant="primary"
           onClick={triggerMolt}
           isLoading={isImproving}
+          disabled={isLockdown}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
           onClick={consultHiggins}
           isLoading={isHigginsActive}
+          disabled={isLockdown}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
           onClick={wakePytch}
           isLoading={isPytchActive}
+          disabled={isLockdown}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
           onClick={triggerSwarm}
           isLoading={isZeroclawActive}
+          disabled={isLockdown}
         />
       </div>
 

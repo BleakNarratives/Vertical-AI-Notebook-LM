@@ -34,6 +34,18 @@ export const useSentinel = () => {
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
+    if (!input || input.length > 500) {
+      logSecurityEvent('Input rejected: invalid length or empty', 'MEDIUM');
+      return false;
+    }
+
+    // Block path traversal and LFI patterns
+    const maliciousPatterns = [/\.\.\//, /\.\.\\/, /\.\.%2f/i, /%2e%2e%2f/i, /\/etc\//, /\/proc\//];
+    if (maliciousPatterns.some(pattern => pattern.test(input))) {
+      logSecurityEvent(`LFI/Path Traversal attempt blocked: ${input.substring(0, 20)}`, 'CRITICAL');
+      return false;
+    }
+
     // Regex-based allowlist for common terminal commands in this app's context
     // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;

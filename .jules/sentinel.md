@@ -12,3 +12,8 @@
 **Vulnerability:** Inconsistent rate limiting across agents and lack of automated response to "protocol siege" (spamming).
 **Learning:** Pure rate limiting blocks actions but doesn't necessarily alert the system to intentional abuse. By implementing "Shadow Triggers"—local counters that track attempts *during* rate-limited states—we can distinguish between accidental spam and a "protocol siege".
 **Prevention:** Always implement rate limiting on entry-point agents (like Higgins). Use behavioral counters to elevate alerts from MEDIUM (Rate Limit) to CRITICAL (Shadow Sequence) to autonomously trigger system hardening (Molt).
+
+## 2026-04-28 - [Event-Driven Lockdown & Recursive Trigger Safety]
+**Vulnerability:** Potential infinite trigger loop when security handlers dispatch alerts that they also listen to.
+**Learning:** Implementing a "Lockdown Protocol" that dispatches its own security event can create a feedback loop if the event listener doesn't distinguish between the *trigger* (the breach) and the *response* (the lockdown initiation).
+**Prevention:** Always include metadata or specific string patterns in system-generated security events to allow handlers to skip them and prevent recursive execution.

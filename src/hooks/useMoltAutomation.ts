@@ -20,7 +20,60 @@ export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
   const { logSecurityEvent } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
+  const [isLockdown, setIsLockdown] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
+
+  // Check for lockdown state on mount and updates
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const checkLockdown = () => {
+      const stored = localStorage.getItem('sentinel_lockdown');
+      if (stored) {
+        const expiry = parseInt(stored, 10);
+        if (Date.now() < expiry) {
+          setIsLockdown(true);
+          return;
+        } else {
+          localStorage.removeItem('sentinel_lockdown');
+        }
+      }
+      setIsLockdown(false);
+    };
+
+    checkLockdown();
+    const interval = setInterval(checkLockdown, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const trackSecurityEvent = useCallback((severity: string) => {
+    if (typeof window === 'undefined') return;
+
+    const key = 'sentinel_high_alerts';
+    const now = Date.now();
+    const stored = localStorage.getItem(key);
+    let alerts: number[] = [];
+
+    try {
+      if (stored) alerts = JSON.parse(stored);
+    } catch { alerts = []; }
+
+    // Filter alerts from the last 5 minutes
+    alerts = alerts.filter(ts => now - ts < 300000);
+
+    if (severity === 'HIGH' || severity === 'CRITICAL') {
+      alerts.push(now);
+    }
+
+    localStorage.setItem(key, JSON.stringify(alerts));
+
+    if (alerts.length >= 3 && !isLockdown) {
+      const lockdownExpiry = now + 300000; // 5 minute lockdown
+      localStorage.setItem('sentinel_lockdown', lockdownExpiry.toString());
+      setIsLockdown(true);
+      logSecurityEvent('SYSTEM LOCKDOWN INITIATED: Multiple high-severity breaches detected.', 'CRITICAL');
+    }
+  }, [logSecurityEvent, isLockdown]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -40,8 +93,13 @@ export const useMoltAutomation = () => {
   useEffect(() => {
     const handleSecurityAlert = (e: Event) => {
       const securityEvent = e as SecurityAlertEvent;
-      const { severity } = securityEvent.detail;
+      const { severity, event } = securityEvent.detail;
+
+      // Prevent recursive loop from lockdown notification
+      if (event.includes('SYSTEM LOCKDOWN INITIATED')) return;
+
       if (severity === 'HIGH' || severity === 'CRITICAL') {
+        trackSecurityEvent(severity);
         attemptAutonomousImprovement(`Security hardening required due to ${severity} alert.`);
       }
     };
@@ -50,7 +108,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('security-alert', handleSecurityAlert);
       return () => window.removeEventListener('security-alert', handleSecurityAlert);
     }
-  }, [attemptAutonomousImprovement]);
+  }, [attemptAutonomousImprovement, trackSecurityEvent]);
 
-  return { cyclesRun, isImproving, level };
+  return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
 };
