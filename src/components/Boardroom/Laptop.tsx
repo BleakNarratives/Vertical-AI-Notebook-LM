@@ -7,7 +7,7 @@ export const Laptop: React.FC = () => {
     <button
       type="button"
       aria-label="Access Terminal (Workstation)"
-      className="group relative w-48 h-32 transition-transform hover:scale-105 focus:outline-none"
+      className="group relative w-48 h-32 transition-transform hover:scale-105 active:scale-95 focus:outline-none"
     >
       {/* Laptop Screen (Open) */}
       <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col">
