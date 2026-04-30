@@ -67,7 +67,7 @@ export const useMoltAutomation = () => {
 
     localStorage.setItem(key, JSON.stringify(alerts));
 
-    if (alerts.length >= 3) {
+    if (alerts.length >= 3 && !isLockdown) {
       const lockdownExpiry = now + 300000; // 5 minute lockdown
       localStorage.setItem('sentinel_lockdown', lockdownExpiry.toString());
       setIsLockdown(true);
