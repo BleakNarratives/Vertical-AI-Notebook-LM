@@ -1,7 +1,8 @@
 'use client';
 
 import { ModuleButton } from "@/components/ModuleButton";
-import { useMolt } from "@/hooks/useMolt";
+import { Persona } from "@/components/AI/Persona";
+import { Papers } from "@/components/Boardroom/Papers";
 import { useHiggins } from "@/hooks/useHiggins";
 import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
@@ -21,8 +22,36 @@ export default function Home() {
   }, [logSecurityEvent]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-12 p-8">
-      <div className="space-y-4 text-center">
+    <div className="flex flex-col items-center justify-between h-full gap-8 p-8 py-16">
+      {/* Top of the table - Personas */}
+      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-none mb-12">
+        <div className="flex flex-col items-center gap-2">
+          <Persona name="Mrs. Higgins" role="Gateway" status={isHigginsActive ? 'active' : 'idle'} />
+          <div className="pointer-events-auto">
+            <Papers />
+          </div>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <Persona name="Pytch" role="Architect" status={isPytchActive ? 'active' : 'idle'} />
+          <div className="pointer-events-auto">
+            <Papers />
+          </div>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <Persona name="Twoie" role="Execution" status="idle" />
+          <div className="pointer-events-auto">
+            <Papers />
+          </div>
+        </div>
+        <div className="flex flex-col items-center gap-2">
+          <Persona name="Zeroclaw" role="Distributed" status={isZeroclawActive ? 'active' : 'idle'} />
+          <div className="pointer-events-auto">
+            <Papers />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 text-center z-10 flex-1 flex flex-col justify-center">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white uppercase">
           Vertical AI <br/>
           <span className="text-neon-red">Notebook LM</span>
