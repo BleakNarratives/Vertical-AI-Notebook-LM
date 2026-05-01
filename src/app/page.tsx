@@ -1,7 +1,6 @@
 'use client';
 
 import { ModuleButton } from "@/components/ModuleButton";
-import { useMolt } from "@/hooks/useMolt";
 import { useHiggins } from "@/hooks/useHiggins";
 import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";

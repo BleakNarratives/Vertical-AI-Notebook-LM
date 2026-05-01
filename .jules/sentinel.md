@@ -17,3 +17,8 @@
 **Vulnerability:** Potential infinite trigger loop when security handlers dispatch alerts that they also listen to.
 **Learning:** Implementing a "Lockdown Protocol" that dispatches its own security event can create a feedback loop if the event listener doesn't distinguish between the *trigger* (the breach) and the *response* (the lockdown initiation).
 **Prevention:** Always include metadata or specific string patterns in system-generated security events to allow handlers to skip them and prevent recursive execution.
+
+## 2026-04-29 - [Forensic Shadow Logging & Sequence Detection]
+**Vulnerability:** Security breaches (like LFI/Path Traversal) were blocked but the malicious payload was lost, preventing forensic analysis of the attack vector.
+**Learning:** Blocking is not enough; forensic data is needed for recursive system hardening. By encoding blocked inputs in Base64 ("Shadow Logs"), we can store evidence safely on the client side for audit. Implementing a "Shadow Sequence" detector allows the system to autonomously recognize and react to rapid forensic log expansion as a coordinated attack.
+**Prevention:** Always capture and safely encode malicious payloads when blocking high-severity attempts. Use forensic log growth as a trigger for autonomous system reconstruction cycles.

@@ -104,11 +104,25 @@ export const useMoltAutomation = () => {
       }
     };
 
+    const handleShadowRecorded = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const count = customEvent.detail?.count || 0;
+
+      if (count >= 5) {
+        logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
+        attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
+      }
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
-      return () => window.removeEventListener('security-alert', handleSecurityAlert);
+      window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      return () => {
+        window.removeEventListener('security-alert', handleSecurityAlert);
+        window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      };
     }
-  }, [attemptAutonomousImprovement, trackSecurityEvent]);
+  }, [attemptAutonomousImprovement, trackSecurityEvent, logSecurityEvent]);
 
   return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
 };

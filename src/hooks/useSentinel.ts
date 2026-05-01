@@ -33,6 +33,21 @@ export const useSentinel = () => {
       .replace(/=/g, '&#x3D;');
   }, []);
 
+  const storeShadowLog = useCallback((input: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const encoded = btoa(input);
+      const logs = JSON.parse(localStorage.getItem('sentinel_shadow_logs') || '[]');
+      const newLogs = [...logs, { t: Date.now(), d: encoded }].slice(-20); // Keep last 20
+      localStorage.setItem('sentinel_shadow_logs', JSON.stringify(newLogs));
+
+      // Dispatch event for forensic tracking
+      window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: newLogs.length } }));
+    } catch (e) {
+      console.error('[🛡️ SENTINEL] Shadow Log failure:', e);
+    }
+  }, []);
+
   const validateInput = useCallback((input: string): boolean => {
     if (!input || input.length > 500) {
       logSecurityEvent('Input rejected: invalid length or empty', 'MEDIUM');
@@ -42,6 +57,7 @@ export const useSentinel = () => {
     // Block path traversal and LFI patterns
     const maliciousPatterns = [/\.\.\//, /\.\.\\/, /\.\.%2f/i, /%2e%2e%2f/i, /\/etc\//, /\/proc\//];
     if (maliciousPatterns.some(pattern => pattern.test(input))) {
+      storeShadowLog(input);
       logSecurityEvent(`LFI/Path Traversal attempt blocked: ${input.substring(0, 20)}`, 'CRITICAL');
       return false;
     }
@@ -54,7 +70,7 @@ export const useSentinel = () => {
       return false;
     }
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
@@ -100,5 +116,5 @@ export const useSentinel = () => {
     return false;
   }, [logSecurityEvent]);
 
-  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit };
+  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit, storeShadowLog };
 };

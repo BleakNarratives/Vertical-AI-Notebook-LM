@@ -6,8 +6,8 @@ import { useSentinel } from './useSentinel';
 
 export const useHiggins = () => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [shadowCounter, setShadowCounter] = useState(0);
-  const { logSecurityEvent, checkRateLimit } = useSentinel();
+  const [, setShadowCounter] = useState(0);
+  const { logSecurityEvent, checkRateLimit, storeShadowLog } = useSentinel();
 
   const consultHiggins = useCallback(async () => {
     // Enforce rate limiting: 3 calls per 60 seconds
@@ -16,6 +16,7 @@ export const useHiggins = () => {
         const newCount = prev + 1;
         if (newCount >= 3) { // 3rd attempt while rate-limited
           logSecurityEvent('SHADOW SEQUENCE DETECTED: Higgins Gateway under siege. Initializing defensive recursion.', 'CRITICAL');
+          storeShadowLog('GATEWAY_SIEGE_PROTOCOL_VIOLATION');
           return 0; // Reset counter after triggering
         }
         return newCount;
@@ -35,7 +36,7 @@ export const useHiggins = () => {
 
     console.log('Higgins: Welcome to the Code City. Please proceed to the Obelisk.');
     setIsProcessing(false);
-  }, [logSecurityEvent, checkRateLimit, shadowCounter]);
+  }, [logSecurityEvent, checkRateLimit, storeShadowLog]);
 
   return { consultHiggins, isProcessing };
 };

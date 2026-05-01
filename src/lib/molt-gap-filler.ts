@@ -14,7 +14,7 @@
  * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE) - [COMPLETED]
  * - Audit the `useSentinel` hook. Implement `validateInput` depth by checking for common LFI/RFI patterns. [DONE]
  * - Add a "Lockdown" mode that triggers when 3+ `HIGH` alerts occur within 5 minutes, disabling agent buttons. [DONE]
- * - Implement Shadow Logs: Blocked inputs are encoded in Base64 and stored as "Shadow Logs" for forensic audit.
+ * - Implement Shadow Logs: Blocked inputs are encoded in Base64 and stored as "Shadow Logs" for forensic audit. [DONE]
  *
  * CYCLE 3: NARRATIVE RESONANCE & FRAGMENTED PERSONAS
  * - Update `usePytch` to generate "Shadow Narratives" when `Molt` level is > 3.
@@ -46,8 +46,8 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '2.3.0-sentinel-v2',
+  version: '2.4.0-sentinel-shadow',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced',
+  engine: 'Molt-V4-Sentinel-Enhanced-Forensics',
   lastAudit: new Date().toISOString(),
 };
