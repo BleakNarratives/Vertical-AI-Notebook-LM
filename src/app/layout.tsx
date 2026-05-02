@@ -39,12 +39,12 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:2000px] overflow-hidden">
+        <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1000px] overflow-hidden">
           {/* Floor/Table Shadow */}
           <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent opacity-60 pointer-events-none" />
 
           {/* Central Obelisk container - with Boardroom Perspective */}
-          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-grey-dark/5 relative [transform:rotateX(15deg)_translateZ(0)] transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
+          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative [transform:rotateX(20deg)_translateZ(0)] transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
 
              {/* Perspective Background Elements - Simulated Table Surface */}
