@@ -38,7 +38,7 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <Persona name="Twoie" role="Execution" status="idle" />
+          <Persona name="Twoie" role="Execution" status={isImproving ? 'active' : 'idle'} />
           <div className="pointer-events-auto">
             <Papers />
           </div>
