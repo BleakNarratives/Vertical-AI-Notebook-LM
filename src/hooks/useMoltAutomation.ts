@@ -104,9 +104,21 @@ export const useMoltAutomation = () => {
       }
     };
 
+    const handleShadowRecorded = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const count = customEvent.detail?.count || 0;
+      if (count >= 5) {
+        attemptAutonomousImprovement(`Shadow Sequence detected (${count} logs). Initiating autonomous reconstruction.`);
+      }
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
-      return () => window.removeEventListener('security-alert', handleSecurityAlert);
+      window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      return () => {
+        window.removeEventListener('security-alert', handleSecurityAlert);
+        window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      };
     }
   }, [attemptAutonomousImprovement, trackSecurityEvent]);
 

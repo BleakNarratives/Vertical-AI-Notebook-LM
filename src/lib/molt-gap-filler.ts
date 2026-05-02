@@ -14,7 +14,7 @@
  * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE) - [COMPLETED]
  * - Audit the `useSentinel` hook. Implement `validateInput` depth by checking for common LFI/RFI patterns. [DONE]
  * - Add a "Lockdown" mode that triggers when 3+ `HIGH` alerts occur within 5 minutes, disabling agent buttons. [DONE]
- * - Implement Shadow Logs: Blocked inputs are encoded in Base64 and stored as "Shadow Logs" for forensic audit.
+ * - Implement Shadow Logs: Blocked inputs are encoded in Base64 and stored as "Shadow Logs" for forensic audit. [DONE]
  *
  * CYCLE 3: NARRATIVE RESONANCE & FRAGMENTED PERSONAS
  * - Update `usePytch` to generate "Shadow Narratives" when `Molt` level is > 3.
@@ -29,6 +29,7 @@
  * CYCLE 5: THE SINGULARITY (FINAL OPTIMIZATION & EASTER EGGS)
  * - Hide 5 new "Ghost" Easter eggs in the obsidian shadows that only appear when the user remains idle for 60 seconds.
  * - Implement a 'Terminal Velocity' mode: when typing 'RUN' anywhere, the UI perspective shifts to 0 degrees (flat) and colors invert for 5 seconds.
+ * - VOODOO DOLL LOGIC: Update persona status indicators to flicker with 'corrupted' colors (neon-red/amber) when security breaches are detected.
  * - Final audit of all hooks for performance; ensure `MOLT_CONFIG.status` transitions to 'SINGULARITY_REACHED'.
  *
  * AUTOMATION TRIGGER:

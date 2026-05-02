@@ -6,7 +6,7 @@ import { useSentinel } from './useSentinel';
 
 export const useHiggins = () => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [shadowCounter, setShadowCounter] = useState(0);
+  const [, setShadowCounter] = useState(0);
   const { logSecurityEvent, checkRateLimit } = useSentinel();
 
   const consultHiggins = useCallback(async () => {
@@ -35,7 +35,7 @@ export const useHiggins = () => {
 
     console.log('Higgins: Welcome to the Code City. Please proceed to the Obelisk.');
     setIsProcessing(false);
-  }, [logSecurityEvent, checkRateLimit, shadowCounter]);
+  }, [logSecurityEvent, checkRateLimit]);
 
   return { consultHiggins, isProcessing };
 };
