@@ -60,7 +60,7 @@ export default function RootLayout({
 
              {/* Boardroom Props */}
              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20">
-               <Papers />
+               <Papers context="user" />
 
                <Laptop />
                <CoffeeMug />

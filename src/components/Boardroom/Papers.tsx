@@ -41,8 +41,23 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
   );
 };
 
-export const Papers: React.FC = () => {
+type ContextType = 'higgins' | 'pytch' | 'twoie' | 'zeroclaw' | 'user';
+
+interface PapersProps {
+  context?: ContextType;
+}
+
+const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string }> = {
+  higgins: { p1: 'Gate Logs', p2: 'Entry Permits' },
+  pytch: { p1: 'Story Beats', p2: 'Draft Scripts' },
+  twoie: { p1: 'Op Manifest', p2: 'Exec Scripts' },
+  zeroclaw: { p1: 'Hive Pulse', p2: 'Swarm State' },
+  user: { p1: 'Source Docs', p2: 'Ref Images' },
+};
+
+export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
   const [status, setStatus] = React.useState<string | null>(null);
+  const data = CONTEXT_DATA[context];
 
   const handleView = (title: string) => {
     setStatus(`Viewing ${title}...`);
@@ -52,24 +67,24 @@ export const Papers: React.FC = () => {
   return (
     <div className="flex flex-col items-center gap-2">
       {status && (
-        <div aria-live="polite" className="text-[8px] font-mono text-neon-amber animate-pulse uppercase">
+        <div aria-live="polite" className="text-[10px] font-mono text-neon-amber animate-pulse uppercase">
           {status}
         </div>
       )}
       <div className="flex items-end gap-4 mb-4">
         <Paper
-          label="View Source Documentation"
-          title="Source Docs"
+          label={`View ${data.p1}`}
+          title={data.p1}
           rotation="-6deg"
-          onClick={() => handleView('Source Docs')}
+          onClick={() => handleView(data.p1)}
         />
         <div className="relative">
           <Paper
-            label="View Reference Images"
-            title="Ref Images"
+            label={`View ${data.p2}`}
+            title={data.p2}
             rotation="3deg"
             translateY="8px"
-            onClick={() => handleView('Ref Images')}
+            onClick={() => handleView(data.p2)}
           />
         {/* Additional stacked paper look */}
         <div className="absolute top-1 left-1 w-14 h-18 bg-white/5 border border-grey-medium rotate-1 -z-10 pointer-events-none" />
