@@ -38,7 +38,7 @@ export const useSentinel = () => {
     try {
       const encoded = btoa(String.fromCharCode(...new TextEncoder().encode(input)));
       const logs = JSON.parse(localStorage.getItem('sentinel_shadow_logs') || '[]');
-      const newLogs = [...logs, { t: Date.now(), d: encoded }].slice(-20); // Keep last 20
+      const newLogs = (Array.isArray(logs) ? logs : []).concat({ t: Date.now(), d: encoded }).slice(-20); // Keep last 20
       localStorage.setItem('sentinel_shadow_logs', JSON.stringify(newLogs));
 
       // Dispatch event for forensic tracking
