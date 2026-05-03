@@ -24,30 +24,22 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-between h-full gap-8 p-8 py-16">
       {/* Top of the table - Personas */}
-      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-none mb-12">
-        <div className="flex flex-col items-center gap-2">
+      <div className="relative w-full flex justify-center gap-6 md:gap-12 scale-90 md:scale-100 pointer-events-none mb-20 [transform:rotateX(-20deg)] transform-gpu">
+        <div className="flex flex-col items-center gap-2 pointer-events-auto">
           <Persona name="Mrs. Higgins" role="Gateway" status={isHigginsActive ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
-            <Papers context="higgins" />
-          </div>
+          <Papers context="higgins" />
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 pointer-events-auto">
           <Persona name="Pytch" role="Architect" status={isPytchActive ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
-            <Papers context="pytch" />
-          </div>
+          <Papers context="pytch" />
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 pointer-events-auto">
           <Persona name="Twoie" role="Execution" status={isImproving ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
-            <Papers context="twoie" />
-          </div>
+          <Papers context="twoie" />
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 pointer-events-auto">
           <Persona name="Zeroclaw" role="Distributed" status={isZeroclawActive ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
-            <Papers context="zeroclaw" />
-          </div>
+          <Papers context="zeroclaw" />
         </div>
       </div>
 

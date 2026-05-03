@@ -10,7 +10,11 @@ interface PersonaProps {
 
 export const Persona: React.FC<PersonaProps> = ({ name, role, status }) => {
   return (
-    <div className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group">
+    <div
+      role="region"
+      aria-label={`${name} (${role}) - Status: ${status}`}
+      className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group"
+    >
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
         ${status === 'active' ? 'border-neon-red border-2' : 'border-grey-medium border'}
