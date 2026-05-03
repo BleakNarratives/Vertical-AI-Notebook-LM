@@ -36,19 +36,26 @@ export const useSentinel = () => {
   const storeShadowLog = useCallback((input: string) => {
     if (typeof window === 'undefined') return;
     const key = 'sentinel_shadow_logs';
-    const encoded = btoa(input);
-    const stored = localStorage.getItem(key);
-    let logs: string[] = [];
     try {
-      if (stored) logs = JSON.parse(stored);
-    } catch { logs = []; }
+      // Unicode-safe Base64 encoding
+      const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+        String.fromCharCode(parseInt(p1, 16))
+      ));
+      const stored = localStorage.getItem(key);
+      let logs: string[] = [];
+      try {
+        if (stored) logs = JSON.parse(stored);
+      } catch { logs = []; }
 
-    logs.push(encoded);
-    if (logs.length > 20) logs.shift(); // Keep last 20
+      logs.push(encoded);
+      if (logs.length > 20) logs.shift(); // Keep last 20
 
-    localStorage.setItem(key, JSON.stringify(logs));
-    window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, []);
+      localStorage.setItem(key, JSON.stringify(logs));
+      window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
+    } catch (err) {
+      logSecurityEvent(`Storage/Encoding failure in Shadow Log: ${err}`, 'HIGH');
+    }
+  }, [logSecurityEvent]);
 
   const validateInput = useCallback((input: string): boolean => {
     if (!input || input.length > 500) {
@@ -90,10 +97,10 @@ export const useSentinel = () => {
 
     const now = Date.now();
     const storageKey = `sentinel_rl_${key}`;
-    const stored = localStorage.getItem(storageKey);
     let data = { count: 0, startTime: now };
 
     try {
+      const stored = localStorage.getItem(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -101,16 +108,24 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      localStorage.removeItem(storageKey);
+      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
     }
 
     if (now - data.startTime > windowMs) {
-      localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      } catch {
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'HIGH');
+      }
       return true;
     }
 
     if (data.count < limit) {
-      localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      } catch {
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'HIGH');
+      }
       return true;
     }
 

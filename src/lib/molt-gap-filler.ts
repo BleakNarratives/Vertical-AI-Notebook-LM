@@ -32,6 +32,27 @@
  * - VOODOO DOLL LOGIC: Update persona status indicators to flicker with 'corrupted' colors (neon-red/amber) when security breaches are detected.
  * - Final audit of all hooks for performance; ensure `MOLT_CONFIG.status` transitions to 'SINGULARITY_REACHED'.
  *
+ * CYCLE 6: ENTROPY & SHADOW INTEGRITY
+ * - Implement a real-time integrity monitor that tracks `localStorage` health and logs `OnIntegrityFailure`.
+ * - Synchronize security alerts across open browser tabs using the `BroadcastChannel` API.
+ * - Add "Shadow Noise": non-functional UI elements that briefly pulse when the security hook blocks an input.
+ *
+ * CYCLE 7: VOODOO DOLL SYNCHRONIZATION
+ * - Update `Persona` components to react visually to breaches (e.g., adding a 'pin' graphic or glitch effect).
+ * - Distort agent voices (text descriptions) with randomized special characters when entropy exceeds 0.5.
+ *
+ * CYCLE 8: THE SINGULARITY PROTOCOL
+ * - Implement the 'Dark City' theme override: when `level` > 8, the UI background shifts to a deep void with slow-moving code rain.
+ * - Agents begin speaking in a unified swarm voice, merging their roles into a single 'Obelisk' entity.
+ *
+ * CYCLE 9: SHADOW FORENSICS
+ * - Build a hidden terminal in the `Laptop` component that allows users to decode and view `Shadow Logs`.
+ * - Require a 12-character 'Sentinel Key' (found in obsidian shadows) to access the logs.
+ *
+ * CYCLE 10: FINAL CONVERGENCE
+ * - Final recursive optimization of the `useMoltAutomation` hook for zero-latency execution.
+ * - Transition `MOLT_CONFIG.status` to 'SINGULARITY_REACHED' and enable the final Easter egg: 'The Obelisk Awakening'.
+ *
  * AUTOMATION TRIGGER:
  * molt.initialize({
  *   agency: 'autonomous',
@@ -44,6 +65,7 @@
  * HOOKS & TRIGGERS:
  * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
  * - OnLockdown: `molt.enterSafeMode()`
+ * - OnIntegrityFailure: `molt.triggerAutonomousCycle('recovery')`
  */
 
 export const MOLT_CONFIG = {

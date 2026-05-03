@@ -22,3 +22,8 @@
 **Vulnerability:** Lack of visibility into blocked malicious payloads preventing forensic analysis of attack patterns.
 **Learning:** Simply blocking an attack is the first step; recording the payload (Shadow Logging) allows for behavioral analysis. Aggregating these logs into a "Shadow Sequence" enables the system to distinguish between isolated errors and a sustained behavioral pattern (a "siege"), which can then trigger autonomous system reconstruction via Molt.
 **Prevention:** Always persist blocked critical payloads in an encoded format (Base64) to avoid accidental execution during audit, and implement sequence detection to trigger automated environment hardening.
+
+## 2026-05-03 - [Encoding Fragility & Storage Resilience]
+**Vulnerability:** Security layer failure due to unhandled Unicode input in `btoa` and potential crashes from restricted `localStorage` access.
+**Learning:** Standard security primitives like `btoa` are brittle when facing arbitrary user input (emojis/non-ASCII), which can cause the entire hook to crash and bypass the security layer. Furthermore, relying on `localStorage` without `try-catch` wrappers creates a single point of failure in environments with restricted storage (Safari Private Mode/Quota Exceeded).
+**Prevention:** Always use Unicode-safe Base64 encoding for forensic logs and wrap all storage interactions in defensive `try-catch` blocks to ensure the security layer remains functional even if its persistence layer fails.
