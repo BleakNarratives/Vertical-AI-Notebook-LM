@@ -27,25 +27,25 @@ export default function Home() {
       <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-none mb-12">
         <div className="flex flex-col items-center gap-2">
           <Persona name="Mrs. Higgins" role="Gateway" status={isHigginsActive ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto [transform:rotateX(-20deg)] transform-gpu">
             <Papers context="higgins" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
           <Persona name="Pytch" role="Architect" status={isPytchActive ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto [transform:rotateX(-20deg)] transform-gpu">
             <Papers context="pytch" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
           <Persona name="Twoie" role="Execution" status={isImproving ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto [transform:rotateX(-20deg)] transform-gpu">
             <Papers context="twoie" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
           <Persona name="Zeroclaw" role="Distributed" status={isZeroclawActive ? 'active' : 'idle'} />
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto [transform:rotateX(-20deg)] transform-gpu">
             <Papers context="zeroclaw" />
           </div>
         </div>

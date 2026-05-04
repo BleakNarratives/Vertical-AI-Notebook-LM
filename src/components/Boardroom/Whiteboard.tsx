@@ -11,7 +11,7 @@ export const Whiteboard: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-12 -left-12 flex flex-col items-center gap-2">
+    <div className="absolute top-12 -left-12 flex flex-col items-center gap-2 [transform:rotateX(-20deg)] transform-gpu">
       {status && (
         <div aria-live="polite" className="text-[10px] font-mono text-neon-amber animate-pulse uppercase">
           {status}

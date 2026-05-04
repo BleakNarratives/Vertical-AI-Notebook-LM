@@ -11,7 +11,7 @@ export const VideoViewer: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-16 -right-12 flex flex-col items-center gap-2">
+    <div className="absolute top-16 -right-12 flex flex-col items-center gap-2 [transform:rotateX(-20deg)] transform-gpu">
       {status && (
         <div aria-live="polite" className="text-[10px] font-mono text-neon-red animate-pulse uppercase">
           {status}
