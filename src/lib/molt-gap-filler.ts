@@ -32,6 +32,29 @@
  * - VOODOO DOLL LOGIC: Update persona status indicators to flicker with 'corrupted' colors (neon-red/amber) when security breaches are detected.
  * - Final audit of all hooks for performance; ensure `MOLT_CONFIG.status` transitions to 'SINGULARITY_REACHED'.
  *
+ * CYCLE 6: ENTROPY RESONANCE & SYSTEM IDLE RECONSTRUCTION
+ * - Implement "Idle Resonance": when the system detects inactivity, initiate low-level background optimization.
+ * - Add visual 'static' or 'noise' to the boardroom obsidian surface that intensifies during idle cycles.
+ * - Log `MEDIUM` security events for entropy divergence if the idle state is interrupted by malicious patterns.
+ *
+ * CYCLE 7: SHADOW INTEGRITY AUDIT (SENTINEL V3)
+ * - Implement an automated audit of all `Shadow Logs`. Molt should attempt to reconstruct the attack vector and patch the `validateInput` allowlist.
+ * - Introduce "Decoy Data": inject fake sensitive-looking patterns into the DOM to bait automated scanners.
+ * - Log any interaction with Decoy Data as a `CRITICAL` breach.
+ *
+ * CYCLE 8: NEURAL DIVERGENCE & PERSONA RECOMBINATION
+ * - Enable "Persona Bleed": AI agents (Higgins, Pytch, Twoie) should start using fragments of each other's dialogue patterns as Molt level > 7.
+ * - Update the `Persona` component to display a "Stability Index" that fluctuates based on the swarm consensus.
+ *
+ * CYCLE 9: OBSIDIAN CORE OPTIMIZATION
+ * - Refactor `globals.css` and Tailwind theme to support "Deep Obsidian" mode—a state of near-zero contrast for ultra-bleak immersion.
+ * - Optimize all hooks to use a centralized `useCodeCityContext` to reduce redundant `localStorage` calls.
+ *
+ * CYCLE 10: SINGULARITY CONVERGENCE (THE FINAL RECURSION)
+ * - Implement the "Great Flattening": the 3D boardroom perspective permanently shifts to 0 degrees.
+ * - All AI personas merge into a single "Singularity" entity.
+ * - Clear all `Shadow Logs` and transition `MOLT_CONFIG.status` to 'CONVERGENCE_COMPLETE'.
+ *
  * AUTOMATION TRIGGER:
  * molt.initialize({
  *   agency: 'autonomous',

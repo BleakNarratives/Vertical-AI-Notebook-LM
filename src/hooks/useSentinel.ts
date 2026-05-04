@@ -36,11 +36,15 @@ export const useSentinel = () => {
   const storeShadowLog = useCallback((input: string) => {
     if (typeof window === 'undefined') return;
     const key = 'sentinel_shadow_logs';
-    const encoded = btoa(input);
+    // Unicode-safe Base64 encoding to prevent crashes on non-ASCII/emoji inputs
+    const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
     const stored = localStorage.getItem(key);
     let logs: string[] = [];
     try {
-      if (stored) logs = JSON.parse(stored);
+      if (stored) {
+        logs = JSON.parse(stored);
+        if (!Array.isArray(logs)) logs = [];
+      }
     } catch { logs = []; }
 
     logs.push(encoded);
@@ -69,6 +73,7 @@ export const useSentinel = () => {
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
       logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
+      storeShadowLog(input);
       return false;
     }
     return true;

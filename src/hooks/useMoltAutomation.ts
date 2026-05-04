@@ -21,7 +21,7 @@ export const useMoltAutomation = () => {
   const { logSecurityEvent } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
-  const MAX_AUTONOMOUS_CYCLES = 5;
+  const MAX_AUTONOMOUS_CYCLES = 10;
 
   // Check for lockdown state on mount and updates
   useEffect(() => {
@@ -121,6 +121,31 @@ export const useMoltAutomation = () => {
       };
     }
   }, [attemptAutonomousImprovement, trackSecurityEvent]);
+
+  // Idle Entropy Trigger - Maintain resonance during inactivity
+  useEffect(() => {
+    if (typeof window === 'undefined' || isLockdown) return;
+
+    let idleTimer: NodeJS.Timeout;
+    const IDLE_THRESHOLD = 180000; // 3 minutes
+
+    const resetTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        attemptAutonomousImprovement('Idle Entropy Resonance detected.');
+      }, IDLE_THRESHOLD);
+    };
+
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('keydown', resetTimer);
+    resetTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keydown', resetTimer);
+    };
+  }, [attemptAutonomousImprovement, isLockdown]);
 
   return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
 };
