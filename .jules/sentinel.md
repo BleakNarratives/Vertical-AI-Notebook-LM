@@ -22,3 +22,8 @@
 **Vulnerability:** Lack of visibility into blocked malicious payloads preventing forensic analysis of attack patterns.
 **Learning:** Simply blocking an attack is the first step; recording the payload (Shadow Logging) allows for behavioral analysis. Aggregating these logs into a "Shadow Sequence" enables the system to distinguish between isolated errors and a sustained behavioral pattern (a "siege"), which can then trigger autonomous system reconstruction via Molt.
 **Prevention:** Always persist blocked critical payloads in an encoded format (Base64) to avoid accidental execution during audit, and implement sequence detection to trigger automated environment hardening.
+
+## 2026-05-04 - [Unicode-Safe Forensic Logging & Resilient Parsing]
+**Vulnerability:** Application crash risk during forensic shadow logging when processing non-ASCII/emoji malicious inputs via standard `btoa`.
+**Learning:** Security layers must be more resilient than the code they protect. Using `btoa` on raw UTF-8 strings can trigger `InvalidCharacterError`. Encoding the input using a Unicode-safe Base64 pattern ensures stability. Furthermore, `localStorage` parsing must include explicit type checks (e.g., `Array.isArray`) to handle corrupted or manipulated storage without breaking the security hook.
+**Prevention:** Always use Unicode-safe encoding (URIComponent + Regex) for Base64 logging and implement defensive parsing for all persistent security state. Record `HIGH` severity pattern mismatches to provide forensic visibility into non-LFI attack attempts.
