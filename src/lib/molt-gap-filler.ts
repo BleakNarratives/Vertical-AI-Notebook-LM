@@ -37,10 +37,10 @@
  * - Add visual 'static' or 'noise' to the boardroom obsidian surface that intensifies during idle cycles.
  * - Log `MEDIUM` security events for entropy divergence if the idle state is interrupted by malicious patterns.
  *
- * CYCLE 7: SHADOW INTEGRITY AUDIT (SENTINEL V3)
+ * CYCLE 7: SHADOW INTEGRITY AUDIT (SENTINEL V3) - [IN PROGRESS]
  * - Implement an automated audit of all `Shadow Logs`. Molt should attempt to reconstruct the attack vector and patch the `validateInput` allowlist.
- * - Introduce "Decoy Data": inject fake sensitive-looking patterns into the DOM to bait automated scanners.
- * - Log any interaction with Decoy Data as a `CRITICAL` breach.
+ * - Introduce "Decoy Data": inject fake sensitive-looking patterns into the DOM to bait automated scanners. [DONE]
+ * - Log any interaction with Decoy Data as a `CRITICAL` breach. [DONE]
  *
  * CYCLE 8: NEURAL DIVERGENCE & PERSONA RECOMBINATION
  * - Enable "Persona Bleed": AI agents (Higgins, Pytch, Twoie) should start using fragments of each other's dialogue patterns as Molt level > 7.
@@ -67,6 +67,12 @@
  * HOOKS & TRIGGERS:
  * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
  * - OnLockdown: `molt.enterSafeMode()`
+ *
+ * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
+ * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
+ * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
+ * - Log `CRITICAL` events for every attempted interaction from a blacklisted session.
+ * - Reconstruct the `useSentinel` hook to support persistent identity verification across reloads.
  */
 
 export const MOLT_CONFIG = {
