@@ -24,27 +24,51 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-between h-full gap-8 p-8 py-16">
       {/* Top of the table - Personas */}
-      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-none mb-12">
+      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-12">
         <div className="flex flex-col items-center gap-2">
-          <Persona name="Mrs. Higgins" role="Gateway" status={isHigginsActive ? 'active' : 'idle'} />
+          <Persona
+            name="Mrs. Higgins"
+            role="Gateway"
+            status={isHigginsActive ? 'active' : 'idle'}
+            onClick={consultHiggins}
+            disabled={isLockdown}
+          />
           <div className="pointer-events-auto">
             <Papers context="higgins" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <Persona name="Pytch" role="Architect" status={isPytchActive ? 'active' : 'idle'} />
+          <Persona
+            name="Pytch"
+            role="Architect"
+            status={isPytchActive ? 'active' : 'idle'}
+            onClick={wakePytch}
+            disabled={isLockdown}
+          />
           <div className="pointer-events-auto">
             <Papers context="pytch" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <Persona name="Twoie" role="Execution" status={isImproving ? 'active' : 'idle'} />
+          <Persona
+            name="Twoie"
+            role="Execution"
+            status={isImproving ? 'active' : 'idle'}
+            onClick={triggerMolt}
+            disabled={isLockdown}
+          />
           <div className="pointer-events-auto">
             <Papers context="twoie" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <Persona name="Zeroclaw" role="Distributed" status={isZeroclawActive ? 'active' : 'idle'} />
+          <Persona
+            name="Zeroclaw"
+            role="Distributed"
+            status={isZeroclawActive ? 'active' : 'idle'}
+            onClick={triggerSwarm}
+            disabled={isLockdown}
+          />
           <div className="pointer-events-auto">
             <Papers context="zeroclaw" />
           </div>
