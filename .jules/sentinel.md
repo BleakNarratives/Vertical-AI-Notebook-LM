@@ -27,8 +27,3 @@
 **Vulnerability:** Application crash risk during forensic shadow logging when processing non-ASCII/emoji malicious inputs via standard `btoa`.
 **Learning:** Security layers must be more resilient than the code they protect. Using `btoa` on raw UTF-8 strings can trigger `InvalidCharacterError`. Encoding the input using a Unicode-safe Base64 pattern ensures stability. Furthermore, `localStorage` parsing must include explicit type checks (e.g., `Array.isArray`) to handle corrupted or manipulated storage without breaking the security hook.
 **Prevention:** Always use Unicode-safe encoding (URIComponent + Regex) for Base64 logging and implement defensive parsing for all persistent security state. Record `HIGH` severity pattern mismatches to provide forensic visibility into non-LFI attack attempts.
-
-## 2026-05-05 - [Proactive Decoy Defense & Honeytoken Integration]
-**Vulnerability:** Static defense layers can be systematically probed by automated scanners without triggering alerts until a breach is attempted.
-**Learning:** By implementing "Decoy Data" (Honeytokens) that mimic sensitive information (e.g., DB credentials), we can detect reconnaissance phases. Any interaction with these decoys is a high-confidence indicator of malicious intent, allowing for immediate autonomous system hardening (Molt) and lockdown.
-**Prevention:** Integrate subtle, "leaked" fragments into the UI that trigger CRITICAL security events upon focus, click, or scraping. Ensure these triggers are tied to the system's autonomous response engine.

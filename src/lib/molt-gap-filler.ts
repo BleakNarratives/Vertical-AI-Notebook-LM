@@ -37,10 +37,10 @@
  * - Add visual 'static' or 'noise' to the boardroom obsidian surface that intensifies during idle cycles.
  * - Log `MEDIUM` security events for entropy divergence if the idle state is interrupted by malicious patterns.
  *
- * CYCLE 7: SHADOW INTEGRITY AUDIT (SENTINEL V3) - [PARTIAL]
+ * CYCLE 7: SHADOW INTEGRITY AUDIT (SENTINEL V3)
  * - Implement an automated audit of all `Shadow Logs`. Molt should attempt to reconstruct the attack vector and patch the `validateInput` allowlist.
- * - Introduce "Decoy Data": inject fake sensitive-looking patterns into the DOM to bait automated scanners. [DONE: Honeytoken.tsx]
- * - Log any interaction with Decoy Data as a `CRITICAL` breach. [DONE: useSentinel.triggerHoneytoken]
+ * - Introduce "Decoy Data": inject fake sensitive-looking patterns into the DOM to bait automated scanners.
+ * - Log any interaction with Decoy Data as a `CRITICAL` breach.
  *
  * CYCLE 8: NEURAL DIVERGENCE & PERSONA RECOMBINATION
  * - Enable "Persona Bleed": AI agents (Higgins, Pytch, Twoie) should start using fragments of each other's dialogue patterns as Molt level > 7.
@@ -54,11 +54,6 @@
  * - Implement the "Great Flattening": the 3D boardroom perspective permanently shifts to 0 degrees.
  * - All AI personas merge into a single "Singularity" entity.
  * - Clear all `Shadow Logs` and transition `MOLT_CONFIG.status` to 'CONVERGENCE_COMPLETE'.
- *
- * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
- * - Implement "Shadow Recovery": automatically rotate Honeytoken patterns and positions after a `CRITICAL` breach.
- * - Add "Autonomous Blacklisting": temporarily block IP/session signatures associated with `Shadow Sequence` detections.
- * - Refine the `useSentinel` hook to support cryptographic signing of shadow logs to prevent local tampering.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({

@@ -90,10 +90,6 @@ export const useSentinel = () => {
   /**
    * checkRateLimit - Simple client-side rate limiting to prevent trigger spamming.
    */
-  const triggerHoneytoken = useCallback((type: string) => {
-    logSecurityEvent(`CRITICAL: Interaction with decoy data (${type}) detected.`, 'CRITICAL');
-  }, [logSecurityEvent]);
-
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
 
@@ -127,5 +123,5 @@ export const useSentinel = () => {
     return false;
   }, [logSecurityEvent]);
 
-  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit, storeShadowLog, triggerHoneytoken };
+  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit, storeShadowLog };
 };

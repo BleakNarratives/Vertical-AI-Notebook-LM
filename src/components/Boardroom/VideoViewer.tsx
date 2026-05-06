@@ -21,8 +21,7 @@ export const VideoViewer: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="Remote Feed / Video Monitor"
-        style={{ transform: 'rotateX(-20deg) rotateZ(2deg)' }}
-        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-neon-red outline-none transform-gpu"
+        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-neon-red outline-none rotate-2 [transform:rotateX(-20deg)] transform-gpu"
       >
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">
           <div className="w-full h-full bg-gradient-to-t from-neon-red/5 to-transparent animate-pulse" />
