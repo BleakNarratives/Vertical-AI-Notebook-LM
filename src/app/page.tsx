@@ -3,6 +3,7 @@
 import { ModuleButton } from "@/components/ModuleButton";
 import { Persona } from "@/components/AI/Persona";
 import { Papers } from "@/components/Boardroom/Papers";
+import { Honeytoken } from "@/components/Boardroom/Honeytoken";
 import { useHiggins } from "@/hooks/useHiggins";
 import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
@@ -107,6 +108,8 @@ export default function Home() {
           Looking for Easter eggs? Try the obsidian shadows.
         </span>
       </div>
+
+      <Honeytoken />
     </div>
   );
 }
