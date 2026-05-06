@@ -21,7 +21,8 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        className="group relative w-16 h-12 transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+        style={{ transform: 'rotateX(-20deg)' }}
+        className="group relative w-16 h-12 transition-transform hover:scale-110 active:scale-95 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
         <div className="absolute -top-4 left-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
