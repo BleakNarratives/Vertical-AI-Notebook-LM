@@ -21,7 +21,7 @@ export const Laptop: React.FC = () => {
         type="button"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation)"
-        className="group relative w-48 h-32 transition-transform hover:scale-105 active:scale-95 focus:outline-none [transform:rotateX(-20deg)] transform-gpu"
+        className="group relative w-48 h-32 transition hover:scale-105 active:scale-95 focus:outline-none [transform:rotateX(-20deg)] transform-gpu"
       >
         {/* Laptop Screen (Open) */}
         <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col">
