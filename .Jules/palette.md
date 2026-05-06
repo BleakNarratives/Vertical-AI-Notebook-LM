@@ -6,6 +6,6 @@
 **Learning:** For immersive environments like 'Code City', interactive elements must clearly communicate their state to both visual and screen reader users without breaking the aesthetic. Using Tailwind's `enabled:` modifier is a clean way to ensure hover/focus effects don't trigger on disabled elements.
 **Action:** Always pair `isLoading` states with `aria-busy` and `disabled` attributes, and ensure status updates use `aria-live` regions.
 
-## 2025-05-15 - [Standing Perspective Pattern]
-**Learning:** In immersive 3D-tilted layouts (like our 20-degree boardroom table), interactive props appear flattened unless a counter-rotation (`rotateX(-20deg)`) is applied. This "Standing Perspective" makes the UI feel significantly more three-dimensional and first-person.
-**Action:** Apply `[transform:rotateX(-20deg)] transform-gpu` to foreground interactive elements within tilted containers to maintain their visual "upright" presence.
+## 2025-05-16 - [Standing Perspective Pattern]
+**Learning:** Applying a perspective transform (like `rotateX(20deg)`) to a container tilts all children. To make interactive props appear "upright" on a 3D surface without breaking Tailwind 4's independent transform utilities (like `hover:scale`), use the `style` attribute to apply a counter-rotation (e.g., `rotateX(-20deg)`).
+**Action:** Use `style={{ transform: 'rotateX(-20deg)' }}` for perspective-countering transforms to avoid clobbering Tailwind's utility-based transforms.

@@ -21,7 +21,8 @@ export const Whiteboard: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
-        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none -rotate-3 [transform:rotateX(-20deg)] transform-gpu"
+        style={{ transform: 'rotateX(-20deg) rotateZ(-3deg)' }}
+        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none transform-gpu"
       >
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           <div className="w-full h-full border-l border-b border-neon-amber/20 flex flex-col gap-2 opacity-40">

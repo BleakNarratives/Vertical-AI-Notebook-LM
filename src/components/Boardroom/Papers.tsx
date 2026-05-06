@@ -17,8 +17,10 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       aria-label={label}
       title={title}
       onClick={onClick}
-      style={{ '--rotation': rotation, '--translate-y': translateY } as React.CSSProperties}
-      className="group relative w-12 h-16 bg-white/5 border border-grey-medium transition-all rotate-[var(--rotation)] translate-y-[var(--translate-y)] hover:rotate-0 hover:translate-y-0 hover:scale-110 active:scale-105 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden [transform:rotateX(-20deg)] transform-gpu"
+      style={{
+        transform: `rotateX(-20deg) rotateZ(${rotation}) translateY(${translateY})`
+      }}
+      className="group relative w-12 h-16 bg-white/5 border border-grey-medium transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:scale-105 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu"
     >
       {/* Paper Content Simulation */}
       <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 transition-opacity">
