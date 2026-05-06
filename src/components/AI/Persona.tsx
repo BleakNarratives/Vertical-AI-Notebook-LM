@@ -16,6 +16,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
       style={{ transform: 'rotateX(-20deg)' }}
       className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
