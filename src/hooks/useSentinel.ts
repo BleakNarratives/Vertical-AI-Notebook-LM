@@ -92,7 +92,43 @@ export const useSentinel = () => {
    */
   const triggerHoneytoken = useCallback((type: string) => {
     logSecurityEvent(`CRITICAL: Interaction with decoy data (${type}) detected.`, 'CRITICAL');
+    window.dispatchEvent(new CustomEvent('sentinel-decoy-breach', { detail: { type } }));
   }, [logSecurityEvent]);
+
+  const rotateDecoys = useCallback(() => {
+    if (typeof window === 'undefined') return;
+
+    const positions = [0, 1, 2, 3, 4]; // Map to fixed classes
+
+    const payloads = [
+      { label: '[ DECOY_ENV_04 ]', secret: 'DB_SECRET_KEY: 0x8F2...A4' },
+      { label: '[ JWT_ROOT_KEY ]', secret: 'SIGNING_SECRET: v0od0o...99' },
+      { label: '[ AWS_METADATA ]', secret: 'IAM_ROLE: city-admin-prod' },
+      { label: '[ SENTRY_DSN ]', secret: 'https://7d3...@o450.ingest' },
+      { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
+    ];
+
+    const config = {
+      posIndex: positions[Math.floor(Math.random() * positions.length)],
+      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      timestamp: Date.now()
+    };
+
+    localStorage.setItem('sentinel_decoy_config', JSON.stringify(config));
+    window.dispatchEvent(new CustomEvent('sentinel-decoys-rotated', { detail: config }));
+    return config;
+  }, []);
+
+  const getDecoyConfig = useCallback(() => {
+    if (typeof window === 'undefined') return null;
+    const stored = localStorage.getItem('sentinel_decoy_config');
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return null;
+    }
+  }, []);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -127,5 +163,15 @@ export const useSentinel = () => {
     return false;
   }, [logSecurityEvent]);
 
-  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit, storeShadowLog, triggerHoneytoken };
+  return {
+    logSecurityEvent,
+    sanitizeInput,
+    validateInput,
+    validateRequest,
+    checkRateLimit,
+    storeShadowLog,
+    triggerHoneytoken,
+    rotateDecoys,
+    getDecoyConfig
+  };
 };

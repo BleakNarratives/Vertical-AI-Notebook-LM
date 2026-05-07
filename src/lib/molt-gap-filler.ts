@@ -55,10 +55,16 @@
  * - All AI personas merge into a single "Singularity" entity.
  * - Clear all `Shadow Logs` and transition `MOLT_CONFIG.status` to 'CONVERGENCE_COMPLETE'.
  *
- * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
- * - Implement "Shadow Recovery": automatically rotate Honeytoken patterns and positions after a `CRITICAL` breach.
+ * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING - [PARTIAL]
+ * - Implement "Shadow Recovery": automatically rotate Honeytoken patterns and positions after a `CRITICAL` breach. [DONE]
  * - Add "Autonomous Blacklisting": temporarily block IP/session signatures associated with `Shadow Sequence` detections.
  * - Refine the `useSentinel` hook to support cryptographic signing of shadow logs to prevent local tampering.
+ *
+ * CYCLE 12: AUTONOMOUS DECOY EVOLUTION & BEHAVIORAL BLOCKLISTING
+ * - Implement "Decoy Evolution": Molt should analyze `sentinel-decoy-breach` events to identify the most effective decoy positions and payloads.
+ * - Automatically generate new decoy patterns based on successful "baits" recorded in the `Shadow Logs`.
+ * - Implement a dynamic `BlacklistOverlay` that renders a persistent "SYSTEM BANNED" message for sessions that hit more than 5 decoys.
+ * - Integrate the voodoo doll visual state with the blacklist: dolls should appear "burned" or "pinned" for blacklisted sessions.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({
