@@ -36,7 +36,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
         {title}
       </span>
     </button>
@@ -69,7 +69,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
   return (
     <div className="flex flex-col items-center gap-2">
       {status && (
-        <div aria-live="polite" className="text-[10px] font-mono text-neon-amber animate-pulse uppercase">
+        <div aria-live="polite" className="text-xs font-mono text-neon-amber animate-pulse uppercase">
           {status}
         </div>
       )}

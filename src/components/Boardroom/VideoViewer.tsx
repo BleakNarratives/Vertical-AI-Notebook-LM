@@ -13,7 +13,7 @@ export const VideoViewer: React.FC = () => {
   return (
     <div className="absolute top-16 -right-12 flex flex-col items-center gap-2">
       {status && (
-        <div aria-live="polite" className="text-[10px] font-mono text-neon-red animate-pulse uppercase">
+        <div aria-live="polite" className="text-xs font-mono text-neon-red animate-pulse uppercase">
           {status}
         </div>
       )}
@@ -31,7 +31,7 @@ export const VideoViewer: React.FC = () => {
           </div>
         </div>
         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-grey-medium" />
-        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Monitor
         </span>
       </button>
