@@ -127,9 +127,10 @@ export const useSentinel = () => {
    * triggerHoneytoken - Logs a critical security event when decoy data is accessed.
    */
   const triggerHoneytoken = useCallback(() => {
+    if (!checkRateLimit('honeytoken', 1, 5000)) return;
     logSecurityEvent('Honeytoken Interaction Detected: Decoy data accessed.', 'CRITICAL');
     storeShadowLog('HONEYTOKEN_ACCESS_ATTEMPT');
-  }, [logSecurityEvent, storeShadowLog]);
+  }, [logSecurityEvent, storeShadowLog, checkRateLimit]);
 
   return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit, storeShadowLog, triggerHoneytoken };
 };
