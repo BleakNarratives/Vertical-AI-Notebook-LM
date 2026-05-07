@@ -13,7 +13,7 @@ export const Laptop: React.FC = () => {
   return (
     <div className="flex flex-col items-center gap-2">
       {status && (
-        <div aria-live="polite" className="text-[10px] font-mono text-neon-red animate-pulse uppercase">
+        <div aria-live="polite" className="text-xs font-mono text-neon-red animate-pulse uppercase">
           {status}
         </div>
       )}
@@ -51,7 +51,7 @@ export const Laptop: React.FC = () => {
         </div>
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           Terminal / IDEal / 4ward
         </span>
 

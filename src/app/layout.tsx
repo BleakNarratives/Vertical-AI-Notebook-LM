@@ -49,6 +49,7 @@ export default function RootLayout({
 
              {/* Perspective Background Elements - Simulated Table Surface */}
              <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,transparent_0%,rgba(10,10,10,0.8)_100%)]" />
+             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 [mask-image:linear-gradient(to_bottom,black_20%,transparent_80%)]" />
              <div className="absolute -bottom-20 -left-20 -right-20 h-40 bg-obsidian blur-3xl opacity-50 -z-10" />
 
              <Whiteboard />

@@ -13,7 +13,7 @@ export const Whiteboard: React.FC = () => {
   return (
     <div className="absolute top-12 -left-12 flex flex-col items-center gap-2">
       {status && (
-        <div aria-live="polite" className="text-[10px] font-mono text-neon-amber animate-pulse uppercase">
+        <div aria-live="polite" className="text-xs font-mono text-neon-amber animate-pulse uppercase">
           {status}
         </div>
       )}
@@ -32,7 +32,7 @@ export const Whiteboard: React.FC = () => {
              <div className="mt-auto h-4 w-4 rounded-full border border-neon-red/40" />
           </div>
         </div>
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Whiteboard
         </span>
       </button>
