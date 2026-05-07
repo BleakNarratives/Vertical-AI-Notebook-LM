@@ -72,6 +72,12 @@
  * HOOKS & TRIGGERS:
  * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
  * - OnLockdown: `molt.enterSafeMode()`
+ *
+ * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
+ * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
+ * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
+ * - Log `CRITICAL` events for every attempted interaction from a blacklisted session.
+ * - Reconstruct the `useSentinel` hook to support persistent identity verification across reloads.
  */
 
 export const MOLT_CONFIG = {
