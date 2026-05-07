@@ -122,13 +122,13 @@ export const useSentinel = () => {
   const getDecoyConfig = useCallback(() => {
     if (typeof window === 'undefined') return null;
     const stored = localStorage.getItem('sentinel_decoy_config');
-    if (!stored) return rotateDecoys();
+    if (!stored) return null;
     try {
       return JSON.parse(stored);
     } catch {
-      return rotateDecoys();
+      return null;
     }
-  }, [rotateDecoys]);
+  }, []);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
