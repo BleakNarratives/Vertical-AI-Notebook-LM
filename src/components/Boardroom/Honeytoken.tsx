@@ -1,36 +1,37 @@
 'use client';
 
-import React from 'react';
-import { useSentinel } from '@/hooks/useSentinel';
+import { useSentinel } from "@/hooks/useSentinel";
 
 /**
- * Honeytoken Component
- *
- * A security decoy designed to bait automated scanners or curious users.
- * Interacting with this component triggers a CRITICAL security alert.
- *
- * Aesthetic: Bleak-Minimalist, nearly invisible.
+ * Honeytoken - A security decoy component.
+ * Appears as a subtle, potentially sensitive data fragment to bait scanners or unauthorized interaction.
+ * Triggers a CRITICAL security alert upon interaction.
  */
-export const Honeytoken: React.FC = () => {
+export const Honeytoken = () => {
   const { triggerHoneytoken } = useSentinel();
 
-  // Fake sensitive data to bait scanners
-  const DECOY_SECRET = "sk_live_bleak_shadow_777_DO_NOT_ACCESS";
-
   return (
-    <div
-      className="group absolute bottom-0 left-0 p-1 select-none pointer-events-auto cursor-default"
-      onClick={triggerHoneytoken}
-      onFocus={triggerHoneytoken}
-      tabIndex={-1}
-      aria-hidden="true"
+    <button
+      type="button"
+      onClick={() => triggerHoneytoken('click')}
+      onFocus={() => triggerHoneytoken('focus')}
+      className="group absolute bottom-12 left-12 p-2 focus:outline-none transition-all duration-1000"
+      aria-label="System credentials fragment"
     >
-      <div className="opacity-[0.02] group-hover:opacity-10 transition-opacity duration-1000">
-        <code className="text-[8px] font-mono text-neon-amber">
-          {/* decoy payload */}
-          system_auth_bypass_key: {DECOY_SECRET}
-        </code>
+      <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 transition-opacity duration-500">
+        <span className="text-[8px] font-mono text-grey-medium uppercase tracking-tighter">
+          [ DECOY_ENV_04 ]
+        </span>
+        <div className="flex gap-2 items-center">
+          <div className="w-1 h-1 bg-neon-amber animate-pulse" />
+          <span className="text-[10px] font-mono text-neon-amber/50 group-hover:text-neon-amber transition-colors">
+            DB_SECRET_KEY: 0x8F2...A4
+          </span>
+        </div>
       </div>
-    </div>
+
+      {/* Invisible hitbox for scanners that don't trigger hover/focus but might click/scrape */}
+      <span className="sr-only">Access production database credentials</span>
+    </button>
   );
 };
