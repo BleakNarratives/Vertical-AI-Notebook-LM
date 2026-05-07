@@ -18,7 +18,7 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent } = useSentinel();
+  const { logSecurityEvent, rotateDecoys } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 10;
@@ -112,15 +112,22 @@ export const useMoltAutomation = () => {
       }
     };
 
+    const handleDecoyBreach = () => {
+      rotateDecoys();
+      attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      window.addEventListener('sentinel-decoy-breach', handleDecoyBreach);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+        window.removeEventListener('sentinel-decoy-breach', handleDecoyBreach);
       };
     }
-  }, [attemptAutonomousImprovement, trackSecurityEvent]);
+  }, [attemptAutonomousImprovement, trackSecurityEvent, rotateDecoys]);
 
   // Idle Entropy Trigger - Maintain resonance during inactivity
   useEffect(() => {

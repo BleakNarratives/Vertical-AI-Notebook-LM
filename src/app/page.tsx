@@ -9,7 +9,7 @@ import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
 import { useMoltAutomation } from "@/hooks/useMoltAutomation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { level, isImproving, triggerMolt, isLockdown } = useMoltAutomation();
@@ -17,13 +17,32 @@ export default function Home() {
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
   const { logSecurityEvent } = useSentinel();
+  const [isGlitching, setIsGlitching] = useState(false);
 
   useEffect(() => {
     logSecurityEvent('Home module initialized', 'LOW');
   }, [logSecurityEvent]);
 
+  useEffect(() => {
+    let count = 0;
+    const handleBreach = () => {
+      count++;
+      if (count >= 3) {
+        setIsGlitching(true);
+        setTimeout(() => setIsGlitching(false), 2000);
+        count = 0;
+      }
+    };
+
+    window.addEventListener('sentinel-decoy-breach', handleBreach);
+    return () => window.removeEventListener('sentinel-decoy-breach', handleBreach);
+  }, []);
+
   return (
-    <div className="flex flex-col items-center justify-between h-full gap-8 p-8 py-16">
+    <div className={`flex flex-col items-center justify-between h-full gap-8 p-8 py-16 transition-all duration-75 ${isGlitching ? 'animate-pulse bg-neon-red/30' : ''}`}>
+      {isGlitching && (
+        <div className="fixed inset-0 z-[200] pointer-events-none bg-white/5 mix-blend-overlay animate-glitch" />
+      )}
       {/* Top of the table - Personas */}
       <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-12">
         <div className="flex flex-col items-center gap-2">
