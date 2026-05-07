@@ -26,9 +26,9 @@ export const CoffeeMug: React.FC = () => {
       >
         {/* Steam animation */}
         <div className="absolute -top-6 left-4 flex gap-1.5 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-500">
-          <div className="w-0.5 h-4 bg-grey-medium/40 animate-[bounce_2s_infinite] delay-75 blur-[1px]" />
+          <div className="w-0.5 h-4 bg-grey-medium/40 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px]" />
           <div className="w-0.5 h-6 bg-grey-medium/40 animate-[bounce_1.5s_infinite] blur-[1px]" />
-          <div className="w-0.5 h-3 bg-grey-medium/40 animate-[bounce_2.5s_infinite] delay-150 blur-[1px]" />
+          <div className="w-0.5 h-3 bg-grey-medium/40 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px]" />
         </div>
 
         {/* Mug Body */}
