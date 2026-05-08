@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const CoffeeMug: React.FC = () => {
   const [saved, setSaved] = useState(false);
