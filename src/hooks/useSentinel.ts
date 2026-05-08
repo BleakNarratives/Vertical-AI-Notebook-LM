@@ -53,7 +53,7 @@ export const useSentinel = () => {
       localStorage.setItem(key, JSON.stringify(logs));
       window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
     } catch (err) {
-      logSecurityEvent(`Storage/Encoding failure in Shadow Log: ${err}`, 'HIGH');
+      logSecurityEvent(`Storage/Encoding failure in Shadow Log: ${err}`, 'MEDIUM');
     }
   }, [logSecurityEvent]);
 
