@@ -16,6 +16,7 @@ export const useHiggins = () => {
         const newCount = prev + 1;
         if (newCount >= 3) { // 3rd attempt while rate-limited
           logSecurityEvent('SHADOW SEQUENCE DETECTED: Higgins Gateway under siege. Initializing defensive recursion.', 'CRITICAL');
+          storeShadowLog('GATEWAY_SIEGE_PROTOCOL_VIOLATION');
           return 0; // Reset counter after triggering
         }
         return newCount;
