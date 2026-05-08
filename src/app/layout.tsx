@@ -60,8 +60,10 @@ export default function RootLayout({
              </div>
 
              {/* Boardroom Props */}
-             <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20">
-               <Papers context="user" />
+             <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom">
+               <div className="[transform:rotateX(-20deg)] transform-gpu">
+                 <Papers context="user" />
+               </div>
 
                <Laptop />
                <CoffeeMug />
