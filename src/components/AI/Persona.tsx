@@ -19,7 +19,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
       style={{ transform: 'rotateX(-20deg)' }}
-      className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:scale-105 focus-visible:scale-105 hover:border-neon-red focus-visible:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+      className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:scale-95"
     >
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
