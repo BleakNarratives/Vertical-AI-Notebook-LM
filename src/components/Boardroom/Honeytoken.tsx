@@ -49,7 +49,7 @@ export const Honeytoken = () => {
       className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none transition-all duration-1000`}
       aria-label="System credentials fragment"
     >
-      <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 transition-opacity duration-500">
+      <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500">
         <span className="text-[8px] font-mono text-grey-medium uppercase tracking-tighter">
           {config.payload.label}
         </span>

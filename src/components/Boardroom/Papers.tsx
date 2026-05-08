@@ -68,11 +68,13 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {status && (
-        <div aria-live="polite" className="text-xs font-mono text-neon-amber animate-pulse uppercase">
-          {status}
-        </div>
-      )}
+      <div className="h-4 flex items-center justify-center" aria-live="polite">
+        {status && (
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
+            {status}
+          </div>
+        )}
+      </div>
       <div className="flex items-end gap-4 mb-4">
         <Paper
           label={`View ${data.p1}`}

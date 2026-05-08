@@ -12,17 +12,19 @@ export const Laptop: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {status && (
-        <div aria-live="polite" className="text-xs font-mono text-neon-red animate-pulse uppercase">
-          {status}
-        </div>
-      )}
+      <div className="h-4 flex items-center justify-center" aria-live="polite">
+        {status && (
+          <div className="text-xs font-mono text-neon-red animate-pulse uppercase">
+            {status}
+          </div>
+        )}
+      </div>
       <button
         type="button"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation)"
         style={{ transform: 'rotateX(-20deg)' }}
-        className="group relative w-48 h-32 transition-transform hover:scale-105 active:scale-95 focus:outline-none transform-gpu"
+        className="group relative w-48 h-32 transition-transform hover:scale-105 focus-visible:scale-105 active:scale-95 focus:outline-none transform-gpu"
       >
         {/* Laptop Screen (Open) */}
         <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col">
