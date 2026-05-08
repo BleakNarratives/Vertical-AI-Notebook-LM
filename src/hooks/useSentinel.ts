@@ -55,27 +55,30 @@ export const useSentinel = () => {
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
-    if (!input || input.length > 500) {
-      logSecurityEvent('Input rejected: invalid length or empty', 'MEDIUM');
-      return false;
-    }
-
-    // Block path traversal and LFI patterns
-    const maliciousPatterns = [/\.\.\//, /\.\.\\/, /\.\.%2f/i, /%2e%2e%2f/i, /\/etc\//, /\/proc\//];
-    if (maliciousPatterns.some(pattern => pattern.test(input))) {
-      logSecurityEvent(`LFI/Path Traversal attempt blocked: ${input.substring(0, 20)}`, 'CRITICAL');
-      storeShadowLog(input);
-      return false;
-    }
-
-    // Regex-based allowlist for common terminal commands in this app's context
-    // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
+    // Basic allowlist check
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
-      logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
-      storeShadowLog(input);
+      logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
       return false;
     }
+
+    // Depth check: Block path traversal and LFI patterns
+    const maliciousPatterns = [
+      /\.\.\//,         // Path traversal
+      /etc\/passwd/,    // LFI target
+      /cmd\.exe/,       // RCE attempt
+      /<script/i,       // XSS attempt
+      /javascript:/i,   // Protocol injection
+      /union\s+select/i // SQL injection
+    ];
+
+    for (const pattern of maliciousPatterns) {
+      if (pattern.test(input)) {
+        logSecurityEvent(`CRITICAL: Malicious pattern detected: ${input.substring(0, 15)}...`, 'CRITICAL');
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent, storeShadowLog]);
 

@@ -11,10 +11,10 @@
  * - Implement "data leaks" in the UI: tiny, non-interactive snippets of raw code or terminal logs that flicker in the background of the boardroom.
  * - Refine the `SecurityOverlay` to include a screen-shake effect when a `CRITICAL` alert is triggered.
  *
- * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE) - [COMPLETED]
- * - Audit the `useSentinel` hook. Implement `validateInput` depth by checking for common LFI/RFI patterns. [DONE]
- * - Add a "Lockdown" mode that triggers when 3+ `HIGH` alerts occur within 5 minutes, disabling agent buttons. [DONE]
- * - Implement Shadow Logs: Blocked inputs are encoded in Base64 and stored as "Shadow Logs" for forensic audit. [DONE]
+ * CYCLE 2: QUANTUM SECURITY HARDENING (DEFENSE)
+ * - Audit the updated `useSentinel` depth checks. Implement a "Shadow Log" that captures the blocked input and stores it as a Base64 encoded string in a hidden `localStorage` key.
+ * - Enhance the "Lockdown" protocol: during lockdown, the `SecurityOverlay` should display a "DECRYPTION ATTEMPT" progress bar that slowly fills but never reaches 100%.
+ * - Implement secure integrity checks for the `sentinel_alert_history` to prevent manual tampering with the lockdown state.
  *
  * CYCLE 3: NARRATIVE RESONANCE & FRAGMENTED PERSONAS
  * - Update `usePytch` to generate "Shadow Narratives" when `Molt` level is > 3.
@@ -29,7 +29,7 @@
  * CYCLE 5: THE SINGULARITY (FINAL OPTIMIZATION & EASTER EGGS)
  * - Hide 5 new "Ghost" Easter eggs in the obsidian shadows that only appear when the user remains idle for 60 seconds.
  * - Implement a 'Terminal Velocity' mode: when typing 'RUN' anywhere, the UI perspective shifts to 0 degrees (flat) and colors invert for 5 seconds.
- * - VOODOO DOLL LOGIC: Update persona status indicators to flicker with 'corrupted' colors (neon-red/amber) when security breaches are detected.
+ * - Implement a "Sentinel Core" Easter Egg: if a user manages to trigger a `CRITICAL` alert exactly 3 times in 30 seconds without triggering a 4th, unlock the "White Hat" visual theme.
  * - Final audit of all hooks for performance; ensure `MOLT_CONFIG.status` transitions to 'SINGULARITY_REACHED'.
  *
  * CYCLE 6: ENTROPY RESONANCE & SYSTEM IDLE RECONSTRUCTION
@@ -104,8 +104,8 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '2.4.0-sentinel-v3',
+  version: '2.4.0-lockdown-protocol',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced-Blacklist',
+  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
   lastAudit: new Date().toISOString(),
 };

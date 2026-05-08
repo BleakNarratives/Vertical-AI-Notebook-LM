@@ -21,63 +21,38 @@ export const useMoltAutomation = () => {
   const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
-  const [isBlacklisted, setIsBlacklisted] = useState(false);
-  const MAX_AUTONOMOUS_CYCLES = 10;
+  const MAX_AUTONOMOUS_CYCLES = 5;
 
-  // Check for lockdown and blacklist state on mount and updates
+  // Check for lockdown on mount and during alerts
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const checkStatus = () => {
-      const blacklisted = checkBlacklist();
-      setIsBlacklisted(blacklisted);
-
+    const checkLockdown = () => {
       const stored = localStorage.getItem('sentinel_lockdown');
       if (stored) {
-        const expiry = parseInt(stored, 10);
-        if (Date.now() < expiry) {
+        const lockdownExpiry = parseInt(stored, 10);
+        if (Date.now() < lockdownExpiry) {
           setIsLockdown(true);
-          return;
+          // Set a timeout to clear lockdown state
+          const remaining = lockdownExpiry - Date.now();
+          setTimeout(() => setIsLockdown(false), remaining);
         } else {
           localStorage.removeItem('sentinel_lockdown');
+          setIsLockdown(false);
         }
       }
-      setIsLockdown(false);
     };
 
-    checkStatus();
-    const interval = setInterval(checkStatus, 10000);
-    return () => clearInterval(interval);
-  }, [checkBlacklist]);
+    checkLockdown();
+  }, []);
 
-  const trackSecurityEvent = useCallback((severity: string) => {
-    if (typeof window === 'undefined') return;
-
-    const key = 'sentinel_high_alerts';
-    const now = Date.now();
-    const stored = localStorage.getItem(key);
-    let alerts: number[] = [];
-
-    try {
-      if (stored) alerts = JSON.parse(stored);
-    } catch { alerts = []; }
-
-    // Filter alerts from the last 5 minutes
-    alerts = alerts.filter(ts => now - ts < 300000);
-
-    if (severity === 'HIGH' || severity === 'CRITICAL') {
-      alerts.push(now);
-    }
-
-    localStorage.setItem(key, JSON.stringify(alerts));
-
-    if (alerts.length >= 3 && !isLockdown && !isBlacklisted) {
-      const lockdownExpiry = now + 300000; // 5 minute lockdown
-      localStorage.setItem('sentinel_lockdown', lockdownExpiry.toString());
-      setIsLockdown(true);
-      logSecurityEvent('SYSTEM LOCKDOWN INITIATED: Multiple high-severity breaches detected.', 'CRITICAL');
-    }
-  }, [logSecurityEvent, isLockdown, isBlacklisted]);
+  const triggerLockdown = useCallback(() => {
+    const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
+    localStorage.setItem('sentinel_lockdown', expiry.toString());
+    setIsLockdown(true);
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
+  }, [logSecurityEvent]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -99,12 +74,18 @@ export const useMoltAutomation = () => {
       const securityEvent = e as SecurityAlertEvent;
       const { severity, event } = securityEvent.detail;
 
-      // Prevent recursive loop from lockdown notification
-      if (event.includes('SYSTEM LOCKDOWN INITIATED')) return;
-
       if (severity === 'HIGH' || severity === 'CRITICAL') {
-        trackSecurityEvent(severity);
-        attemptAutonomousImprovement(`Security hardening required due to ${severity} alert.`);
+        // Track high-severity alerts for lockdown
+        const alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
+        const now = Date.now();
+        const recentAlerts = [...alerts.filter((a: number) => now - a < 300000), now];
+        localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+
+        if (recentAlerts.length >= 3 && !isLockdown) {
+          triggerLockdown();
+        }
+
+        attemptAutonomousImprovement(`Security hardening required: ${event}`);
       }
     };
 
@@ -156,32 +137,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
       };
     }
-  }, [attemptAutonomousImprovement, trackSecurityEvent, rotateDecoys, triggerBlacklist]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown]);
 
-  // Idle Entropy Trigger - Maintain resonance during inactivity
-  useEffect(() => {
-    if (typeof window === 'undefined' || isLockdown || isBlacklisted) return;
-
-    let idleTimer: NodeJS.Timeout;
-    const IDLE_THRESHOLD = 180000; // 3 minutes
-
-    const resetTimer = () => {
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => {
-        attemptAutonomousImprovement('Idle Entropy Resonance detected.');
-      }, IDLE_THRESHOLD);
-    };
-
-    window.addEventListener('mousemove', resetTimer);
-    window.addEventListener('keydown', resetTimer);
-    resetTimer();
-
-    return () => {
-      clearTimeout(idleTimer);
-      window.removeEventListener('mousemove', resetTimer);
-      window.removeEventListener('keydown', resetTimer);
-    };
-  }, [attemptAutonomousImprovement, isLockdown, isBlacklisted]);
-
-  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
+  return { cyclesRun, isImproving, level, isLockdown };
 };
