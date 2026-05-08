@@ -33,16 +33,51 @@ export const useSentinel = () => {
       .replace(/=/g, '&#x3D;');
   }, []);
 
+  const storeShadowLog = useCallback((input: string) => {
+    if (typeof window === 'undefined') return;
+    const key = 'sentinel_shadow_logs';
+    // Unicode-safe Base64 encoding to prevent crashes on non-ASCII/emoji inputs
+    const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+    const stored = localStorage.getItem(key);
+    let logs: string[] = [];
+    try {
+      if (stored) {
+        logs = JSON.parse(stored);
+        if (!Array.isArray(logs)) logs = [];
+      }
+    } catch { logs = []; }
+
+    logs.push(encoded);
+    if (logs.length > 20) logs.shift(); // Keep last 20
+
+    localStorage.setItem(key, JSON.stringify(logs));
+    window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
+  }, []);
+
   const validateInput = useCallback((input: string): boolean => {
+    if (!input || input.length > 500) {
+      logSecurityEvent('Input rejected: invalid length or empty', 'MEDIUM');
+      return false;
+    }
+
+    // Block path traversal and LFI patterns
+    const maliciousPatterns = [/\.\.\//, /\.\.\\/, /\.\.%2f/i, /%2e%2e%2f/i, /\/etc\//, /\/proc\//];
+    if (maliciousPatterns.some(pattern => pattern.test(input))) {
+      logSecurityEvent(`LFI/Path Traversal attempt blocked: ${input.substring(0, 20)}`, 'CRITICAL');
+      storeShadowLog(input);
+      return false;
+    }
+
     // Regex-based allowlist for common terminal commands in this app's context
     // Allowing basic alphanum, spaces, and terminal operators: . _ - ! ? ( ) [ ] * | / > <
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
       logSecurityEvent(`Potentially malicious input pattern: ${input.substring(0, 10)}...`, 'HIGH');
+      storeShadowLog(input);
       return false;
     }
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
@@ -55,15 +90,77 @@ export const useSentinel = () => {
   /**
    * checkRateLimit - Simple client-side rate limiting to prevent trigger spamming.
    */
+  const triggerHoneytoken = useCallback((type: string) => {
+    logSecurityEvent(`CRITICAL: Interaction with decoy data (${type}) detected.`, 'CRITICAL');
+    window.dispatchEvent(new CustomEvent('sentinel-decoy-breach', { detail: { type } }));
+  }, [logSecurityEvent]);
+
+  const rotateDecoys = useCallback(() => {
+    if (typeof window === 'undefined') return;
+
+    const positions = [0, 1, 2, 3, 4]; // Map to fixed classes
+
+    const payloads = [
+      { label: '[ DECOY_ENV_04 ]', secret: 'DB_SECRET_KEY: 0x8F2...A4' },
+      { label: '[ JWT_ROOT_KEY ]', secret: 'SIGNING_SECRET: v0od0o...99' },
+      { label: '[ AWS_METADATA ]', secret: 'IAM_ROLE: city-admin-prod' },
+      { label: '[ SENTRY_DSN ]', secret: 'https://7d3...@o450.ingest' },
+      { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
+    ];
+
+    const config = {
+      posIndex: positions[Math.floor(Math.random() * positions.length)],
+      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      timestamp: Date.now()
+    };
+
+    localStorage.setItem('sentinel_decoy_config', JSON.stringify(config));
+    window.dispatchEvent(new CustomEvent('sentinel-decoys-rotated', { detail: config }));
+    return config;
+  }, []);
+
+  const getDecoyConfig = useCallback(() => {
+    if (typeof window === 'undefined') return null;
+    const stored = localStorage.getItem('sentinel_decoy_config');
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const triggerBlacklist = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const expiry = Date.now() + 86400000; // 24 hours
+    localStorage.setItem('sentinel_blacklist', expiry.toString());
+    logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
+    window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
+  }, [logSecurityEvent]);
+
+  const checkBlacklist = useCallback((): boolean => {
+    if (typeof window === 'undefined') return false;
+    const stored = localStorage.getItem('sentinel_blacklist');
+    if (stored) {
+      const expiry = parseInt(stored, 10);
+      if (Date.now() < expiry) {
+        return true;
+      } else {
+        localStorage.removeItem('sentinel_blacklist');
+      }
+    }
+    return false;
+  }, []);
+
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
 
     const now = Date.now();
     const storageKey = `sentinel_rl_${key}`;
-    const stored = localStorage.getItem(storageKey);
     let data = { count: 0, startTime: now };
 
     try {
+      const stored = localStorage.getItem(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -71,16 +168,24 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      localStorage.removeItem(storageKey);
+      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
     }
 
     if (now - data.startTime > windowMs) {
-      localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      } catch {
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
+      }
       return true;
     }
 
     if (data.count < limit) {
-      localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      } catch {
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
+      }
       return true;
     }
 
@@ -88,5 +193,17 @@ export const useSentinel = () => {
     return false;
   }, [logSecurityEvent]);
 
-  return { logSecurityEvent, sanitizeInput, validateInput, validateRequest, checkRateLimit };
+  return {
+    logSecurityEvent,
+    sanitizeInput,
+    validateInput,
+    validateRequest,
+    checkRateLimit,
+    storeShadowLog,
+    triggerHoneytoken,
+    rotateDecoys,
+    getDecoyConfig,
+    triggerBlacklist,
+    checkBlacklist
+  };
 };
