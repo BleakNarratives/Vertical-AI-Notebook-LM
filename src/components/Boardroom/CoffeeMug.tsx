@@ -12,17 +12,19 @@ export const CoffeeMug: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {status && (
-        <div aria-live="polite" className="text-xs font-mono text-neon-amber animate-pulse uppercase">
-          {status}
-        </div>
-      )}
+      <div className="h-4 flex items-center justify-center">
+        {status && (
+          <div aria-live="polite" className="text-xs font-mono text-neon-amber animate-pulse uppercase">
+            {status}
+          </div>
+        )}
+      </div>
       <button
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
         style={{ transform: 'rotateX(-20deg)' }}
-        className="group relative w-16 h-12 transition-transform hover:scale-110 active:scale-95 focus:outline-none transform-gpu"
+        className="group relative w-16 h-12 transition-transform hover:scale-110 focus-visible:scale-110 active:scale-95 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
         <div className="absolute -top-6 left-4 flex gap-1.5 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-500">

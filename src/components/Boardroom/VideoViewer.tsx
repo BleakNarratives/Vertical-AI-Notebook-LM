@@ -12,17 +12,19 @@ export const VideoViewer: React.FC = () => {
 
   return (
     <div className="absolute top-16 -right-12 flex flex-col items-center gap-2">
-      {status && (
-        <div aria-live="polite" className="text-xs font-mono text-neon-red animate-pulse uppercase">
-          {status}
-        </div>
-      )}
+      <div className="h-4 flex items-center justify-center">
+        {status && (
+          <div aria-live="polite" className="text-xs font-mono text-neon-red animate-pulse uppercase">
+            {status}
+          </div>
+        )}
+      </div>
       <button
         type="button"
         onClick={handleAction}
         aria-label="Remote Feed / Video Monitor"
         style={{ transform: 'rotateX(-20deg) rotateZ(2deg)' }}
-        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-neon-red outline-none transform-gpu"
+        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-neon-red outline-none transform-gpu"
       >
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">
           <div className="w-full h-full bg-gradient-to-t from-neon-red/5 to-transparent animate-pulse" />
