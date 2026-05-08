@@ -6,14 +6,20 @@ interface PersonaProps {
   name: string;
   role: string;
   status: 'idle' | 'active' | 'distorted';
+  onClick?: () => void;
+  disabled?: boolean;
 }
 
-export const Persona: React.FC<PersonaProps> = ({ name, role, status }) => {
+export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, disabled }) => {
   return (
-    <div
-      role="region"
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
-      className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group"
+      style={{ transform: 'rotateX(-20deg)' }}
+      className="flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:scale-95"
     >
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
@@ -33,9 +39,9 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status }) => {
       </div>
 
       <div className="text-center">
-        <h3 className="text-[10px] font-mono text-neon-red uppercase tracking-[0.2em]">{name}</h3>
-        <p className="text-[8px] font-mono text-grey-medium uppercase">{role}</p>
+        <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em]">{name}</h3>
+        <p className="text-xs font-mono text-grey-medium uppercase">{role}</p>
       </div>
-    </div>
+    </button>
   );
 };
