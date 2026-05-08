@@ -115,7 +115,7 @@ export const useSentinel = () => {
       try {
         localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
       } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'HIGH');
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
       }
       return true;
     }
