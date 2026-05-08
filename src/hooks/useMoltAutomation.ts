@@ -133,6 +133,7 @@ export const useMoltAutomation = () => {
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
+        localStorage.setItem(key, '0');
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
