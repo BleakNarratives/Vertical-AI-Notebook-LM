@@ -32,3 +32,8 @@
 **Vulnerability:** Static defense layers can be systematically probed by automated scanners without triggering alerts until a breach is attempted.
 **Learning:** By implementing "Decoy Data" (Honeytokens) that mimic sensitive information (e.g., DB credentials), we can detect reconnaissance phases. Any interaction with these decoys is a high-confidence indicator of malicious intent, allowing for immediate autonomous system hardening (Molt) and lockdown.
 **Prevention:** Integrate subtle, "leaked" fragments into the UI that trigger CRITICAL security events upon focus, click, or scraping. Ensure these triggers are tied to the system's autonomous response engine.
+
+## 2026-05-10 - [Autonomous Behavioral Blacklisting & Persistent Revocation]
+**Vulnerability:** Attackers can systematically interact with multiple decoys or triggers without facing persistent consequences beyond short-term lockdowns.
+**Learning:** Short-term lockdowns (5 minutes) are insufficient for deterring determined bad actors or automated probes. By implementing a "Behavioral Blacklist" that tracks cumulative decoy breaches, we can escalate defense to a multi-day revocation. Persistent state in `localStorage` allows for session-based blacklisting that survives reloads.
+**Prevention:** Track high-confidence malicious interactions (decoy breaches) across the entire session lifecycle. Implement a persistent "Banned" state that revokes all application agency and provides high-visibility visual feedback to discourage further attempts.

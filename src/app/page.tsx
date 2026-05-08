@@ -12,7 +12,7 @@ import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { level, isImproving, triggerMolt, isLockdown } = useMoltAutomation();
+  const { level, isImproving, triggerMolt, isLockdown, isBlacklisted } = useMoltAutomation();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
@@ -39,9 +39,21 @@ export default function Home() {
   }, []);
 
   return (
-    <div className={`flex flex-col items-center justify-between h-full gap-8 p-8 py-16 transition-all duration-75 ${isGlitching ? 'animate-pulse bg-neon-red/30' : ''}`}>
+    <div className={`flex flex-col items-center justify-between h-full gap-8 p-8 py-16 transition-all duration-75 ${isGlitching || isBlacklisted ? 'animate-pulse bg-neon-red/30' : ''}`}>
       {isGlitching && (
         <div className="fixed inset-0 z-[200] pointer-events-none bg-white/5 mix-blend-overlay animate-glitch" />
+      )}
+      {isBlacklisted && (
+        <div className="fixed inset-0 z-[300] bg-neon-red/20 mix-blend-multiply flex items-center justify-center pointer-events-none">
+          <div className="border-4 border-neon-red p-8 bg-obsidian/90 shadow-[0_0_100px_rgba(255,0,0,0.6)] animate-bounce">
+            <h2 className="text-6xl font-black text-neon-red uppercase tracking-[0.5em] text-center">
+              SYSTEM BANNED
+            </h2>
+            <p className="text-neon-red font-mono text-center mt-4 tracking-widest text-sm">
+              ACCESS REVOKED BY SENTINEL PROTOCOL [24H]
+            </p>
+          </div>
+        </div>
       )}
       {/* Top of the table - Personas */}
       <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-12">
@@ -51,7 +63,7 @@ export default function Home() {
             role="Gateway"
             status={isHigginsActive ? 'active' : 'idle'}
             onClick={consultHiggins}
-            disabled={isLockdown}
+            disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
             <Papers context="higgins" />
@@ -63,7 +75,7 @@ export default function Home() {
             role="Architect"
             status={isPytchActive ? 'active' : 'idle'}
             onClick={wakePytch}
-            disabled={isLockdown}
+            disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
             <Papers context="pytch" />
@@ -75,7 +87,7 @@ export default function Home() {
             role="Execution"
             status={isImproving ? 'active' : 'idle'}
             onClick={triggerMolt}
-            disabled={isLockdown}
+            disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
             <Papers context="twoie" />
@@ -87,7 +99,7 @@ export default function Home() {
             role="Distributed"
             status={isZeroclawActive ? 'active' : 'idle'}
             onClick={triggerSwarm}
-            disabled={isLockdown}
+            disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
             <Papers context="zeroclaw" />
@@ -108,7 +120,11 @@ export default function Home() {
             </span>
           )}
         </p>
-        {isLockdown && (
+        {isBlacklisted ? (
+          <div aria-live="assertive" className="mt-4 p-2 border-2 border-neon-red bg-neon-red text-obsidian font-mono text-sm font-bold animate-pulse">
+            [ SESSION BLOCK ACTIVE ] - ACCESS DENIED BY OBELISK SECURITY
+          </div>
+        ) : isLockdown && (
           <div aria-live="assertive" className="mt-4 p-2 border border-neon-red bg-neon-red/10 text-neon-red font-mono text-xs animate-pulse">
             [ SYSTEM LOCKDOWN ACTIVE ] - SECURITY BREACH COUNTERMEASURES ENGAGED
           </div>
@@ -121,28 +137,28 @@ export default function Home() {
           variant="primary"
           onClick={triggerMolt}
           isLoading={isImproving}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
           onClick={consultHiggins}
           isLoading={isHigginsActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
           onClick={wakePytch}
           isLoading={isPytchActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
           onClick={triggerSwarm}
           isLoading={isZeroclawActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
       </div>
 
