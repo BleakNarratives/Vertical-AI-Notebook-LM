@@ -123,9 +123,10 @@ export const useMoltAutomation = () => {
       const key = 'sentinel_decoy_breaches';
       const stored = localStorage.getItem(key);
       let breaches = 0;
-      try {
-        if (stored) breaches = parseInt(stored, 10);
-      } catch { breaches = 0; }
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        breaches = Number.isNaN(parsed) ? 0 : parsed;
+      }
 
       breaches += 1;
       localStorage.setItem(key, breaches.toString());
