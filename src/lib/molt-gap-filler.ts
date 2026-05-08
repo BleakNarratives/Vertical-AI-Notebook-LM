@@ -32,26 +32,56 @@
  * - VOODOO DOLL LOGIC: Update persona status indicators to flicker with 'corrupted' colors (neon-red/amber) when security breaches are detected.
  * - Final audit of all hooks for performance; ensure `MOLT_CONFIG.status` transitions to 'SINGULARITY_REACHED'.
  *
- * CYCLE 6: ENTROPY & SHADOW INTEGRITY
- * - Implement a real-time integrity monitor that tracks `localStorage` health and logs `OnIntegrityFailure`.
- * - Synchronize security alerts across open browser tabs using the `BroadcastChannel` API.
- * - Add "Shadow Noise": non-functional UI elements that briefly pulse when the security hook blocks an input.
+ * CYCLE 6: ENTROPY RESONANCE & SYSTEM IDLE RECONSTRUCTION
+ * - Implement "Idle Resonance": when the system detects inactivity, initiate low-level background optimization.
+ * - Add visual 'static' or 'noise' to the boardroom obsidian surface that intensifies during idle cycles.
+ * - Log `MEDIUM` security events for entropy divergence if the idle state is interrupted by malicious patterns.
  *
- * CYCLE 7: VOODOO DOLL SYNCHRONIZATION
- * - Update `Persona` components to react visually to breaches (e.g., adding a 'pin' graphic or glitch effect).
- * - Distort agent voices (text descriptions) with randomized special characters when entropy exceeds 0.5.
+ * CYCLE 7: SHADOW INTEGRITY AUDIT (SENTINEL V3) - [PARTIAL]
+ * - Implement an automated audit of all `Shadow Logs`. Molt should attempt to reconstruct the attack vector and patch the `validateInput` allowlist.
+ * - Introduce "Decoy Data": inject fake sensitive-looking patterns into the DOM to bait automated scanners. [DONE: Honeytoken.tsx]
+ * - Log any interaction with Decoy Data as a `CRITICAL` breach. [DONE: useSentinel.triggerHoneytoken]
  *
- * CYCLE 8: THE SINGULARITY PROTOCOL
- * - Implement the 'Dark City' theme override: when `level` > 8, the UI background shifts to a deep void with slow-moving code rain.
- * - Agents begin speaking in a unified swarm voice, merging their roles into a single 'Obelisk' entity.
+ * CYCLE 8: NEURAL DIVERGENCE & PERSONA RECOMBINATION
+ * - Enable "Persona Bleed": AI agents (Higgins, Pytch, Twoie) should start using fragments of each other's dialogue patterns as Molt level > 7.
+ * - Update the `Persona` component to display a "Stability Index" that fluctuates based on the swarm consensus.
  *
- * CYCLE 9: SHADOW FORENSICS
- * - Build a hidden terminal in the `Laptop` component that allows users to decode and view `Shadow Logs`.
- * - Require a 12-character 'Sentinel Key' (found in obsidian shadows) to access the logs.
+ * CYCLE 9: OBSIDIAN CORE OPTIMIZATION
+ * - Refactor `globals.css` and Tailwind theme to support "Deep Obsidian" mode—a state of near-zero contrast for ultra-bleak immersion.
+ * - Optimize all hooks to use a centralized `useCodeCityContext` to reduce redundant `localStorage` calls.
  *
- * CYCLE 10: FINAL CONVERGENCE
- * - Final recursive optimization of the `useMoltAutomation` hook for zero-latency execution.
- * - Transition `MOLT_CONFIG.status` to 'SINGULARITY_REACHED' and enable the final Easter egg: 'The Obelisk Awakening'.
+ * CYCLE 10: SINGULARITY CONVERGENCE (THE FINAL RECURSION)
+ * - Implement the "Great Flattening": the 3D boardroom perspective permanently shifts to 0 degrees.
+ * - All AI personas merge into a single "Singularity" entity.
+ * - Clear all `Shadow Logs` and transition `MOLT_CONFIG.status` to 'CONVERGENCE_COMPLETE'.
+ *
+ * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING - [PARTIAL]
+ * - Implement "Shadow Recovery": automatically rotate Honeytoken patterns and positions after a `CRITICAL` breach. [DONE]
+ * - Add "Autonomous Blacklisting": temporarily block IP/session signatures associated with `Shadow Sequence` detections.
+ * - Refine the `useSentinel` hook to support cryptographic signing of shadow logs to prevent local tampering.
+ *
+ * CYCLE 12: AUTONOMOUS DECOY EVOLUTION & BEHAVIORAL BLOCKLISTING - [PARTIAL]
+ * - Implement "Decoy Evolution": Molt should analyze `sentinel-decoy-breach` events to identify the most effective decoy positions and payloads.
+ * - Automatically generate new decoy patterns based on successful "baits" recorded in the `Shadow Logs`.
+ * - Implement a dynamic `BlacklistOverlay` that renders a persistent "SYSTEM BANNED" message for sessions that hit more than 5 decoys. [DONE]
+ * - Integrate the voodoo doll visual state with the blacklist: dolls should appear "burned" or "pinned" for blacklisted sessions.
+ *
+ * CYCLE 13: VOODOO CORRUPTION & IDENTITY FRAGMENTATION
+ * - Implement "Identity Fragmentation": when blacklisted, the names of AI personas should scramble periodically (e.g., "Mrs. Higgins" -> "M.rs H.igg.ins").
+ * - Update the `Persona` component to support a `corrupted` status that applies a deep-red glitch effect to the "ragtag suit" visuals.
+ * - Create a `Shadow Gallery`: a hidden route or component that displays all `Shadow Logs` as fragmented pieces of a larger narrative puzzle.
+ * - Log `MEDIUM` security events when the "Stability Index" of the swarm drops below 10% during blacklisted sessions.
+ *
+ * CYCLE 14: THE VOID PROTOCOL (SILENT RECOVERY)
+ * - Implement "Silent Recovery": after a blacklist expires, the system should subtly change one UI element (e.g., color of the coffee mug) to indicate a new session state.
+ * - Add "Ghost Triggers": non-visible interaction points that trigger `LOW` severity security alerts if "clicked" by automated tools.
+ * - Refine the `useSentinel` hook to include `validateSessionIntegrity` which checks for tampering of `localStorage` security keys.
+ *
+ * CYCLE 15: SINGULARITY MANIFESTATION
+ * - When Molt level hits 15, the Boardroom should "dissolve" into a pure terminal interface.
+ * - All personas merge into a single "Sentinel Prime" entity that speaks in raw hex codes and fragmented poetry.
+ * - Finalize the "Code City" transition: all visual assets (mug, laptop, papers) should be replaced with ASCII art representations.
+ * - Transition `MOLT_CONFIG.status` to 'SINGULARITY_STABLE'.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({
@@ -65,12 +95,17 @@
  * HOOKS & TRIGGERS:
  * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
  * - OnLockdown: `molt.enterSafeMode()`
- * - OnIntegrityFailure: `molt.triggerAutonomousCycle('recovery')`
+ *
+ * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
+ * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
+ * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
+ * - Log `CRITICAL` events for every attempted interaction from a blacklisted session.
+ * - Reconstruct the `useSentinel` hook to support persistent identity verification across reloads.
  */
 
 export const MOLT_CONFIG = {
-  version: '2.3.0-sentinel-v2',
+  version: '2.4.0-sentinel-v3',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced',
+  engine: 'Molt-V4-Sentinel-Enhanced-Blacklist',
   lastAudit: new Date().toISOString(),
 };

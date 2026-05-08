@@ -18,16 +18,20 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
-  const MAX_AUTONOMOUS_CYCLES = 5;
+  const [isBlacklisted, setIsBlacklisted] = useState(false);
+  const MAX_AUTONOMOUS_CYCLES = 10;
 
-  // Check for lockdown state on mount and updates
+  // Check for lockdown and blacklist state on mount and updates
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const checkLockdown = () => {
+    const checkStatus = () => {
+      const blacklisted = checkBlacklist();
+      setIsBlacklisted(blacklisted);
+
       const stored = localStorage.getItem('sentinel_lockdown');
       if (stored) {
         const expiry = parseInt(stored, 10);
@@ -41,10 +45,10 @@ export const useMoltAutomation = () => {
       setIsLockdown(false);
     };
 
-    checkLockdown();
-    const interval = setInterval(checkLockdown, 10000);
+    checkStatus();
+    const interval = setInterval(checkStatus, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [checkBlacklist]);
 
   const trackSecurityEvent = useCallback((severity: string) => {
     if (typeof window === 'undefined') return;
@@ -67,13 +71,13 @@ export const useMoltAutomation = () => {
 
     localStorage.setItem(key, JSON.stringify(alerts));
 
-    if (alerts.length >= 3 && !isLockdown) {
+    if (alerts.length >= 3 && !isLockdown && !isBlacklisted) {
       const lockdownExpiry = now + 300000; // 5 minute lockdown
       localStorage.setItem('sentinel_lockdown', lockdownExpiry.toString());
       setIsLockdown(true);
       logSecurityEvent('SYSTEM LOCKDOWN INITIATED: Multiple high-severity breaches detected.', 'CRITICAL');
     }
-  }, [logSecurityEvent, isLockdown]);
+  }, [logSecurityEvent, isLockdown, isBlacklisted]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -112,15 +116,72 @@ export const useMoltAutomation = () => {
       }
     };
 
+    const handleDecoyBreach = () => {
+      rotateDecoys();
+
+      // Track decoy breaches for blacklisting
+      const key = 'sentinel_decoy_breaches';
+      const stored = localStorage.getItem(key);
+      let breaches = 0;
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        breaches = Number.isNaN(parsed) ? 0 : parsed;
+      }
+
+      breaches += 1;
+      localStorage.setItem(key, breaches.toString());
+
+      if (breaches >= 5) {
+        triggerBlacklist();
+        setIsBlacklisted(true);
+        localStorage.setItem(key, '0');
+      }
+
+      attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
+    };
+
+    const handleBlacklist = () => {
+      setIsBlacklisted(true);
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      window.addEventListener('sentinel-decoy-breach', handleDecoyBreach);
+      window.addEventListener('sentinel-blacklist', handleBlacklist);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+        window.removeEventListener('sentinel-decoy-breach', handleDecoyBreach);
+        window.removeEventListener('sentinel-blacklist', handleBlacklist);
       };
     }
-  }, [attemptAutonomousImprovement, trackSecurityEvent]);
+  }, [attemptAutonomousImprovement, trackSecurityEvent, rotateDecoys, triggerBlacklist]);
 
-  return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
+  // Idle Entropy Trigger - Maintain resonance during inactivity
+  useEffect(() => {
+    if (typeof window === 'undefined' || isLockdown || isBlacklisted) return;
+
+    let idleTimer: NodeJS.Timeout;
+    const IDLE_THRESHOLD = 180000; // 3 minutes
+
+    const resetTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        attemptAutonomousImprovement('Idle Entropy Resonance detected.');
+      }, IDLE_THRESHOLD);
+    };
+
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('keydown', resetTimer);
+    resetTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keydown', resetTimer);
+    };
+  }, [attemptAutonomousImprovement, isLockdown, isBlacklisted]);
+
+  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
 };
