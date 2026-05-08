@@ -122,7 +122,7 @@ export default function Home() {
         </p>
         {isBlacklisted ? (
           <div aria-live="assertive" className="mt-4 p-2 border-2 border-neon-red bg-neon-red text-obsidian font-mono text-sm font-bold animate-pulse">
-            [ PERMANENT BLOCK ACTIVE ] - ACCESS DENIED BY OBELISK SECURITY
+            [ SESSION BLOCK ACTIVE ] - ACCESS DENIED BY OBELISK SECURITY
           </div>
         ) : isLockdown && (
           <div aria-live="assertive" className="mt-4 p-2 border border-neon-red bg-neon-red/10 text-neon-red font-mono text-xs animate-pulse">
