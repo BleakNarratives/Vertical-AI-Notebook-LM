@@ -35,7 +35,7 @@ export const CoffeeMug: React.FC = () => {
       {/* Label hidden until focus/hover */}
       <span
         aria-live="polite"
-        className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase"
+        className={`absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber whitespace-nowrap transition-opacity uppercase ${saved ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}
       >
         {saved ? '[ SYSTEM STATE SAVED ]' : 'SAVE / LOAD / SETTINGS'}
       </span>
