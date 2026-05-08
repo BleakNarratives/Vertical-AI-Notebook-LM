@@ -157,10 +157,10 @@ export const useSentinel = () => {
 
     const now = Date.now();
     const storageKey = `sentinel_rl_${key}`;
-    const stored = localStorage.getItem(storageKey);
     let data = { count: 0, startTime: now };
 
     try {
+      const stored = localStorage.getItem(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -168,16 +168,24 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      localStorage.removeItem(storageKey);
+      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
     }
 
     if (now - data.startTime > windowMs) {
-      localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
+      } catch {
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
+      }
       return true;
     }
 
     if (data.count < limit) {
-      localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
+      } catch {
+        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
+      }
       return true;
     }
 
