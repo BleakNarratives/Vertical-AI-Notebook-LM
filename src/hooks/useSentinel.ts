@@ -130,6 +130,28 @@ export const useSentinel = () => {
     }
   }, []);
 
+  const triggerBlacklist = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const expiry = Date.now() + 86400000; // 24 hours
+    localStorage.setItem('sentinel_blacklist', expiry.toString());
+    logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
+    window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
+  }, [logSecurityEvent]);
+
+  const checkBlacklist = useCallback((): boolean => {
+    if (typeof window === 'undefined') return false;
+    const stored = localStorage.getItem('sentinel_blacklist');
+    if (stored) {
+      const expiry = parseInt(stored, 10);
+      if (Date.now() < expiry) {
+        return true;
+      } else {
+        localStorage.removeItem('sentinel_blacklist');
+      }
+    }
+    return false;
+  }, []);
+
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
 
@@ -172,6 +194,8 @@ export const useSentinel = () => {
     storeShadowLog,
     triggerHoneytoken,
     rotateDecoys,
-    getDecoyConfig
+    getDecoyConfig,
+    triggerBlacklist,
+    checkBlacklist
   };
 };
