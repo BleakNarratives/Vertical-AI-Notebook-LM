@@ -68,9 +68,9 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center">
+      <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && (
-          <div aria-live="polite" className="text-xs font-mono text-neon-amber animate-pulse uppercase">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
             {status}
           </div>
         )}
