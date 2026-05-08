@@ -13,12 +13,7 @@
 **Learning:** Pure rate limiting blocks actions but doesn't necessarily alert the system to intentional abuse. By implementing "Shadow Triggers"—local counters that track attempts *during* rate-limited states—we can distinguish between accidental spam and a "protocol siege".
 **Prevention:** Always implement rate limiting on entry-point agents (like Higgins). Use behavioral counters to elevate alerts from MEDIUM (Rate Limit) to CRITICAL (Shadow Sequence) to autonomously trigger system hardening (Molt).
 
-## 2026-04-28 - [Event-Driven Lockdown & Recursive Trigger Safety]
-**Vulnerability:** Potential infinite trigger loop when security handlers dispatch alerts that they also listen to.
-**Learning:** Implementing a "Lockdown Protocol" that dispatches its own security event can create a feedback loop if the event listener doesn't distinguish between the *trigger* (the breach) and the *response* (the lockdown initiation).
-**Prevention:** Always include metadata or specific string patterns in system-generated security events to allow handlers to skip them and prevent recursive execution.
-
-## 2026-04-29 - [Forensic Shadow Logging & Sequence Detection]
-**Vulnerability:** Security breaches (like LFI/Path Traversal) were blocked but the malicious payload was lost, preventing forensic analysis of the attack vector.
-**Learning:** Blocking is not enough; forensic data is needed for recursive system hardening. By encoding blocked inputs in Base64 ("Shadow Logs"), we can store evidence safely on the client side for audit. Implementing a "Shadow Sequence" detector allows the system to autonomously recognize and react to rapid forensic log expansion as a coordinated attack.
-**Prevention:** Always capture and safely encode malicious payloads when blocking high-severity attempts. Use forensic log growth as a trigger for autonomous system reconstruction cycles.
+## 2026-04-28 - [Persistent Lockdown Protocol & Input Depth Defense]
+**Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
+**Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
+**Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).

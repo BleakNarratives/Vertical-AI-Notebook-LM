@@ -18,62 +18,41 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
 
-  // Check for lockdown state on mount and updates
+  // Check for lockdown on mount and during alerts
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const checkLockdown = () => {
       const stored = localStorage.getItem('sentinel_lockdown');
       if (stored) {
-        const expiry = parseInt(stored, 10);
-        if (Date.now() < expiry) {
+        const lockdownExpiry = parseInt(stored, 10);
+        if (Date.now() < lockdownExpiry) {
           setIsLockdown(true);
-          return;
+          // Set a timeout to clear lockdown state
+          const remaining = lockdownExpiry - Date.now();
+          setTimeout(() => setIsLockdown(false), remaining);
         } else {
           localStorage.removeItem('sentinel_lockdown');
+          setIsLockdown(false);
         }
       }
-      setIsLockdown(false);
     };
 
     checkLockdown();
-    const interval = setInterval(checkLockdown, 10000);
-    return () => clearInterval(interval);
   }, []);
 
-  const trackSecurityEvent = useCallback((severity: string) => {
-    if (typeof window === 'undefined') return;
-
-    const key = 'sentinel_high_alerts';
-    const now = Date.now();
-    const stored = localStorage.getItem(key);
-    let alerts: number[] = [];
-
-    try {
-      if (stored) alerts = JSON.parse(stored);
-    } catch { alerts = []; }
-
-    // Filter alerts from the last 5 minutes
-    alerts = alerts.filter(ts => now - ts < 300000);
-
-    if (severity === 'HIGH' || severity === 'CRITICAL') {
-      alerts.push(now);
-    }
-
-    localStorage.setItem(key, JSON.stringify(alerts));
-
-    if (alerts.length >= 3 && !isLockdown) {
-      const lockdownExpiry = now + 300000; // 5 minute lockdown
-      localStorage.setItem('sentinel_lockdown', lockdownExpiry.toString());
-      setIsLockdown(true);
-      logSecurityEvent('SYSTEM LOCKDOWN INITIATED: Multiple high-severity breaches detected.', 'CRITICAL');
-    }
-  }, [logSecurityEvent, isLockdown]);
+  const triggerLockdown = useCallback(() => {
+    const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
+    localStorage.setItem('sentinel_lockdown', expiry.toString());
+    setIsLockdown(true);
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
+  }, [logSecurityEvent]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -95,13 +74,55 @@ export const useMoltAutomation = () => {
       const securityEvent = e as SecurityAlertEvent;
       const { severity, event } = securityEvent.detail;
 
-      // Prevent recursive loop from lockdown notification
-      if (event.includes('SYSTEM LOCKDOWN INITIATED')) return;
-
       if (severity === 'HIGH' || severity === 'CRITICAL') {
-        trackSecurityEvent(severity);
-        attemptAutonomousImprovement(`Security hardening required due to ${severity} alert.`);
+        // Track high-severity alerts for lockdown
+        const alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
+        const now = Date.now();
+        const recentAlerts = [...alerts.filter((a: number) => now - a < 300000), now];
+        localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+
+        if (recentAlerts.length >= 3 && !isLockdown) {
+          triggerLockdown();
+        }
+
+        attemptAutonomousImprovement(`Security hardening required: ${event}`);
       }
+    };
+
+    const handleShadowRecorded = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const count = customEvent.detail?.count || 0;
+      if (count >= 5) {
+        attemptAutonomousImprovement(`Shadow Sequence detected (${count} logs). Initiating autonomous reconstruction.`);
+      }
+    };
+
+    const handleDecoyBreach = () => {
+      rotateDecoys();
+
+      // Track decoy breaches for blacklisting
+      const key = 'sentinel_decoy_breaches';
+      const stored = localStorage.getItem(key);
+      let breaches = 0;
+      if (stored) {
+        const parsed = parseInt(stored, 10);
+        breaches = Number.isNaN(parsed) ? 0 : parsed;
+      }
+
+      breaches += 1;
+      localStorage.setItem(key, breaches.toString());
+
+      if (breaches >= 5) {
+        triggerBlacklist();
+        setIsBlacklisted(true);
+        localStorage.setItem(key, '0');
+      }
+
+      attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
+    };
+
+    const handleBlacklist = () => {
+      setIsBlacklisted(true);
     };
 
     const handleShadowRecorded = (e: Event) => {
@@ -117,12 +138,16 @@ export const useMoltAutomation = () => {
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+      window.addEventListener('sentinel-decoy-breach', handleDecoyBreach);
+      window.addEventListener('sentinel-blacklist', handleBlacklist);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
+        window.removeEventListener('sentinel-decoy-breach', handleDecoyBreach);
+        window.removeEventListener('sentinel-blacklist', handleBlacklist);
       };
     }
-  }, [attemptAutonomousImprovement, trackSecurityEvent, logSecurityEvent]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown]);
 
-  return { cyclesRun, isImproving, level, isLockdown, triggerMolt };
+  return { cyclesRun, isImproving, level, isLockdown };
 };
