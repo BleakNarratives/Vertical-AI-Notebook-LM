@@ -22,3 +22,18 @@
 **Vulnerability:** Lack of visibility into blocked malicious payloads preventing forensic analysis of attack patterns.
 **Learning:** Simply blocking an attack is the first step; recording the payload (Shadow Logging) allows for behavioral analysis. Aggregating these logs into a "Shadow Sequence" enables the system to distinguish between isolated errors and a sustained behavioral pattern (a "siege"), which can then trigger autonomous system reconstruction via Molt.
 **Prevention:** Always persist blocked critical payloads in an encoded format (Base64) to avoid accidental execution during audit, and implement sequence detection to trigger automated environment hardening.
+
+## 2026-05-04 - [Unicode-Safe Forensic Logging & Resilient Parsing]
+**Vulnerability:** Application crash risk during forensic shadow logging when processing non-ASCII/emoji malicious inputs via standard `btoa`.
+**Learning:** Security layers must be more resilient than the code they protect. Using `btoa` on raw UTF-8 strings can trigger `InvalidCharacterError`. Encoding the input using a Unicode-safe Base64 pattern ensures stability. Furthermore, `localStorage` parsing must include explicit type checks (e.g., `Array.isArray`) to handle corrupted or manipulated storage without breaking the security hook.
+**Prevention:** Always use Unicode-safe encoding (URIComponent + Regex) for Base64 logging and implement defensive parsing for all persistent security state. Record `HIGH` severity pattern mismatches to provide forensic visibility into non-LFI attack attempts.
+
+## 2026-05-05 - [Proactive Decoy Defense & Honeytoken Integration]
+**Vulnerability:** Static defense layers can be systematically probed by automated scanners without triggering alerts until a breach is attempted.
+**Learning:** By implementing "Decoy Data" (Honeytokens) that mimic sensitive information (e.g., DB credentials), we can detect reconnaissance phases. Any interaction with these decoys is a high-confidence indicator of malicious intent, allowing for immediate autonomous system hardening (Molt) and lockdown.
+**Prevention:** Integrate subtle, "leaked" fragments into the UI that trigger CRITICAL security events upon focus, click, or scraping. Ensure these triggers are tied to the system's autonomous response engine.
+
+## 2026-05-10 - [Autonomous Behavioral Blacklisting & Persistent Revocation]
+**Vulnerability:** Attackers can systematically interact with multiple decoys or triggers without facing persistent consequences beyond short-term lockdowns.
+**Learning:** Short-term lockdowns (5 minutes) are insufficient for deterring determined bad actors or automated probes. By implementing a "Behavioral Blacklist" that tracks cumulative decoy breaches, we can escalate defense to a multi-day revocation. Persistent state in `localStorage` allows for session-based blacklisting that survives reloads.
+**Prevention:** Track high-confidence malicious interactions (decoy breaches) across the entire session lifecycle. Implement a persistent "Banned" state that revokes all application agency and provides high-visibility visual feedback to discourage further attempts.
