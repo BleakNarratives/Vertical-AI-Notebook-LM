@@ -21,19 +21,20 @@ export const useMoltAutomation = () => {
   const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
+  const [isBlacklisted, setIsBlacklisted] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
 
-  // Check for lockdown on mount and during alerts
+  // Check for security states on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const checkLockdown = () => {
-      const stored = localStorage.getItem('sentinel_lockdown');
-      if (stored) {
-        const lockdownExpiry = parseInt(stored, 10);
+    const checkSecurityStates = () => {
+      // Check Lockdown
+      const storedLockdown = localStorage.getItem('sentinel_lockdown');
+      if (storedLockdown) {
+        const lockdownExpiry = parseInt(storedLockdown, 10);
         if (Date.now() < lockdownExpiry) {
           setIsLockdown(true);
-          // Set a timeout to clear lockdown state
           const remaining = lockdownExpiry - Date.now();
           setTimeout(() => setIsLockdown(false), remaining);
         } else {
@@ -41,10 +42,13 @@ export const useMoltAutomation = () => {
           setIsLockdown(false);
         }
       }
+
+      // Check Blacklist
+      setIsBlacklisted(checkBlacklist());
     };
 
-    checkLockdown();
-  }, []);
+    checkSecurityStates();
+  }, [checkBlacklist]);
 
   const triggerLockdown = useCallback(() => {
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
@@ -92,8 +96,10 @@ export const useMoltAutomation = () => {
     const handleShadowRecorded = (e: Event) => {
       const customEvent = e as CustomEvent;
       const count = customEvent.detail?.count || 0;
+
       if (count >= 5) {
-        attemptAutonomousImprovement(`Shadow Sequence detected (${count} logs). Initiating autonomous reconstruction.`);
+        logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
+        attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
       }
     };
 
@@ -125,16 +131,6 @@ export const useMoltAutomation = () => {
       setIsBlacklisted(true);
     };
 
-    const handleShadowRecorded = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const count = customEvent.detail?.count || 0;
-
-      if (count >= 5) {
-        logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
-        attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
-      }
-    };
-
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -147,7 +143,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
       };
     }
-  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist]);
 
-  return { cyclesRun, isImproving, level, isLockdown };
+  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted };
 };
