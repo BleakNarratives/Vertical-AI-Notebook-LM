@@ -4,10 +4,15 @@ import React, { useState } from 'react';
 
 export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
+  const [isFlashing, setIsFlashing] = useState(false);
 
   const handleAccess = () => {
     setStatus('Terminal Synchronized');
-    setTimeout(() => setStatus(null), 2000);
+    setIsFlashing(true);
+    setTimeout(() => {
+      setStatus(null);
+      setIsFlashing(false);
+    }, 2000);
   };
 
   return (
@@ -32,14 +37,14 @@ export const Laptop: React.FC = () => {
             <div className="w-1 h-1 rounded-full bg-neon-red/40" />
             <div className="w-1 h-1 rounded-full bg-neon-amber/40" />
           </div>
-          <div className="flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight">
+          <div className={`flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
             <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
             <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
             <div className="mt-1 opacity-40">System Link: ACTIVE</div>
             <div className="mt-2 animate-pulse">_</div>
           </div>
-          {/* Screen Glare */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
+          {/* Screen Glare and Data Flash */}
+          <div className={`absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none transition-opacity duration-300 ${isFlashing ? 'bg-white/20 opacity-100' : ''}`} />
         </div>
 
         {/* Laptop Base (Keyboard area) */}

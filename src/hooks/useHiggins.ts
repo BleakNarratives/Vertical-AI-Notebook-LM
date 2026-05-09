@@ -7,7 +7,7 @@ import { useSentinel } from './useSentinel';
 export const useHiggins = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [, setShadowCounter] = useState(0);
-  const { logSecurityEvent, checkRateLimit } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, storeShadowLog } = useSentinel();
 
   const consultHiggins = useCallback(async () => {
     // Enforce rate limiting: 3 calls per 60 seconds
@@ -36,7 +36,7 @@ export const useHiggins = () => {
 
     console.log('Higgins: Welcome to the Code City. Please proceed to the Obelisk.');
     setIsProcessing(false);
-  }, [logSecurityEvent, checkRateLimit]);
+  }, [logSecurityEvent, checkRateLimit, storeShadowLog]);
 
   return { consultHiggins, isProcessing };
 };

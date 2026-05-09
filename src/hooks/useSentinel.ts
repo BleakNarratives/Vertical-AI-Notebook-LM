@@ -80,7 +80,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent, storeShadowLog]);
+  }, [logSecurityEvent]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
