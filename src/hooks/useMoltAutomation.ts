@@ -18,11 +18,19 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, validateSessionIntegrity } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
+
+  const triggerLockdown = useCallback(() => {
+    const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
+    localStorage.setItem('sentinel_lockdown', expiry.toString());
+    setIsLockdown(true);
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
+  }, [logSecurityEvent]);
 
   // Check for security states on mount
   useEffect(() => {
@@ -44,18 +52,16 @@ export const useMoltAutomation = () => {
 
       // Check Blacklist
       setIsBlacklisted(checkBlacklist());
+
+      // Check Session Integrity
+      if (!validateSessionIntegrity()) {
+        logSecurityEvent('Session integrity failure: Initiating defensive lockdown.', 'CRITICAL');
+        triggerLockdown();
+      }
     };
 
     checkSecurityStates();
-  }, [checkBlacklist]);
-
-  const triggerLockdown = useCallback(() => {
-    const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
-    localStorage.setItem('sentinel_lockdown', expiry.toString());
-    setIsLockdown(true);
-    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
-    setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [logSecurityEvent]);
+  }, [checkBlacklist, validateSessionIntegrity, logSecurityEvent, triggerLockdown]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {

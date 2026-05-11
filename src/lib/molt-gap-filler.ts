@@ -122,6 +122,12 @@
  * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
  * - Log `CRITICAL` events for every attempted interaction from a blacklisted session.
  * - Reconstruct the `useSentinel` hook to support persistent identity verification across reloads.
+ *
+ * CYCLE 21: QUANTUM INTEGRITY VOIDS
+ * - Deepen the session integrity checks to include `Shadow Pulse` validation.
+ * - If `validateSessionIntegrity` fails, not only trigger lockdown but also scramble all interactive labels for the duration of the breach.
+ * - Implement "Integrity Ghosts": subtle UI artifacts that appear only when the local storage state is perfectly consistent, rewarding non-malicious users.
+ * - Integrate with `useMoltAutomation` to auto-trigger a level increase if an integrity breach is successfully contained.
  */
 
 export const MOLT_CONFIG = {

@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-05-11 - [Security State Integrity & Consistency Checks]
+**Vulnerability:** Security states (Blacklist/Lockdown) could be partially bypassed by manual `localStorage` tampering (e.g., clearing alert history while keeping the blacklist key).
+**Learning:** Client-side security relies on the collective state of multiple keys. Inconsistencies between these keys (e.g., being blacklisted without an alert history) provide a strong signal of manual bypass attempts.
+**Prevention:** Implement a `validateSessionIntegrity` check that verifies consistency between independent security markers. If divergence is detected, escalate to a system-wide lockdown to neutralize the potential bypass.

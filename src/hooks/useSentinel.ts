@@ -55,6 +55,12 @@ export const useSentinel = () => {
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Length check: Prevent DoS/Buffer-related overflows
+    if (input.length > 200) {
+      logSecurityEvent(`Input rejected: Length exceeds 200 character limit`, 'MEDIUM');
+      return false;
+    }
+
     // Basic allowlist check
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
@@ -155,6 +161,23 @@ export const useSentinel = () => {
     return false;
   }, []);
 
+  const validateSessionIntegrity = useCallback(() => {
+    if (typeof window === 'undefined') return true;
+
+    // Check for inconsistent security states that might indicate manual tampering
+    // e.g. Blacklist expiry exists but lockdown history was wiped.
+    const blacklist = localStorage.getItem('sentinel_blacklist');
+    const alertHistory = localStorage.getItem('sentinel_alert_history');
+
+    if (blacklist && !alertHistory) {
+      logSecurityEvent('INTEGRITY DIVERGENCE: Security state inconsistency detected.', 'HIGH');
+      // If they wiped their alert history but are still blacklisted, they are likely trying to bypass lockdown
+      return false;
+    }
+
+    return true;
+  }, [logSecurityEvent]);
+
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
 
@@ -207,6 +230,7 @@ export const useSentinel = () => {
     rotateDecoys,
     getDecoyConfig,
     triggerBlacklist,
-    checkBlacklist
+    checkBlacklist,
+    validateSessionIntegrity
   };
 };
