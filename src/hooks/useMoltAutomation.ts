@@ -39,7 +39,6 @@ export const useMoltAutomation = () => {
           setTimeout(() => setIsLockdown(false), remaining);
         } else {
           localStorage.removeItem('sentinel_lockdown');
-          setIsLockdown(false);
         }
       }
 
