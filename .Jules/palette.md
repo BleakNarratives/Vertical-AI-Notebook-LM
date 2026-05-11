@@ -17,3 +17,11 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Dynamic Boardroom Parallax]
+**Learning:** Adding a subtle, cursor-driven 3D tilt (parallax) to a perspective-shifted container significantly increases the sense of "being there" in a first-person UI. To avoid motion sickness, tilts should be capped at low angles (e.g., ±5deg) and use `transition-transform duration-300 ease-out` for smoothness.
+**Action:** Implement mouse-tracking perspective wrappers for large structural containers to create responsive depth, ensuring tilts remain subtle and performant via `transform-gpu`.
+
+## 2025-05-20 - [Performance-Safe Parallax]
+**Learning:** High-frequency events like `mousemove` should avoid triggering React state updates if they affect large parts of the DOM. Using CSS variables (`element.style.setProperty`) allows for smooth, performance-safe animations without the overhead of full-page re-renders. Additionally, always respect `prefers-reduced-motion` to prevent motion sickness.
+**Action:** Use CSS variables for cursor-driven effects and always check accessibility media queries before applying motion-heavy transforms.
