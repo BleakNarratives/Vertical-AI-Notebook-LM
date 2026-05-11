@@ -24,30 +24,29 @@ export const useMoltAutomation = () => {
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
 
-  // Check for lockdown and blacklist on mount
+  // Check for security states on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const checkInitialState = () => {
-      // Lockdown check
-      const lockdownStored = localStorage.getItem('sentinel_lockdown');
-      if (lockdownStored) {
-        const lockdownExpiry = parseInt(lockdownStored, 10);
+    const checkSecurityStates = () => {
+      // Check Lockdown
+      const storedLockdown = localStorage.getItem('sentinel_lockdown');
+      if (storedLockdown) {
+        const lockdownExpiry = parseInt(storedLockdown, 10);
         if (Date.now() < lockdownExpiry) {
           setIsLockdown(true);
-          setTimeout(() => setIsLockdown(false), lockdownExpiry - Date.now());
+          const remaining = lockdownExpiry - Date.now();
+          setTimeout(() => setIsLockdown(false), remaining);
         } else {
           localStorage.removeItem('sentinel_lockdown');
         }
       }
 
-      // Blacklist check
-      if (checkBlacklist()) {
-        setIsBlacklisted(true);
-      }
+      // Check Blacklist
+      setIsBlacklisted(checkBlacklist());
     };
 
-    checkInitialState();
+    checkSecurityStates();
   }, [checkBlacklist]);
 
   const triggerLockdown = useCallback(() => {
@@ -99,7 +98,7 @@ export const useMoltAutomation = () => {
 
       if (count >= 5) {
         logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
-        attemptAutonomousImprovement(`Shadow Sequence detected (${count} logs). Forensic reconstruction initiated.`);
+        attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
       }
     };
 
@@ -145,5 +144,5 @@ export const useMoltAutomation = () => {
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist]);
 
-  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted };
+  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
 };

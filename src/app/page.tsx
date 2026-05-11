@@ -13,7 +13,7 @@ import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { isLockdown, isBlacklisted } = useMoltAutomation();
+  const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
   const { level, isImproving, triggerMolt } = useMolt();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
