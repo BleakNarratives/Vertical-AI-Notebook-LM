@@ -39,9 +39,10 @@ export const Laptop: React.FC = () => {
           </div>
           <div className={`flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
             <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
-            <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
-            <div className="mt-1 opacity-40">System Link: ACTIVE</div>
-            <div className="mt-2 animate-pulse">_</div>
+            <div className="mt-0.5 opacity-40 italic">IDEal / 4ward active</div>
+            <div className="mt-0.5 opacity-40">Loading Obelisk OS v0.1.0</div>
+            <div className="mt-0.5 opacity-40">System Link: ACTIVE</div>
+            <div className="mt-1 animate-pulse">_</div>
           </div>
           {/* Screen Glare and Data Flash */}
           <div className={`absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none transition-opacity duration-300 ${isFlashing ? 'bg-white/20 opacity-100' : ''}`} />

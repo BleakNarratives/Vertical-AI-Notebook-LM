@@ -5,6 +5,7 @@ import { Laptop } from "@/components/Boardroom/Laptop";
 import { Whiteboard } from "@/components/Boardroom/Whiteboard";
 import { VideoViewer } from "@/components/Boardroom/VideoViewer";
 import { Papers } from "@/components/Boardroom/Papers";
+import { PerspectiveWrapper } from "@/components/Boardroom/PerspectiveWrapper";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -43,8 +44,7 @@ export default function RootLayout({
           {/* Floor/Table Shadow */}
           <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent opacity-60 pointer-events-none" />
 
-          {/* Central Obelisk container - with Boardroom Perspective */}
-          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative [transform:rotateX(20deg)_translateZ(0)] transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
+          <PerspectiveWrapper>
              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
 
              {/* Perspective Background Elements - Simulated Table Surface */}
@@ -72,7 +72,7 @@ export default function RootLayout({
              <EasterEgg />
              <SecurityOverlay />
              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber to-transparent opacity-30" />
-          </div>
+          </PerspectiveWrapper>
         </main>
 
         <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
