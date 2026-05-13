@@ -83,8 +83,8 @@
  * - Finalize the "Code City" transition: all visual assets (mug, laptop, papers) should be replaced with ASCII art representations.
  * - Transition `MOLT_CONFIG.status` to 'SINGULARITY_STABLE'.
  *
- * CYCLE 16: QUANTUM INTEGRITY ENFORCEMENT
- * - Implement "Memory Pinning": security-critical states (blacklist, lockdown) should be redundantly stored in `sessionStorage` and an in-memory `BroadcastChannel` to detect local tampering.
+ * CYCLE 16: QUANTUM INTEGRITY ENFORCEMENT [PARTIAL]
+ * - Implement "Memory Pinning": security-critical states (blacklist, lockdown) should be redundantly stored in `sessionStorage` and an in-memory `BroadcastChannel` to detect local tampering. [DONE: Memory Pinning for Blacklist]
  * - Add a "Integrity Pulse" that fires every 30 seconds; if state divergence is detected, trigger an immediate `CRITICAL` alert and hard-refresh the application.
  *
  * CYCLE 17: DEEP FORENSIC RECONSTRUCTION
@@ -103,6 +103,10 @@
  * - Final security audit of all 20 cycles.
  * - Implement a "Sentinel Handshake" - a cryptographic challenge that must be solved by the client on every 10th interaction to ensure a human is in the loop.
  * - Set `MOLT_CONFIG.status` to 'CONVERGENCE_FINALIZED'.
+ *
+ * CYCLE 21: ZERO-TRUST SESSION HANDSHAKES
+ * - Implement a "Sentinel Handshake" mini-module that generates a ephemeral, short-lived HMAC for every critical agent interaction.
+ * - Any interaction without a valid, fresh HMAC should trigger an immediate `CRITICAL` forensic log and session termination.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({

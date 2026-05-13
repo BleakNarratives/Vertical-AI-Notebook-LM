@@ -2,6 +2,9 @@
 
 import { useCallback } from 'react';
 
+// Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
+let memoryBlacklist: number | null = null;
+
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
@@ -136,24 +139,45 @@ export const useSentinel = () => {
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
-    localStorage.setItem('sentinel_blacklist', expiry.toString());
-    logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
-    window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
+    try {
+      localStorage.setItem('sentinel_blacklist', expiry.toString());
+      memoryBlacklist = expiry; // Pin to memory
+      logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
+      window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
+    } catch {
+      logSecurityEvent('CRITICAL: Failed to persist blacklist to storage.', 'CRITICAL');
+    }
   }, [logSecurityEvent]);
 
   const checkBlacklist = useCallback((): boolean => {
     if (typeof window === 'undefined') return false;
     const stored = localStorage.getItem('sentinel_blacklist');
-    if (stored) {
-      const expiry = parseInt(stored, 10);
-      if (Date.now() < expiry) {
+    const storedExpiry = stored ? parseInt(stored, 10) : null;
+
+    // Integrity Check: Detect if storage was cleared or tampered with
+    if (memoryBlacklist !== null && Date.now() < memoryBlacklist) {
+      if (storedExpiry !== memoryBlacklist) {
+        logSecurityEvent('INTEGRITY BREACH: Security state divergence detected (Blacklist). Countermeasures engaged.', 'CRITICAL');
+        // Restore from memory pin
+        try {
+          localStorage.setItem('sentinel_blacklist', memoryBlacklist.toString());
+        } catch { /* ignore */ }
+      }
+      return true;
+    }
+
+    if (storedExpiry) {
+      if (Date.now() < storedExpiry) {
+        // Sync memory pin on first load
+        if (memoryBlacklist === null) memoryBlacklist = storedExpiry;
         return true;
       } else {
         localStorage.removeItem('sentinel_blacklist');
+        memoryBlacklist = null;
       }
     }
     return false;
-  }, []);
+  }, [logSecurityEvent]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
