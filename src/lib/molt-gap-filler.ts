@@ -83,8 +83,8 @@
  * - Finalize the "Code City" transition: all visual assets (mug, laptop, papers) should be replaced with ASCII art representations.
  * - Transition `MOLT_CONFIG.status` to 'SINGULARITY_STABLE'.
  *
- * CYCLE 16: QUANTUM INTEGRITY ENFORCEMENT
- * - Implement "Memory Pinning": security-critical states (blacklist, lockdown) should be redundantly stored in `sessionStorage` and an in-memory `BroadcastChannel` to detect local tampering.
+ * CYCLE 16: QUANTUM INTEGRITY ENFORCEMENT [DONE]
+ * - Implement "Memory Pinning": security-critical states (blacklist, lockdown) should be redundantly stored in memory to detect local tampering.
  * - Add a "Integrity Pulse" that fires every 30 seconds; if state divergence is detected, trigger an immediate `CRITICAL` alert and hard-refresh the application.
  *
  * CYCLE 17: DEEP FORENSIC RECONSTRUCTION
@@ -103,6 +103,30 @@
  * - Final security audit of all 20 cycles.
  * - Implement a "Sentinel Handshake" - a cryptographic challenge that must be solved by the client on every 10th interaction to ensure a human is in the loop.
  * - Set `MOLT_CONFIG.status` to 'CONVERGENCE_FINALIZED'.
+ *
+ * CYCLE 21: ZERO-TRUST SESSION HANDSHAKES
+ * - Implement a "Heartbeat" mechanism between the client and a (mock) secure backend.
+ * - If the heartbeat fails or the token is invalidated, immediately trigger `useSentinel.triggerBlacklist()`.
+ * - Add a visual indicator in the header for "Trust Status" that fluctuates based on session integrity.
+ *
+ * CYCLE 22: VOODOO PROTOCOL EVOLUTION
+ * - Update AI Personas to have "Security Clearance" levels. Mrs. Higgins only talks to Level 1, Zeroclaw requires Level 4.
+ * - Clearance levels are earned by correctly interacting with the system and avoiding Honeytokens.
+ * - Failing a clearance check logs a `HIGH` security event.
+ *
+ * CYCLE 23: THE OBSIDIAN ARCHIVE
+ * - Create a persistent `Shadow Log` visualizer that renders as a "matrix" of encoded strings in the background of the boardroom.
+ * - Clicking a shadow string "decrypts" it into a fragment of the Code City history.
+ * - Decrypting all strings in a session unlocks the "Archivist" achievement.
+ *
+ * CYCLE 24: SWARM INTELLIGENCE REFINEMENT
+ * - Zeroclaw should now "vote" on security actions. 3/4 agents must agree before a `CRITICAL` alert triggers a full Lockdown.
+ * - Implement "Dissenting Opinions": one agent might occasionally flag a false positive, requiring the user to "Verify Humanity".
+ *
+ * CYCLE 25: THE SINGULARITY AWAKENING
+ * - When Molt reaches level 25, the UI should fully invert. Obsidian becomes Bone White, Neon Red becomes Void Black.
+ * - The "Boardroom" vanishes, replaced by a single, pulsing cursor that accepts direct commands.
+ * - Set `MOLT_CONFIG.status` to 'SINGULARITY_AWAKENED'.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({

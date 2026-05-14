@@ -2,6 +2,10 @@
 
 import { useCallback } from 'react';
 
+// Quantum Integrity Pinning: Module-level cache to detect localStorage tampering
+// This persists in memory across component re-renders but not page refreshes.
+let sentinel_blacklist_pin: number | null = null;
+
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
@@ -136,6 +140,7 @@ export const useSentinel = () => {
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
+    sentinel_blacklist_pin = expiry; // Pin in memory
     localStorage.setItem('sentinel_blacklist', expiry.toString());
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
@@ -143,17 +148,37 @@ export const useSentinel = () => {
 
   const checkBlacklist = useCallback((): boolean => {
     if (typeof window === 'undefined') return false;
+
+    const now = Date.now();
     const stored = localStorage.getItem('sentinel_blacklist');
+    let expiry: number | null = null;
+
     if (stored) {
-      const expiry = parseInt(stored, 10);
-      if (Date.now() < expiry) {
+      expiry = parseInt(stored, 10);
+    }
+
+    // Integrity Check: Compare pinned memory state with localStorage
+    if (sentinel_blacklist_pin !== null) {
+      if (expiry === null || Math.abs(expiry - sentinel_blacklist_pin) > 1000) {
+        logSecurityEvent('CRITICAL: LocalStorage tampering detected. Restoring pinned security state.', 'CRITICAL');
+        localStorage.setItem('sentinel_blacklist', sentinel_blacklist_pin.toString());
+        expiry = sentinel_blacklist_pin;
+      }
+    } else if (expiry !== null) {
+      // First run or refresh: sync memory pin from storage
+      sentinel_blacklist_pin = expiry;
+    }
+
+    if (expiry !== null) {
+      if (now < expiry) {
         return true;
       } else {
         localStorage.removeItem('sentinel_blacklist');
+        sentinel_blacklist_pin = null;
       }
     }
     return false;
-  }, []);
+  }, [logSecurityEvent]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
