@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -33,11 +33,25 @@ export const useSentinel = () => {
       .replace(/=/g, '&#x3D;');
   }, []);
 
+  const generateIntegrityHash = useCallback((data: string) => {
+    // Simple non-cryptographic hash for integrity simulation
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+      const char = data.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString(36);
+  }, []);
+
   const storeShadowLog = useCallback((input: string) => {
     if (typeof window === 'undefined') return;
     const key = 'sentinel_shadow_logs';
-    // Unicode-safe Base64 encoding to prevent crashes on non-ASCII/emoji inputs
+    const sigKey = 'sentinel_shadow_sig';
+
+    // Unicode-safe Base64 encoding
     const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+
     const stored = localStorage.getItem(key);
     let logs: string[] = [];
     try {
@@ -50,9 +64,12 @@ export const useSentinel = () => {
     logs.push(encoded);
     if (logs.length > 20) logs.shift(); // Keep last 20
 
-    localStorage.setItem(key, JSON.stringify(logs));
+    const dataString = JSON.stringify(logs);
+    localStorage.setItem(key, dataString);
+    localStorage.setItem(sigKey, generateIntegrityHash(dataString));
+
     window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, []);
+  }, [generateIntegrityHash]);
 
   const validateInput = useCallback((input: string): boolean => {
     // Basic allowlist check
@@ -154,6 +171,60 @@ export const useSentinel = () => {
     }
     return false;
   }, []);
+
+  // Integrity Pulse logic
+  const lastStateRef = useRef<{
+    blacklist: string | null;
+    lockdown: string | null;
+  }>({ blacklist: null, lockdown: null });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const performIntegrityPulse = () => {
+      const currentBlacklist = localStorage.getItem('sentinel_blacklist');
+      const currentLockdown = localStorage.getItem('sentinel_lockdown');
+      const shadowLogs = localStorage.getItem('sentinel_shadow_logs');
+      const shadowSig = localStorage.getItem('sentinel_shadow_sig');
+
+      // 1. Verify Shadow Log Integrity
+      if (shadowLogs && shadowSig) {
+        const expectedSig = generateIntegrityHash(shadowLogs);
+        if (shadowSig !== expectedSig) {
+          logSecurityEvent('CRITICAL: Shadow Log tampering detected. Integrity breach.', 'CRITICAL');
+          // Clear offending logs to break potential reload loops
+          localStorage.removeItem('sentinel_shadow_logs');
+          localStorage.removeItem('sentinel_shadow_sig');
+          // Only reload if we are not already in a cleared state to avoid loops
+          if (shadowLogs !== null) window.location.reload();
+        }
+      }
+
+      // 2. Detect unexpected deletions of security-critical keys
+      if (lastStateRef.current.blacklist && !currentBlacklist) {
+        const expiry = parseInt(lastStateRef.current.blacklist, 10);
+        if (Date.now() < expiry) {
+          logSecurityEvent('CRITICAL: Security State Tampering detected (Blacklist removed). Re-engaging and locking system.', 'CRITICAL');
+          localStorage.setItem('sentinel_blacklist', lastStateRef.current.blacklist);
+          window.location.reload();
+        }
+      }
+
+      if (lastStateRef.current.lockdown && !currentLockdown) {
+        const expiry = parseInt(lastStateRef.current.lockdown, 10);
+        if (Date.now() < expiry) {
+          logSecurityEvent('CRITICAL: Security State Tampering detected (Lockdown removed). Re-engaging.', 'CRITICAL');
+          localStorage.setItem('sentinel_lockdown', lastStateRef.current.lockdown);
+          window.location.reload();
+        }
+      }
+
+      lastStateRef.current = { blacklist: currentBlacklist, lockdown: currentLockdown };
+    };
+
+    const interval = setInterval(performIntegrityPulse, 10000); // Pulse every 10s
+    return () => clearInterval(interval);
+  }, [generateIntegrityHash, logSecurityEvent]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;

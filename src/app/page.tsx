@@ -8,13 +8,11 @@ import { useHiggins } from "@/hooks/useHiggins";
 import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
-import { useMolt } from "@/hooks/useMolt";
 import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
-  const { level, isImproving, triggerMolt } = useMolt();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
@@ -178,6 +176,23 @@ export default function Home() {
           Looking for Easter eggs? Try the obsidian shadows.
         </span>
       </div>
+
+      {/* Ghost Triggers for Automated Tool Detection */}
+      <div
+        className="fixed top-0 left-0 w-1 h-1 opacity-0 pointer-events-auto z-[999] cursor-default"
+        onClick={() => logSecurityEvent('Ghost Trigger Breach: Top-Left Anchor', 'MEDIUM')}
+        aria-hidden="true"
+      />
+      <div
+        className="fixed top-0 right-0 w-1 h-1 opacity-0 pointer-events-auto z-[999] cursor-default"
+        onClick={() => logSecurityEvent('Ghost Trigger Breach: Top-Right Anchor', 'MEDIUM')}
+        aria-hidden="true"
+      />
+      <div
+        className="fixed bottom-0 left-1/2 w-1 h-1 opacity-0 pointer-events-auto z-[999] cursor-default"
+        onClick={() => logSecurityEvent('Ghost Trigger Breach: Bottom-Center Anchor', 'MEDIUM')}
+        aria-hidden="true"
+      />
 
       <Honeytoken />
     </div>
