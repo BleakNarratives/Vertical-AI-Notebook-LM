@@ -8,13 +8,11 @@ import { useHiggins } from "@/hooks/useHiggins";
 import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
-import { useMolt } from "@/hooks/useMolt";
 import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
-  const { level, isImproving, triggerMolt } = useMolt();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
@@ -169,17 +167,13 @@ export default function Home() {
         />
       </div>
 
-      <div className="absolute bottom-12 left-12">
-        <Honeytoken />
-      </div>
+      <Honeytoken />
 
       <div className="absolute bottom-12 right-12 opacity-20 hover:opacity-100 transition-opacity duration-1000">
         <span className="text-[10px] font-mono text-neon-amber">
           Looking for Easter eggs? Try the obsidian shadows.
         </span>
       </div>
-
-      <Honeytoken />
     </div>
   );
 }
