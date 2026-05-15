@@ -4,15 +4,16 @@ import React, { useEffect, useRef, useSyncExternalStore } from 'react';
 /**
  * PerspectiveWrapper - Dynamic 3D parallax tilt for the boardroom.
  */
+const motionQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
 export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isReduced = useSyncExternalStore(
     (cb) => {
-      const q = window.matchMedia('(prefers-reduced-motion: reduce)');
-      q.addEventListener('change', cb);
-      return () => q.removeEventListener('change', cb);
+      motionQuery?.addEventListener('change', cb);
+      return () => motionQuery?.removeEventListener('change', cb);
     },
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    () => motionQuery?.matches ?? false,
     () => false
   );
 
