@@ -90,8 +90,10 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
             translateY="8px"
             onClick={() => handleView(data.p2)}
           />
-        {/* Additional stacked paper look */}
-        <div className="absolute top-1 left-1 w-14 h-18 bg-white/5 border border-grey-medium rotate-1 -z-10 pointer-events-none" />
+        {/* Additional stacked paper look - multiple layers */}
+        <div className="absolute top-1 left-1 w-12 h-16 bg-white/5 border border-grey-medium rotate-1 -z-10 pointer-events-none" />
+        <div className="absolute top-2 left-2 w-12 h-16 bg-white/5 border border-grey-medium -rotate-2 -z-20 pointer-events-none" />
+        <div className="absolute top-1.5 left-0 w-12 h-16 bg-white/5 border border-grey-medium rotate-4 -z-30 pointer-events-none" />
         </div>
       </div>
     </div>

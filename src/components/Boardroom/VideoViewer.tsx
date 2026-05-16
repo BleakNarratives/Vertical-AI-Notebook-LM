@@ -7,14 +7,14 @@ export const VideoViewer: React.FC = () => {
 
   const handleAction = () => {
     setStatus('Connection Established');
-    setTimeout(() => setStatus(null), 2000);
+    setTimeout(() => setStatus(null), 3000);
   };
 
   return (
-    <div className="absolute top-16 -right-12 flex flex-col items-center gap-2">
+    <div className="absolute top-16 -right-12 flex flex-col items-center gap-2 z-20">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && (
-          <div className="text-xs font-mono text-neon-red animate-pulse uppercase">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
             {status}
           </div>
         )}
@@ -30,16 +30,16 @@ export const VideoViewer: React.FC = () => {
           {/* Scanlines */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[size:100%_2px,3px_100%] pointer-events-none" />
 
-          <div className="w-full h-full bg-gradient-to-t from-neon-red/5 to-transparent animate-pulse" />
+          <div className={`w-full h-full bg-gradient-to-t ${status ? 'from-neon-amber/20' : 'from-neon-red/5'} to-transparent animate-pulse transition-colors duration-500`} />
 
           {/* REC indicator */}
           <div className="absolute top-2 right-2 flex items-center gap-1 opacity-60">
-            <div className="w-1.5 h-1.5 rounded-full bg-neon-red animate-pulse" />
-            <span className="text-[8px] font-mono text-neon-red uppercase">REC</span>
+            <div className={`w-1.5 h-1.5 rounded-full ${status ? 'bg-neon-amber' : 'bg-neon-red'} animate-pulse transition-colors duration-500`} />
+            <span className={`text-[8px] font-mono ${status ? 'text-neon-amber' : 'text-neon-red'} uppercase transition-colors duration-500`}>REC</span>
           </div>
 
-          <div className="absolute text-[10px] font-mono text-neon-red/60 tracking-widest animate-pulse">
-            SIGNAL_WAITING...
+          <div className={`absolute text-[10px] font-mono ${status ? 'text-neon-amber' : 'text-neon-red/60'} tracking-widest animate-pulse transition-colors duration-500`}>
+            {status ? 'FEED_SYNCHRONIZED' : 'SIGNAL_WAITING...'}
           </div>
         </div>
         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-grey-medium" />
