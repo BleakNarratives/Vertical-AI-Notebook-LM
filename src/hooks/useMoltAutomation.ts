@@ -79,10 +79,18 @@ export const useMoltAutomation = () => {
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
         // Track high-severity alerts for lockdown
-        const alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
+        let alerts = [];
+        try {
+          alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
+          if (!Array.isArray(alerts)) alerts = [];
+        } catch { alerts = []; }
+
         const now = Date.now();
-        const recentAlerts = [...alerts.filter((a: number) => now - a < 300000), now];
-        localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+        const recentAlerts = [...alerts.filter((a: number) => typeof a === 'number' && now - a < 300000), now];
+
+        try {
+          localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+        } catch { /* ignore */ }
 
         if (recentAlerts.length >= 3 && !isLockdown) {
           triggerLockdown();

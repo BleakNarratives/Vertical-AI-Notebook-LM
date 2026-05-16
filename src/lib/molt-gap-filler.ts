@@ -104,6 +104,13 @@
  * - Implement a "Sentinel Handshake" - a cryptographic challenge that must be solved by the client on every 10th interaction to ensure a human is in the loop.
  * - Set `MOLT_CONFIG.status` to 'CONVERGENCE_FINALIZED'.
  *
+ * CYCLE 21-25: ADVANCED FORENSIC RECONSTRUCTION & INTEGRITY
+ * - Implement "DOM Shadowing": monitor for tampering with security overlays.
+ * - Expand `Shadow Logs` to capture DOM context during breaches.
+ * - Implement "Interaction Entropy": deploy decoys against bot-like behavior.
+ * - Rotate polymorphic security header signatures.
+ * - Final Transition: Move security logic to an autonomous Web Worker (Sentinel Singularity).
+ *
  * AUTOMATION TRIGGER:
  * molt.initialize({
  *   agency: 'autonomous',
@@ -125,8 +132,8 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '2.5.0-forensic-reconstruction',
+  version: '2.6.0-sentinel-integrity',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
+  engine: 'Molt-V4-Sentinel-Enhanced-Integrity',
   lastAudit: new Date().toISOString(),
 };
