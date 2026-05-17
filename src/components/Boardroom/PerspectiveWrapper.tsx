@@ -19,6 +19,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
 
   useEffect(() => {
     if (isReduced) return;
+
     const move = (e: MouseEvent) => {
       if (!ref.current) return;
       const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
@@ -26,8 +27,27 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       ref.current.style.setProperty('--tx', `${y * 2}deg`);
       ref.current.style.setProperty('--ty', `${-x * 2}deg`);
     };
+
+    const handleFocus = (e: FocusEvent) => {
+      if (!ref.current || !(e.target instanceof Element) || !ref.current.contains(e.target)) return;
+      const rect = e.target.getBoundingClientRect();
+      const rect = e.target.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const x = (centerX - window.innerWidth / 2) / (window.innerWidth / 2);
+      const y = (centerY - window.innerHeight / 2) / (window.innerHeight / 2);
+
+      ref.current.style.setProperty('--tx', `${y * 2}deg`);
+      ref.current.style.setProperty('--ty', `${-x * 2}deg`);
+    };
+
     window.addEventListener('mousemove', move);
-    return () => window.removeEventListener('mousemove', move);
+    window.addEventListener('focusin', handleFocus);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('focusin', handleFocus);
+    };
   }, [isReduced]);
 
   return (
