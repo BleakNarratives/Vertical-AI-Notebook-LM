@@ -84,7 +84,7 @@ export const useMoltAutomation = () => {
         // Track high-severity alerts for lockdown
         let alerts: number[] = [];
         try {
-          const stored = localStorage.getItem('sentinel_alert_history');
+          const stored = secureGet('sentinel_alert_history');
           if (stored) {
             alerts = JSON.parse(stored);
             if (!Array.isArray(alerts)) alerts = [];
@@ -93,7 +93,7 @@ export const useMoltAutomation = () => {
 
         const now = Date.now();
         const recentAlerts = [...alerts.filter((a: number) => now - a < 300000), now];
-        localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+        secureStore('sentinel_alert_history', JSON.stringify(recentAlerts));
 
         if (recentAlerts.length >= 3 && !isLockdown) {
           triggerLockdown();
