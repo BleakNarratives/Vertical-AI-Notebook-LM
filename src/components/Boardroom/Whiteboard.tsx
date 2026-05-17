@@ -13,8 +13,13 @@ export const Whiteboard: React.FC = () => {
     e.currentTarget.style.setProperty('--y', `${y}%`);
   };
 
+  const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.setProperty('--x', '50%');
+    e.currentTarget.style.setProperty('--y', '50%');
+  };
+
   const handleAction = () => {
-    setStatus('Strategy Updated');
+    setStatus('ITERATION_LOOP_LOGGED');
     setTimeout(() => setStatus(null), 2000);
   };
 
@@ -30,6 +35,7 @@ export const Whiteboard: React.FC = () => {
       <button
         type="button"
         onMouseMove={handleMouseMove}
+        onFocus={handleFocus}
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
         style={{ transform: 'rotateX(-20deg) rotateZ(-3deg)' }}
@@ -40,11 +46,22 @@ export const Whiteboard: React.FC = () => {
           <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
                style={{ left: 'var(--x, 50%)', top: 'var(--y, 50%)', transform: 'translate(-50%, -50%)' }} />
 
+          {/* Voodoo Loop Sketch */}
+          <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none stroke-neon-red" viewBox="0 0 100 150" fill="none">
+            <path d="M50,30 Q80,30 80,60 Q80,90 50,90 Q20,90 20,60 Q20,30 50,30 Z" strokeWidth="0.5" />
+            <path d="M50,90 L50,120 M40,110 L60,110" strokeWidth="0.5" />
+            <circle cx="40" cy="50" r="2" fill="currentColor" />
+            <circle cx="60" cy="50" r="2" fill="currentColor" />
+          </svg>
+
           <div className="w-full h-full border-l border-b border-neon-amber/20 flex flex-col gap-2 opacity-40">
              <div className="h-0.5 w-3/4 bg-neon-amber/40" />
              <div className="h-0.5 w-1/2 bg-neon-amber/40" />
              <div className="h-0.5 w-5/6 bg-neon-amber/40" />
-             <div className="mt-auto h-4 w-4 rounded-full border border-neon-red/40" />
+             <div className="mt-auto flex justify-between items-end">
+               <div className="h-4 w-4 rounded-full border border-neon-red/40" />
+               <div className="text-[8px] font-mono text-neon-amber/40">v2.6.0</div>
+             </div>
           </div>
         </div>
         <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
