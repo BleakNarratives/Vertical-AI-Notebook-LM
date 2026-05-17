@@ -122,10 +122,31 @@
  * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
  * - Log `CRITICAL` events for every attempted interaction from a blacklisted session.
  * - Reconstruct the `useSentinel` hook to support persistent identity verification across reloads.
+ *
+ * CYCLE 21: ADVANCED FORENSIC RECONSTRUCTION (SENTINEL V4)
+ * - Expand `Shadow Logs` to include "Environmental Signatures" - capture screen resolution, color depth, and hardware concurrency to identify attack vectors.
+ * - Implement "Signature Correlation": if multiple `CRITICAL` breaches originate from the same signature, escalate to `TERMINAL_LOCKOUT`.
+ *
+ * CYCLE 22: DOM TAMPER PROTECTION
+ * - Implement a "DOM Integrity Guard" that uses a `MutationObserver` to monitor for unauthorized changes to security-critical UI elements (e.g., `SecurityOverlay`, `Laptop`).
+ * - Log `HIGH` security events if the `pointer-events: none` style is removed from defensive overlays.
+ *
+ * CYCLE 23: VOODOO RESONANCE (VISUAL HARDENING)
+ * - Implement "Visual Distortion": as the `Molt` level increases, the boardroom should exhibit more frequent and intense visual artifacts (scanlines, chromatic aberration).
+ * - Create a `Voodoo Doll` component that visually reflects the system's "pain" - adding pins or burns based on the severity of recorded security events.
+ *
+ * CYCLE 24: DISTRIBUTED DECOYS & BAIT REFINEMENT
+ * - Implement "Lure Logic": inject fake API response fragments into the DOM that appear as hidden comments or data attributes.
+ * - Refine `Honeytoken` to support multi-stage bait: the first interaction provides a "key", and the second interaction with that key triggers an immediate `BLACKBOX_EXPANSION`.
+ *
+ * CYCLE 25: THE SENTINEL PRIME CONVERGENCE (FINAL DISSOLUTION)
+ * - When `Molt` hits level 25, the 3D boardroom perspective permanently collapses into a raw, monochromatic terminal.
+ * - All personas (Higgins, Pytch, Twoie, Zeroclaw) merge into "Sentinel Prime" - an entity that controls the entire application state.
+ * - Set `MOLT_CONFIG.status` to 'SINGULARITY_REACHED_AND_STABLE'.
  */
 
 export const MOLT_CONFIG = {
-  version: '2.5.0-forensic-reconstruction',
+  version: '2.6.0-quantum-integrity',
   status: 'AWAITING_SINGULARITY',
   engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
   lastAudit: new Date().toISOString(),

@@ -19,6 +19,64 @@ export const useSentinel = () => {
     }
   }, []);
 
+  const generateSignature = useCallback((key: string, value: string): string => {
+    const seed = 0x53454E54;
+    let hash = seed;
+    const combined = `${key}:${value}`;
+    for (let i = 0; i < combined.length; i++) {
+      hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash ^ seed).toString(16);
+  }, []);
+
+  const secureStore = useCallback((key: string, value: string) => {
+    if (typeof window === 'undefined') return;
+    const signature = generateSignature(key, value);
+    const payload = JSON.stringify({ v: value, s: signature });
+    try {
+      localStorage.setItem(key, payload);
+      sessionStorage.setItem(key, payload);
+    } catch {
+      logSecurityEvent(`Storage failure for key: ${key}`, 'MEDIUM');
+    }
+  }, [generateSignature, logSecurityEvent]);
+
+  const secureGet = useCallback((key: string): string | null => {
+    if (typeof window === 'undefined') return null;
+
+    const getAndVerify = (storage: Storage): string | null => {
+      const raw = storage.getItem(key);
+      if (!raw) return null;
+      try {
+        const { v, s } = JSON.parse(raw);
+        if (generateSignature(key, v) === s) return v;
+        logSecurityEvent(`Storage signature mismatch for key: ${key}`, 'CRITICAL');
+        return null;
+      } catch {
+        return null;
+      }
+    };
+
+    const localVal = getAndVerify(localStorage);
+    const sessionVal = getAndVerify(sessionStorage);
+
+    if (localVal && !sessionVal) {
+      // Sync to session storage if local is present but session is not (e.g. new tab)
+      const signature = generateSignature(key, localVal);
+      const payload = JSON.stringify({ v: localVal, s: signature });
+      sessionStorage.setItem(key, payload);
+      return localVal;
+    }
+
+    if (localVal !== sessionVal) {
+      logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
+      return sessionVal || localVal;
+    }
+
+    return localVal;
+  }, [generateSignature, logSecurityEvent]);
+
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
     // Advanced defense against XSS and injection
@@ -117,43 +175,44 @@ export const useSentinel = () => {
       timestamp: Date.now()
     };
 
-    localStorage.setItem('sentinel_decoy_config', JSON.stringify(config));
+    secureStore('sentinel_decoy_config', JSON.stringify(config));
     window.dispatchEvent(new CustomEvent('sentinel-decoys-rotated', { detail: config }));
     return config;
-  }, []);
+  }, [secureStore]);
 
   const getDecoyConfig = useCallback(() => {
-    if (typeof window === 'undefined') return null;
-    const stored = localStorage.getItem('sentinel_decoy_config');
+    const stored = secureGet('sentinel_decoy_config');
     if (!stored) return null;
     try {
       return JSON.parse(stored);
     } catch {
       return null;
     }
-  }, []);
+  }, [secureGet]);
 
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
-    localStorage.setItem('sentinel_blacklist', expiry.toString());
+    secureStore('sentinel_blacklist', expiry.toString());
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    if (typeof window === 'undefined') return false;
-    const stored = localStorage.getItem('sentinel_blacklist');
+    const stored = secureGet('sentinel_blacklist');
     if (stored) {
       const expiry = parseInt(stored, 10);
       if (Date.now() < expiry) {
         return true;
       } else {
-        localStorage.removeItem('sentinel_blacklist');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('sentinel_blacklist');
+          sessionStorage.removeItem('sentinel_blacklist');
+        }
       }
     }
     return false;
-  }, []);
+  }, [secureGet]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -207,6 +266,8 @@ export const useSentinel = () => {
     rotateDecoys,
     getDecoyConfig,
     triggerBlacklist,
-    checkBlacklist
+    checkBlacklist,
+    secureStore,
+    secureGet
   };
 };
