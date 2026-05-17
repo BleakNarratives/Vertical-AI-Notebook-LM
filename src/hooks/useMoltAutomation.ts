@@ -18,7 +18,7 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
@@ -30,7 +30,7 @@ export const useMoltAutomation = () => {
 
     const checkSecurityStates = () => {
       // Check Lockdown
-      const storedLockdown = localStorage.getItem('sentinel_lockdown');
+      const storedLockdown = secureGet('sentinel_lockdown');
       if (storedLockdown) {
         const lockdownExpiry = parseInt(storedLockdown, 10);
         if (Date.now() < lockdownExpiry) {
@@ -38,7 +38,10 @@ export const useMoltAutomation = () => {
           const remaining = lockdownExpiry - Date.now();
           setTimeout(() => setIsLockdown(false), remaining);
         } else {
-          localStorage.removeItem('sentinel_lockdown');
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('sentinel_lockdown');
+            sessionStorage.removeItem('sentinel_lockdown');
+          }
         }
       }
 
@@ -47,15 +50,15 @@ export const useMoltAutomation = () => {
     };
 
     checkSecurityStates();
-  }, [checkBlacklist]);
+  }, [checkBlacklist, secureGet]);
 
   const triggerLockdown = useCallback(() => {
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
-    localStorage.setItem('sentinel_lockdown', expiry.toString());
+    secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureStore]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -79,10 +82,18 @@ export const useMoltAutomation = () => {
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
         // Track high-severity alerts for lockdown
-        const alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
+        let alerts: number[] = [];
+        try {
+          const stored = secureGet('sentinel_alert_history');
+          if (stored) {
+            alerts = JSON.parse(stored);
+            if (!Array.isArray(alerts)) alerts = [];
+          }
+        } catch { alerts = []; }
+
         const now = Date.now();
         const recentAlerts = [...alerts.filter((a: number) => now - a < 300000), now];
-        localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
+        secureStore('sentinel_alert_history', JSON.stringify(recentAlerts));
 
         if (recentAlerts.length >= 3 && !isLockdown) {
           triggerLockdown();
@@ -142,7 +153,17 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
       };
     }
-  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
+
+  // Integrity Heartbeat: Verify storage consistency every 30s
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const interval = setInterval(() => {
+      secureGet('sentinel_blacklist');
+      secureGet('sentinel_lockdown');
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [secureGet]);
 
   return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
 };
