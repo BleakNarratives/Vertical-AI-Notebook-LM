@@ -56,9 +56,11 @@ export const useSentinel = () => {
 
   const validateInput = useCallback((input: string): boolean => {
     // Length check: Prevent DoS/Buffer-related overflows
-    if (input.length > 200) {
-      logSecurityEvent(`Input rejected: Length exceeds 200 character limit`, 'MEDIUM');
+    const MAX_INPUT_LENGTH = 200;
+    if (input.length > MAX_INPUT_LENGTH) {
+      logSecurityEvent(`Input rejected: Length exceeds ${MAX_INPUT_LENGTH} character limit`, 'MEDIUM');
       return false;
+    }
     }
 
     // Basic allowlist check
