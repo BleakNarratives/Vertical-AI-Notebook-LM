@@ -32,7 +32,7 @@ export const PerspectiveWrapper: React.FC<PerspectiveWrapperProps> = ({ children
   return (
     <div
       ref={containerRef}
-      className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transition-transform duration-500 ease-out [transform:rotateX(var(--tilt-y,20deg))_rotateY(var(--tilt-x,0deg))_translateZ(0)] transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]"
+      className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transition-transform duration-300 ease-out [transform:rotateX(var(--tilt-y,20deg))_rotateY(var(--tilt-x,0deg))_translateZ(0)] transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]"
     >
       {/* Table Edge (Visual reinforcement of perspective) */}
       <div className="absolute -bottom-2 left-0 w-full h-4 bg-grey-dark border-t border-grey-medium skew-x-[20deg] origin-bottom shadow-2xl pointer-events-none z-30" />
