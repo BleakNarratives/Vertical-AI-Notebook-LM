@@ -169,10 +169,11 @@ export const useSentinel = () => {
     const blacklist = localStorage.getItem('sentinel_blacklist');
     const alertHistory = localStorage.getItem('sentinel_alert_history');
 
-    if (blacklist && !alertHistory) {
+    if (blacklist && (!alertHistory || alertHistory === '[]')) {
       logSecurityEvent('INTEGRITY DIVERGENCE: Security state inconsistency detected.', 'HIGH');
       // If they wiped their alert history but are still blacklisted, they are likely trying to bypass lockdown
       return false;
+    }
     }
 
     return true;
