@@ -2,15 +2,25 @@
 
 import React, { useState } from 'react';
 
+const STATUS_MESSAGES = [
+  'System Snapshot Saved',
+  'Cache Cleared',
+  'Mug Refilled',
+  'Session Persisted',
+  'Tokens Rotated'
+];
+
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
 
   const handleAction = () => {
-    setStatus('System Snapshot Saved');
+    if (status) return;
+    const randomMsg = STATUS_MESSAGES[Math.floor(Math.random() * STATUS_MESSAGES.length)];
+    setStatus(randomMsg);
     setTimeout(() => setStatus(null), 2000);
   };
 
-  const isSaving = status === 'System Snapshot Saved';
+  const isSaving = status !== null;
 
   return (
     <div className="flex flex-col items-center gap-2">

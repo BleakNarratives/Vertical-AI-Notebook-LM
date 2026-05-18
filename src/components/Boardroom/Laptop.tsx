@@ -7,12 +7,17 @@ export const Laptop: React.FC = () => {
   const [isFlashing, setIsFlashing] = useState(false);
 
   const handleAccess = () => {
-    setStatus('Terminal Synchronized');
+    if (status) return;
+    setStatus('Synchronizing...');
     setIsFlashing(true);
+
     setTimeout(() => {
-      setStatus(null);
-      setIsFlashing(false);
-    }, 2000);
+      setStatus('Terminal Synchronized');
+      setTimeout(() => {
+        setStatus(null);
+        setIsFlashing(false);
+      }, 2000);
+    }, 1000);
   };
 
   return (
