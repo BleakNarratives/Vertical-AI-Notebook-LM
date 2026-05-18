@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-04-29 - [Integrity-Hardened Security State & Centralized Shadow Triggers]
+**Vulnerability:** Security-critical counters (rate limits, breach history, decoy interactions) were stored in `localStorage` without signature verification, allowing for trivial client-side tampering to bypass system lockdowns or session blacklists.
+**Learning:** Defense-in-depth requires that even client-side security state be hardened against tampering. By signing security-critical keys with a checksum-based signature, we can detect and log manual storage modification attempts as CRITICAL events.
+**Prevention:** Always use signed storage abstractions (`secureStore`/`secureGet`) for any data that influences security logic, rate limits, or system state. Centralize behavioral monitoring (Shadow Triggers) to ensure consistent detection of "Protocol Siege" attempts across all application entry points.

@@ -96,7 +96,7 @@ export const useSentinel = () => {
     const key = 'sentinel_shadow_logs';
     // Unicode-safe Base64 encoding to prevent crashes on non-ASCII/emoji inputs
     const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
-    const stored = localStorage.getItem(key);
+    const stored = secureGet(key);
     let logs: string[] = [];
     try {
       if (stored) {
@@ -108,9 +108,9 @@ export const useSentinel = () => {
     logs.push(encoded);
     if (logs.length > 20) logs.shift(); // Keep last 20
 
-    localStorage.setItem(key, JSON.stringify(logs));
+    secureStore(key, JSON.stringify(logs));
     window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, []);
+  }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
     // Basic allowlist check
@@ -222,7 +222,7 @@ export const useSentinel = () => {
     let data = { count: 0, startTime: now };
 
     try {
-      const stored = localStorage.getItem(storageKey);
+      const stored = secureGet(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -230,30 +230,43 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
+      /* ignore */
     }
 
     if (now - data.startTime > windowMs) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: 1, startTime: now }));
       return true;
     }
 
     if (data.count < limit) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
       return true;
     }
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore]);
+
+  const trackShadowTrigger = useCallback((key: string, limit: number = 3) => {
+    const storageKey = `sentinel_shadow_${key}`;
+    const stored = secureGet(storageKey);
+    let count = 0;
+    if (stored) {
+      count = parseInt(stored, 10);
+      if (isNaN(count)) count = 0;
+    }
+
+    count += 1;
+    if (count >= limit) {
+      logSecurityEvent(`SHADOW SEQUENCE DETECTED: ${key} under siege. Initializing defensive recursion.`, 'CRITICAL');
+      storeShadowLog(`${key.toUpperCase()}_SIEGE_PROTOCOL_VIOLATION`);
+      secureStore(storageKey, '0');
+      return true;
+    }
+
+    secureStore(storageKey, count.toString());
+    return false;
+  }, [secureGet, secureStore, logSecurityEvent, storeShadowLog]);
 
   return {
     logSecurityEvent,
@@ -261,6 +274,7 @@ export const useSentinel = () => {
     validateInput,
     validateRequest,
     checkRateLimit,
+    trackShadowTrigger,
     storeShadowLog,
     triggerHoneytoken,
     rotateDecoys,

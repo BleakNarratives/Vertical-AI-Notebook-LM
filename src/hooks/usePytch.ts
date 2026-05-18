@@ -6,10 +6,13 @@ import { useSentinel } from './useSentinel';
 
 export const usePytch = () => {
   const [isConstructing, setIsConstructing] = useState(false);
-  const { logSecurityEvent, checkRateLimit } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, trackShadowTrigger } = useSentinel();
 
   const wakePytch = useCallback(async () => {
-    if (!checkRateLimit('wakePytch', 3, 60000)) return;
+    if (!checkRateLimit('wakePytch', 3, 60000)) {
+      trackShadowTrigger('wakePytch', 3);
+      return;
+    }
 
     setIsConstructing(true);
     triggerAgent('pytch');
@@ -21,7 +24,7 @@ export const usePytch = () => {
 
     console.log('Pytch: The narrative has been solidified. Reality is now compliant.');
     setIsConstructing(false);
-  }, [logSecurityEvent, checkRateLimit]);
+  }, [logSecurityEvent, checkRateLimit, trackShadowTrigger]);
 
   return { wakePytch, isConstructing };
 };
