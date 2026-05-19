@@ -146,7 +146,7 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '2.6.0-quantum-integrity',
+  version: '2.7.0-quantum-forensics',
   status: 'AWAITING_SINGULARITY',
   engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
   lastAudit: new Date().toISOString(),

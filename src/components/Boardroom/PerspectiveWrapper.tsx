@@ -31,7 +31,6 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
     const handleFocus = (e: FocusEvent) => {
       if (!ref.current || !(e.target instanceof Element) || !ref.current.contains(e.target)) return;
       const rect = e.target.getBoundingClientRect();
-      const rect = e.target.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 

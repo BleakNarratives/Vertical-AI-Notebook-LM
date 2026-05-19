@@ -221,39 +221,31 @@ export const useSentinel = () => {
     const storageKey = `sentinel_rl_${key}`;
     let data = { count: 0, startTime: now };
 
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
+    const stored = secureGet(storageKey);
+    if (stored) {
+      try {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
           data = { ...data, ...parsed };
         }
+      } catch {
+        /* ignore parsing errors, secureGet handles signature mismatch */
       }
-    } catch {
-      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
     }
 
     if (now - data.startTime > windowMs) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: 1, startTime: now }));
       return true;
     }
 
     if (data.count < limit) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
       return true;
     }
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore]);
 
   return {
     logSecurityEvent,

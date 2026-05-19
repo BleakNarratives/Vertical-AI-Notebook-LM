@@ -142,28 +142,28 @@ export default function Home() {
           variant="primary"
           onClick={triggerMolt}
           isLoading={isImproving}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
           onClick={consultHiggins}
           isLoading={isHigginsActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
           onClick={wakePytch}
           isLoading={isPytchActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
           onClick={triggerSwarm}
           isLoading={isZeroclawActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
       </div>
 
