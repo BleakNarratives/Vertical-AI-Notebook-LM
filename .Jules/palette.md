@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Focus-Driven 3D Depth & Smooth Reset]
+**Learning:** Focus-driven 3D depth (e.g., a "Lean-In" effect via `translateZ`) significantly improves immersion for keyboard users, making the environment feel responsive to their attention. However, standard `focusout` resets can cause "flickering" when tabbing between siblings. Checking `e.relatedTarget` to see if focus remains within the 3D container ensures a smooth, persistent "active session" feel.
+**Action:** Use `e.relatedTarget` and `container.contains()` in `focusout` handlers to verify focus has truly exited the 3D context before resetting perspective variables.
