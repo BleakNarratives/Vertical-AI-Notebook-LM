@@ -7,12 +7,25 @@ export const Laptop: React.FC = () => {
   const [isFlashing, setIsFlashing] = useState(false);
 
   const handleAccess = () => {
-    setStatus('Terminal Synchronized');
+    if (status) return; // Prevent spamming during sequence
+
+    setStatus('Synchronizing...');
     setIsFlashing(true);
+
+    setTimeout(() => {
+      setStatus('Authenticating...');
+      setIsFlashing(false);
+    }, 800);
+
+    setTimeout(() => {
+      setStatus('Terminal Synchronized');
+      setIsFlashing(true);
+    }, 1600);
+
     setTimeout(() => {
       setStatus(null);
       setIsFlashing(false);
-    }, 2000);
+    }, 3000);
   };
 
   return (
