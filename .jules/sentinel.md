@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-04-29 - [Integrity-Hardened Security Persistence]
+**Vulnerability:** Direct `localStorage` access for security-critical keys (`sentinel_rl_*`, `sentinel_shadow_logs`, `sentinel_decoy_breaches`) allowed for potential tampering or bypassing of defensive mechanisms.
+**Learning:** Pure `localStorage` is mutable by the user. For a robust client-side security layer, all defensive state must be cryptographically signed. Inconsistent application of the `secureStore` pattern leaves gaps in the system's integrity.
+**Prevention:** Always use the `secureGet`, `secureStore`, and `secureRemove` abstractions in `useSentinel` for any key prefixed with `sentinel_`. Centralize removal logic to ensure consistent teardown across storage layers.
