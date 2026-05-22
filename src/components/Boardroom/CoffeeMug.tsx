@@ -1,16 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
+const STATUS_MESSAGES = [
+  'SYSTEM_SNAPSHOT_SAVED',
+  'SETTINGS_SYNCHRONIZED',
+  'ENVIRONMENT_STATE_LOADED',
+  'CACHE_PURGED',
+  'COFFEE_REFILLED'
+];
 
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
 
-  const handleAction = () => {
-    setStatus('System Snapshot Saved');
+  const handleAction = useCallback(() => {
+    if (status) return;
+    const randomMessage = STATUS_MESSAGES[Math.floor(Math.random() * STATUS_MESSAGES.length)];
+    setStatus(randomMessage);
     setTimeout(() => setStatus(null), 2000);
-  };
+  }, [status]);
 
-  const isSaving = status === 'System Snapshot Saved';
+  const isActive = !!status;
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -24,27 +34,29 @@ export const CoffeeMug: React.FC = () => {
       <button
         type="button"
         onClick={handleAction}
-        aria-label="System Settings (Coffee Break)"
+        aria-label="System Administration (Save/Load/Settings)"
         style={{ transform: 'rotateX(-20deg)' }}
         className="group relative w-16 h-12 transition-transform hover:scale-110 focus-visible:scale-110 active:scale-95 focus:outline-none transform-gpu"
       >
-        {/* Steam animation */}
-        <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isSaving ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
-          <div className={`w-0.5 h-4 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px] transition-colors duration-500 ${isSaving ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
-          <div className={`w-0.5 h-6 animate-[bounce_1.5s_infinite] blur-[1px] transition-colors duration-500 ${isSaving ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-grey-medium/40'}`} />
-          <div className={`w-0.5 h-3 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px] transition-colors duration-500 ${isSaving ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
+        {/* Steam animation with heat glow */}
+        <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
+          <div className={`w-0.5 h-4 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px] transition-all duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_4px_rgba(255,191,0,0.6)]' : 'bg-grey-medium/40'}`} />
+          <div className={`w-0.5 h-6 animate-[bounce_1.5s_infinite] blur-[1px] transition-all duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-grey-medium/40'}`} />
+          <div className={`w-0.5 h-3 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px] transition-all duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_4px_rgba(255,191,0,0.6)]' : 'bg-grey-medium/40'}`} />
         </div>
 
         {/* Mug Body */}
         <div className="absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm">
            <div className="absolute top-0 left-0 w-full h-2 bg-obsidian border-b border-grey-medium" />
+           {/* Heat glow on the mug itself */}
+           <div className={`absolute inset-0 bg-neon-amber/5 transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
         </div>
 
         {/* Mug Handle */}
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           SAVE / LOAD / SETTINGS
         </span>
 

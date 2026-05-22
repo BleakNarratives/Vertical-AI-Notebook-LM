@@ -59,9 +59,9 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
 
   return (
     <div ref={ref} className="relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
-      style={{ transform: isReduced ? 'rotateX(20deg)' : 'rotateX(calc(20deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))' }}
+      style={{ transform: isReduced ? 'rotateX(25deg)' : 'rotateX(calc(25deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))' }}
     >
-      <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[20deg] border-t border-grey-medium/20 pointer-events-none" />
+      <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[25deg] border-t border-grey-medium/20 pointer-events-none" />
       {children}
     </div>
   );

@@ -20,7 +20,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       style={{
         transform: `rotateX(-20deg) rotateZ(${rotation}) translateY(${translateY})`
       }}
-      className="group relative w-12 h-16 bg-white/5 border border-grey-medium transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:scale-105 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu"
+      className="group relative w-12 h-16 bg-white/5 border border-grey-medium transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:scale-105 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu hover:shadow-neon-amber/20"
     >
       {/* Paper Content Simulation */}
       <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity">
@@ -36,7 +36,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap tracking-tighter">
         {title}
       </span>
     </button>
