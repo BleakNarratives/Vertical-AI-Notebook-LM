@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-04-29 - [Storage Integrity Bypass & Signed State Hardening]
+**Vulnerability:** Direct `localStorage` access bypassed the cryptographic signature verification of the security layer.
+**Learning:** Having a "secure" storage abstraction is useless if the application logic continues to use direct browser APIs for critical state (rate limits, breach counters). This allows an attacker to manually modify storage values to bypass security controls without triggering signature mismatch alerts.
+**Prevention:** Enforce the use of signed storage utilities (`secureGet`, `secureStore`, `secureRemove`) for ALL security-critical keys. Audit hooks regularly to ensure no raw `localStorage` calls remain in sensitive logic paths.
