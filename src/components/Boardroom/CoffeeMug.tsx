@@ -6,11 +6,20 @@ export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
 
   const handleAction = () => {
-    setStatus('System Snapshot Saved');
+    const messages = [
+      'SYSTEM_SNAPSHOT_SAVED',
+      'CACHE_PURGED',
+      'STATE_LOADED',
+      'LOGS_ARCHIVED',
+      'MEMORY_SYNCHRONIZED',
+      'SESSION_RECONSTRUCTED'
+    ];
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    setStatus(randomMessage);
     setTimeout(() => setStatus(null), 2000);
   };
 
-  const isSaving = status === 'System Snapshot Saved';
+  const isSaving = status !== null;
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -25,7 +34,7 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        style={{ transform: 'rotateX(-20deg)' }}
+        style={{ transform: 'rotateX(-25deg)' }}
         className="group relative w-16 h-12 transition-transform hover:scale-110 focus-visible:scale-110 active:scale-95 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
@@ -36,8 +45,10 @@ export const CoffeeMug: React.FC = () => {
         </div>
 
         {/* Mug Body */}
-        <div className="absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm">
+        <div className={`absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm transition-shadow duration-500 ${isSaving ? 'shadow-[0_0_15px_rgba(255,191,0,0.4)]' : ''}`}>
            <div className="absolute top-0 left-0 w-full h-2 bg-obsidian border-b border-grey-medium" />
+           {/* Heat Glow Inner */}
+           <div className={`absolute inset-0 bg-neon-amber/5 transition-opacity duration-500 ${isSaving ? 'opacity-100' : 'opacity-0'}`} />
         </div>
 
         {/* Mug Handle */}

@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Dynamic Perspective & Tactile Feedback]
+**Learning:** Increasing the tabletop perspective (to 25deg) enhances the "long boardroom" depth but requires absolute synchronization across all prop counter-rotations to prevent a "sliding" visual artifact. Adding randomized status messages and localized "Heat Glow" animations (box-shadow + overlay) provides higher-fidelity tactile feedback that makes immersive props feel functional.
+**Action:** When updating core scene perspective, use a global search to ensure all `rotateX` counter-transforms are updated in lockstep. Use randomized feedback strings to avoid repetitive interaction fatigue.
