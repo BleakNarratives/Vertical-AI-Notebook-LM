@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Contextual Focus Indicators]
+**Learning:** In complex immersive environments with multiple interactive props, using a generic focus indicator (like neon-red) can be visually jarring or misleading if the component itself uses a different primary accent (like neon-amber). Matching the focus ring color to the component's interactive highlights reinforces the object's identity and improves visual hierarchy.
+**Action:** Always synchronize focus indicator colors with the component's established accent palette to maintain immersion.
