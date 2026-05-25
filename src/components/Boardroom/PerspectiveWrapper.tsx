@@ -26,6 +26,8 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
       ref.current.style.setProperty('--tx', `${y * 2}deg`);
       ref.current.style.setProperty('--ty', `${-x * 2}deg`);
+      ref.current.style.setProperty('--mx', `${(e.clientX / window.innerWidth) * 100}%`);
+      ref.current.style.setProperty('--my', `${(e.clientY / window.innerHeight) * 100}%`);
     };
 
     const handleFocus = (e: FocusEvent) => {
@@ -40,6 +42,8 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       ref.current.style.setProperty('--tx', `${y * 2}deg`);
       ref.current.style.setProperty('--ty', `${-x * 2}deg`);
       ref.current.style.setProperty('--tz', '30px');
+      ref.current.style.setProperty('--mx', `${(centerX / window.innerWidth) * 100}%`);
+      ref.current.style.setProperty('--my', `${(centerY / window.innerHeight) * 100}%`);
     };
 
     const handleFocusOut = (e: FocusEvent) => {
@@ -62,6 +66,17 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       style={{ transform: isReduced ? 'rotateX(20deg)' : 'rotateX(calc(20deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))' }}
     >
       <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[20deg] border-t border-grey-medium/20 pointer-events-none" />
+
+      {/* Atmospheric Cursor/Focus Glow */}
+      {!isReduced && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20 transition-opacity duration-500"
+          style={{
+            background: `radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 0, 0, 0.15), transparent 80%)`
+          }}
+        />
+      )}
+
       {children}
     </div>
   );
