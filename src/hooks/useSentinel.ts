@@ -71,11 +71,21 @@ export const useSentinel = () => {
 
     if (localVal !== sessionVal) {
       logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
-      return sessionVal || localVal;
+      return null; // Fail secure on divergence
     }
 
     return localVal;
   }, [generateSignature, logSecurityEvent]);
+
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`Storage removal failed for key: ${key}`, 'MEDIUM');
+    }
+  }, [logSecurityEvent]);
 
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
@@ -113,6 +123,12 @@ export const useSentinel = () => {
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Length limit check (DoS prevention)
+    if (input.length > 512) {
+      logSecurityEvent(`Input rejected: Length exceeds 512 characters`, 'HIGH');
+      return false;
+    }
+
     // Basic allowlist check
     const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
     if (!allowlist.test(input)) {
@@ -205,14 +221,11 @@ export const useSentinel = () => {
       if (Date.now() < expiry) {
         return true;
       } else {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('sentinel_blacklist');
-          sessionStorage.removeItem('sentinel_blacklist');
-        }
+        secureRemove('sentinel_blacklist');
       }
     }
     return false;
-  }, [secureGet]);
+  }, [secureGet, secureRemove]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -268,6 +281,7 @@ export const useSentinel = () => {
     triggerBlacklist,
     checkBlacklist,
     secureStore,
-    secureGet
+    secureGet,
+    secureRemove
   };
 };
