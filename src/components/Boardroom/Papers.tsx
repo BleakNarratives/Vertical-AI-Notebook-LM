@@ -18,7 +18,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       title={title}
       onClick={onClick}
       style={{
-        transform: `rotateX(-20deg) rotateZ(${rotation}) translateY(${translateY})`
+        transform: `rotateX(-20deg) rotateZ(${rotation}) translateY(${translateY}) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1))`
       }}
       className="group relative w-12 h-16 bg-white/5 border border-grey-medium transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:scale-105 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu"
     >

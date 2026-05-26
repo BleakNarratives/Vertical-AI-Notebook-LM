@@ -26,6 +26,8 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
       ref.current.style.setProperty('--tx', `${y * 2}deg`);
       ref.current.style.setProperty('--ty', `${-x * 2}deg`);
+      ref.current.style.setProperty('--mx', `${e.clientX}px`);
+      ref.current.style.setProperty('--my', `${e.clientY}px`);
     };
 
     const handleFocus = (e: FocusEvent) => {
@@ -40,6 +42,8 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       ref.current.style.setProperty('--tx', `${y * 2}deg`);
       ref.current.style.setProperty('--ty', `${-x * 2}deg`);
       ref.current.style.setProperty('--tz', '30px');
+      ref.current.style.setProperty('--mx', `${centerX}px`);
+      ref.current.style.setProperty('--my', `${centerY}px`);
     };
 
     const handleFocusOut = (e: FocusEvent) => {
@@ -61,6 +65,13 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
     <div ref={ref} className="relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
       style={{ transform: isReduced ? 'rotateX(20deg)' : 'rotateX(calc(20deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))' }}
     >
+      {/* Atmospheric Glow (Delight) */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 opacity-20 transition-opacity duration-1000"
+        style={{
+          background: `radial-gradient(circle 400px at var(--mx, 50%) var(--my, 50%), rgba(255,191,0,0.15), transparent 80%)`
+        }}
+      />
       <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[20deg] border-t border-grey-medium/20 pointer-events-none" />
       {children}
     </div>

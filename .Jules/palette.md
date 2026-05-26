@@ -17,3 +17,11 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Preserving Utility Transforms in Inline Styles]
+**Learning:** Applying fixed 3D rotations via the `style` attribute (required for counter-rotation in perspective layouts) clobbers Tailwind's utility-based transforms (like `hover:scale` or `active:translate-y`). This breaks tactile feedback. Manually integrating Tailwind's transform variables into the inline `style` string restores the expected behavior.
+**Action:** Use `style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1))' }}` to ensure utility-driven animations remain functional alongside fixed rotations.
+
+## 2025-05-20 - [Efficient Atmospheric Feedback]
+**Learning:** Driving large-scale visual effects (like a radial "Atmospheric Glow") via React state on every mouse move causes significant performance overhead. Offloading coordinate tracking to CSS variables via direct DOM manipulation in a `mousemove` listener allows the GPU to handle the rendering smoothly without triggering expensive component re-renders.
+**Action:** Use `ref.current.style.setProperty('--mx', '${e.clientX}px')` to drive atmospheric shaders/gradients for a fluid, high-performance immersive feel.
