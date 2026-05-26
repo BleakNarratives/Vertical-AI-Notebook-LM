@@ -71,11 +71,22 @@ export const useSentinel = () => {
 
     if (localVal !== sessionVal) {
       logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
-      return sessionVal || localVal;
+      // FAIL-SECURE: Return null on divergence to prevent tampering
+      return null;
     }
 
     return localVal;
   }, [generateSignature, logSecurityEvent]);
+
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
+    }
+  }, [logSecurityEvent]);
 
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
@@ -205,14 +216,11 @@ export const useSentinel = () => {
       if (Date.now() < expiry) {
         return true;
       } else {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('sentinel_blacklist');
-          sessionStorage.removeItem('sentinel_blacklist');
-        }
+        secureRemove('sentinel_blacklist');
       }
     }
     return false;
-  }, [secureGet]);
+  }, [secureGet, secureRemove]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -222,7 +230,7 @@ export const useSentinel = () => {
     let data = { count: 0, startTime: now };
 
     try {
-      const stored = localStorage.getItem(storageKey);
+      const stored = secureGet(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -230,30 +238,22 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
+      secureRemove(storageKey);
     }
 
     if (now - data.startTime > windowMs) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: 1, startTime: now }));
       return true;
     }
 
     if (data.count < limit) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
       return true;
     }
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore, secureRemove]);
 
   return {
     logSecurityEvent,
@@ -268,6 +268,7 @@ export const useSentinel = () => {
     triggerBlacklist,
     checkBlacklist,
     secureStore,
-    secureGet
+    secureGet,
+    secureRemove
   };
 };
