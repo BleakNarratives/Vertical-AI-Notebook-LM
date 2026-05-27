@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
 interface PaperProps {
   label: string;
@@ -18,7 +18,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       title={title}
       onClick={onClick}
       style={{
-        transform: `rotateX(-20deg) rotateZ(${rotation}) translateY(${translateY})`
+        transform: `rotateX(-20deg) rotateZ(${rotation}) translateY(calc(${translateY} + var(--tw-translate-y, 0))) scale(var(--tw-scale-x, 1))`
       }}
       className="group relative w-12 h-16 bg-white/5 border border-grey-medium transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:scale-105 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu"
     >
@@ -58,12 +58,23 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string }> = {
 };
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
-  const [status, setStatus] = React.useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const data = CONTEXT_DATA[context];
 
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const handleView = (title: string) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setStatus(`Viewing ${title}...`);
-    setTimeout(() => setStatus(null), 2000);
+    timeoutRef.current = setTimeout(() => {
+      setStatus(null);
+      timeoutRef.current = null;
+    }, 2000);
   };
 
   return (
@@ -92,6 +103,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
           />
         {/* Additional stacked paper look */}
         <div className="absolute top-1 left-1 w-14 h-18 bg-white/5 border border-grey-medium rotate-1 -z-10 pointer-events-none" />
+        <div className="absolute -top-1 -left-1 w-12 h-16 bg-white/5 border border-grey-medium -rotate-2 -z-20 pointer-events-none" />
         </div>
       </div>
     </div>

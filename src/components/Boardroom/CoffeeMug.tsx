@@ -1,16 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
+const MESSAGES = [
+  'SYSTEM_SNAPSHOT_SAVED',
+  'CACHE_PURGED',
+  'STATE_LOADED',
+  'LOGS_ARCHIVED',
+  'MEMORY_SYNCHRONIZED',
+  'SESSION_RECONSTRUCTED'
+];
 
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleAction = () => {
-    setStatus('System Snapshot Saved');
-    setTimeout(() => setStatus(null), 2000);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    const msg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+    setStatus(msg);
+
+    timeoutRef.current = setTimeout(() => {
+      setStatus(null);
+      timeoutRef.current = null;
+    }, 2000);
   };
 
-  const isSaving = status === 'System Snapshot Saved';
+  const isActive = !!status;
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -25,18 +48,20 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        style={{ transform: 'rotateX(-20deg)' }}
+        style={{ transform: 'rotateX(-20deg) scale(var(--tw-scale-x, 1)) translateY(var(--tw-translate-y, 0))' }}
         className="group relative w-16 h-12 transition-transform hover:scale-110 focus-visible:scale-110 active:scale-95 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
-        <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isSaving ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
-          <div className={`w-0.5 h-4 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px] transition-colors duration-500 ${isSaving ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
-          <div className={`w-0.5 h-6 animate-[bounce_1.5s_infinite] blur-[1px] transition-colors duration-500 ${isSaving ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-grey-medium/40'}`} />
-          <div className={`w-0.5 h-3 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px] transition-colors duration-500 ${isSaving ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
+        <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
+          <div className={`w-0.5 h-4 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
+          <div className={`w-0.5 h-6 animate-[bounce_1.5s_infinite] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-grey-medium/40'}`} />
+          <div className={`w-0.5 h-3 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
         </div>
 
         {/* Mug Body */}
-        <div className="absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm">
+        <div className={`absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm transition-colors duration-500 ${isActive ? 'shadow-[0_0_15px_rgba(255,191,0,0.2)]' : ''}`}>
+           {/* Heat Glow */}
+           <div className={`absolute inset-0 bg-neon-amber/5 opacity-0 transition-opacity duration-500 ${isActive ? 'opacity-100' : ''}`} />
            <div className="absolute top-0 left-0 w-full h-2 bg-obsidian border-b border-grey-medium" />
         </div>
 
