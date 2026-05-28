@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-04-29 - [Signed Storage Integrity & Centralized State Cleanup]
+**Vulnerability:** Security-critical state (rate limits, breach counters) was being accessed via direct `localStorage` calls, allowing for easy client-side tampering and signature bypass.
+**Learning:** Even with a secure storage utility available, inconsistent usage across hooks creates weak points. Centralizing all security state management behind a cryptographically-signed interface (`secureGet`/`secureStore`) is required for true defense-in-depth. Dual-storage cleanup (`localStorage` and `sessionStorage`) must also be synchronized via a single utility to prevent stale data.
+**Prevention:** Strictly enforce the use of `secureGet`, `secureStore`, and `secureRemove` for all `sentinel_*` keys. Audit call sites to ensure no direct `localStorage` access remains for security metadata.
