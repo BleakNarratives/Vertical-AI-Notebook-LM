@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Tactile Boardroom Feedback]
+**Learning:** For a first-person perspective "tabletop" UI, `active:translate-y-1` provides a much more satisfying and grounded tactile feel than `active:scale-95`. The downward movement reinforces the physical presence of objects on the table surface.
+**Action:** Use `active:translate-y-1` for interactive props in the boardroom to maintain a consistent physical interaction model.
