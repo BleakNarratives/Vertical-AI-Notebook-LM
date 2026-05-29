@@ -111,6 +111,11 @@ export const useMoltAutomation = () => {
         logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
         attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
       }
+
+      // Every 3 shadow logs, trigger a minor behavioral reinforcement
+      if (count > 0 && count % 3 === 0) {
+        attemptAutonomousImprovement(`Behavioral trigger: Shadow forensic reconstruction [${count}]`);
+      }
     };
 
     const handleDecoyBreach = () => {
@@ -118,7 +123,7 @@ export const useMoltAutomation = () => {
 
       // Track decoy breaches for blacklisting
       const key = 'sentinel_decoy_breaches';
-      const stored = localStorage.getItem(key);
+      const stored = secureGet(key);
       let breaches = 0;
       if (stored) {
         const parsed = parseInt(stored, 10);
@@ -126,12 +131,12 @@ export const useMoltAutomation = () => {
       }
 
       breaches += 1;
-      localStorage.setItem(key, breaches.toString());
+      secureStore(key, breaches.toString());
 
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
-        localStorage.setItem(key, '0');
+        secureStore(key, '0');
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
