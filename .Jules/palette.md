@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Responsive Feedback Reset Pattern]
+**Learning:** Throttling feedback interactions (like preventing a button click while a message is showing) can make the UI feel sluggish or unresponsive. Allowing rapid clicks to reset the feedback timer and cycle through messages creates a more "organic" and responsive feel, especially in playful, high-interactivity environments.
+**Action:** Implement feedback timers using `useCallback` and `useRef` to allow new interactions to cancel and restart the feedback loop immediately.
