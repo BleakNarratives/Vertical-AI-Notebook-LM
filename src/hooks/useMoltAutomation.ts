@@ -18,7 +18,7 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet, secureRemove } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
@@ -38,10 +38,7 @@ export const useMoltAutomation = () => {
           const remaining = lockdownExpiry - Date.now();
           setTimeout(() => setIsLockdown(false), remaining);
         } else {
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('sentinel_lockdown');
-            sessionStorage.removeItem('sentinel_lockdown');
-          }
+          secureRemove('sentinel_lockdown');
         }
       }
 
@@ -50,7 +47,7 @@ export const useMoltAutomation = () => {
     };
 
     checkSecurityStates();
-  }, [checkBlacklist, secureGet]);
+  }, [checkBlacklist, secureGet, secureRemove]);
 
   const triggerLockdown = useCallback(() => {
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
@@ -118,7 +115,7 @@ export const useMoltAutomation = () => {
 
       // Track decoy breaches for blacklisting
       const key = 'sentinel_decoy_breaches';
-      const stored = localStorage.getItem(key);
+      const stored = secureGet(key);
       let breaches = 0;
       if (stored) {
         const parsed = parseInt(stored, 10);
@@ -126,12 +123,12 @@ export const useMoltAutomation = () => {
       }
 
       breaches += 1;
-      localStorage.setItem(key, breaches.toString());
+      secureStore(key, breaches.toString());
 
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
-        localStorage.setItem(key, '0');
+        secureStore(key, '0');
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
