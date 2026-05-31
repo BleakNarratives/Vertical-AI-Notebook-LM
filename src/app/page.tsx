@@ -27,8 +27,11 @@ export default function Home() {
     let count = 0;
     const handleBreach = () => {
       count++;
+      // Voodoo Glitch Easter Egg: Trigger glitch pulses and screen-shake after 3 decoy breaches
       if (count >= 3) {
         setIsGlitching(true);
+        // Dispatch event for components to react to the glitch
+        window.dispatchEvent(new CustomEvent('sentinel-voodoo-glitch'));
         setTimeout(() => setIsGlitching(false), 2000);
         count = 0;
       }
