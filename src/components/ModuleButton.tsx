@@ -27,9 +27,8 @@ export const ModuleButton: React.FC<ModuleButtonProps> = ({
       aria-busy={isLoading}
       className={`
         group relative px-4 py-2 text-xs font-mono uppercase tracking-widest transition-all duration-300
-        active:scale-[0.98] active:duration-75
         focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian
-        active:enabled:scale-[0.98]
+        active:enabled:scale-[0.98] active:duration-75
         ${isActuallyDisabled ? 'opacity-50 grayscale cursor-not-allowed' : ''}
         ${variant === 'primary'
           ? 'bg-grey-dark text-neon-red border border-grey-medium hover:enabled:bg-neon-red hover:enabled:text-obsidian hover:enabled:shadow-[0_0_15px_rgba(255,0,0,0.5)] focus-visible:enabled:bg-neon-red focus-visible:enabled:text-obsidian focus-visible:ring-neon-red'

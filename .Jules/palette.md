@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Atmospheric Reactive Lighting]
+**Learning:** In immersive 3D environments, cursor-driven atmospheric lighting (radial gradients driven by CSS variables) significantly increases the "sense of presence" and 3D depth without requiring heavy assets or complex shaders. Tracking focus coordinates alongside mouse coordinates ensures this delight remains accessible to keyboard users.
+**Action:** Use `--mx` and `--my` CSS variables in a high-level `PerspectiveWrapper` to drive reactive UI elements that follow user attention.
