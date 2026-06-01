@@ -13,7 +13,7 @@ const MESSAGES = [
 
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleAction = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
