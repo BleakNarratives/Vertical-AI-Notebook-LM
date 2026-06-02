@@ -77,6 +77,12 @@ export const useSentinel = () => {
     return localVal;
   }, [generateSignature, logSecurityEvent]);
 
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+  }, []);
+
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
     // Advanced defense against XSS and injection
@@ -96,7 +102,7 @@ export const useSentinel = () => {
     const key = 'sentinel_shadow_logs';
     // Unicode-safe Base64 encoding to prevent crashes on non-ASCII/emoji inputs
     const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
-    const stored = localStorage.getItem(key);
+    const stored = secureGet(key);
     let logs: string[] = [];
     try {
       if (stored) {
@@ -108,9 +114,9 @@ export const useSentinel = () => {
     logs.push(encoded);
     if (logs.length > 20) logs.shift(); // Keep last 20
 
-    localStorage.setItem(key, JSON.stringify(logs));
+    secureStore(key, JSON.stringify(logs));
     window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, []);
+  }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
     // Basic allowlist check
@@ -205,14 +211,11 @@ export const useSentinel = () => {
       if (Date.now() < expiry) {
         return true;
       } else {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('sentinel_blacklist');
-          sessionStorage.removeItem('sentinel_blacklist');
-        }
+        secureRemove('sentinel_blacklist');
       }
     }
     return false;
-  }, [secureGet]);
+  }, [secureGet, secureRemove]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -222,7 +225,7 @@ export const useSentinel = () => {
     let data = { count: 0, startTime: now };
 
     try {
-      const stored = localStorage.getItem(storageKey);
+      const stored = secureGet(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -230,30 +233,22 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
+      secureRemove(storageKey);
     }
 
     if (now - data.startTime > windowMs) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: 1, startTime: now }));
       return true;
     }
 
     if (data.count < limit) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
       return true;
     }
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore, secureRemove]);
 
   return {
     logSecurityEvent,
@@ -268,6 +263,7 @@ export const useSentinel = () => {
     triggerBlacklist,
     checkBlacklist,
     secureStore,
-    secureGet
+    secureGet,
+    secureRemove
   };
 };
