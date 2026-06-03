@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useMoltAutomation } from '@/hooks/useMoltAutomation';
 
 export const Laptop: React.FC = () => {
+  const { level } = useMoltAutomation();
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
 
@@ -41,8 +43,8 @@ export const Laptop: React.FC = () => {
         type="button"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation)"
-        style={{ transform: 'rotateX(-20deg)' }}
-        className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
+        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+        className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-neon-red/50 focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian transform-gpu"
       >
         {/* Laptop Screen (Open) */}
         <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col">
@@ -53,7 +55,8 @@ export const Laptop: React.FC = () => {
           <div className={`flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
             <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
             <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
-            <div className="mt-1 opacity-40">System Link: ACTIVE</div>
+            <div className="mt-1 opacity-40">SYSTEM_LINK: ACTIVE</div>
+            <div className="mt-1 text-neon-amber opacity-60">MOLT_LEVEL: {level}</div>
             <div className="mt-2 animate-pulse">_</div>
           </div>
           {/* Screen Glare and Data Flash */}

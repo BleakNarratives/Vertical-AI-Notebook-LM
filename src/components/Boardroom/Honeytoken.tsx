@@ -46,7 +46,7 @@ export const Honeytoken = () => {
       type="button"
       onClick={() => triggerHoneytoken('click')}
       onFocus={() => triggerHoneytoken('focus')}
-      className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none transition-all duration-1000`}
+      className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-neon-amber/30 transition-all duration-1000`}
       aria-label="System credentials fragment"
     >
       <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500">
