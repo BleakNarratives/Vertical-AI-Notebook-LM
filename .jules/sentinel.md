@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-06-03 - [Signed Storage Integrity & Hardening]
+**Vulnerability:** Critical security counters (rate limits, decoy breaches) used raw, unverified localStorage, allowing for manual client-side resets.
+**Learning:** Even internal security metadata must be treated as untrusted if stored client-side. Relying on signed storage for alert history but not for rate limits creates a bypassable defense.
+**Prevention:** Always use the cryptographically signed storage interface (`secureStore`/`secureGet`) for any value that drives system-level security states like lockdown or blacklisting.
