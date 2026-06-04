@@ -50,8 +50,9 @@ export const useSentinel = () => {
       if (!raw) return null;
       try {
         const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== 'object') return null;
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
         const { v, s } = parsed;
+        if (typeof v !== 'string' || typeof s !== 'string') return null;
         if (generateSignature(key, v) === s) return v;
         logSecurityEvent(`Storage signature mismatch for key: ${key}`, 'CRITICAL');
         return null;
