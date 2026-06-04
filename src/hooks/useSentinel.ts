@@ -81,9 +81,13 @@ export const useSentinel = () => {
     if (typeof window === 'undefined') return;
     try {
       localStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`LocalStorage removal failed for key: ${key}`, 'MEDIUM');
+    }
+    try {
       sessionStorage.removeItem(key);
     } catch {
-      logSecurityEvent(`Storage removal failed for key: ${key}`, 'MEDIUM');
+      logSecurityEvent(`SessionStorage removal failed for key: ${key}`, 'MEDIUM');
     }
   }, [logSecurityEvent]);
 
