@@ -1,0 +1,8 @@
+
+> tmp_app@0.1.0 start /app
+> next start
+
+▲ Next.js 16.2.4
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 201ms
