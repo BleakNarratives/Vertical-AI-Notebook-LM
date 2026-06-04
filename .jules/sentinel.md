@@ -17,3 +17,8 @@
 **Vulnerability:** System remained partially functional even after repeated high-severity security events, allowing for persistent attack attempts.
 **Learning:** High-frequency malicious activity requires a full system cooldown to break attack momentum. By implementing a persistent "Lockdown" state linked to alert frequency, we can enforce a cooling-off period that survives page refreshes and disables all entry points.
 **Prevention:** Implement a `localStorage`-backed lockdown mechanism that monitors high-severity alert history and disables interaction modules for a fixed duration (e.g., 5 minutes) upon reaching a threshold. Pair this with depth-based input validation checks for known attack patterns (Path Traversal, LFI, etc.).
+
+## 2026-04-29 - [Payload Normalization & Multi-Vector Depth Defense]
+**Vulnerability:** Static pattern matching is easily bypassed via simple obfuscation (e.g., URL encoding, mixed-case, or alternative event handlers).
+**Learning:** Security validation must always operate on normalized input. In a client-side environment, attackers often use encoded characters to bypass basic allowlists or regex patterns. Furthermore, depth defense must expand to include non-traditional vectors like NoSQL injection and data URIs.
+**Prevention:** Always normalize (URL decode, case-fold if appropriate) user input before running validation checks. Expand the `maliciousPatterns` suite to include common obfuscated XSS vectors (onerror, onload, data:) and database-specific injection signatures (NoSQL $where/regex).

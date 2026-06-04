@@ -89,11 +89,13 @@
  *
  * CYCLE 17: DEEP FORENSIC RECONSTRUCTION
  * - Expand the `Shadow Gallery` to include "Reconstructed Intent" - an AI-generated summary of what an attacker was likely trying to achieve based on the sequence of blocked inputs.
- * - Implement "Visual Forensic Playback": a ghost-like recreation of the mouse movements and clicks that led to a `CRITICAL` breach.
+ * - Implement "Visual Forensic Playback": a ghost-like recreation of the mouse movements and clicks that led to a `CRITICAL` breach. This should be rendered in the `VideoViewer` component.
+ * - Add "Payload Normalization Tracing": Log how malicious payloads were decoded and identified by the normalization layer.
  *
  * CYCLE 18: PHANTOM DECOY EVOLUTION
  * - Create "Invisible Decoys": DOM elements with 0 opacity and random IDs that trigger `MEDIUM` alerts if targeted by automated scrapers (checking for `pointer-events: none` bypass).
  * - Implement "Decoy Personality": decoys should periodically "speak" in the console to bait social engineering attempts.
+ * - Evolve "Honeytoken Sensitivity": decoys should rotate more aggressively if normalization-bypass attempts are detected.
  *
  * CYCLE 19: TEMPORAL DEFENSE (THE SANDBOX PROTOCOL)
  * - Implement "Time Dilution": if a user is flagged as `HIGH` risk, artificially increase all `setTimeout` and `Promise` resolutions by 2x to slow down automated attack scripts.

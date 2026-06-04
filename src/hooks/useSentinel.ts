@@ -113,26 +113,36 @@ export const useSentinel = () => {
   }, []);
 
   const validateInput = useCallback((input: string): boolean => {
-    // Basic allowlist check
-    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
-    if (!allowlist.test(input)) {
+    // Input Normalization: Decode and clean to prevent obfuscation
+    let normalized = input;
+    try {
+      normalized = decodeURIComponent(input);
+    } catch { /* use original if decoding fails */ }
+
+    // Basic allowlist check (using normalized input)
+    const allowlist = /^[a-zA-Z0-9\s._\-!?()[\]*|\/><=:$]+$/;
+    if (!allowlist.test(normalized)) {
       logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
       return false;
     }
 
-    // Depth check: Block path traversal and LFI patterns
+    // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
     const maliciousPatterns = [
-      /\.\.\//,         // Path traversal
-      /etc\/passwd/,    // LFI target
-      /cmd\.exe/,       // RCE attempt
-      /<script/i,       // XSS attempt
-      /javascript:/i,   // Protocol injection
-      /union\s+select/i // SQL injection
+      /\.\.\//,             // Path traversal
+      /etc\/passwd/,        // LFI target
+      /cmd\.exe/,           // RCE attempt
+      /<script/i,           // XSS attempt
+      /javascript:/i,       // Protocol injection
+      /onerror\s*=/i,       // XSS Event handler
+      /onload\s*=/i,        // XSS Event handler
+      /data:/i,             // Data URI scheme
+      /union\s+select/i,    // SQL injection
+      /\$(where|regex|ne)/i // NoSQL injection
     ];
 
     for (const pattern of maliciousPatterns) {
-      if (pattern.test(input)) {
-        logSecurityEvent(`CRITICAL: Malicious pattern detected: ${input.substring(0, 15)}...`, 'CRITICAL');
+      if (pattern.test(normalized)) {
+        logSecurityEvent(`CRITICAL: Malicious pattern detected: ${normalized.substring(0, 15)}...`, 'CRITICAL');
         return false;
       }
     }
