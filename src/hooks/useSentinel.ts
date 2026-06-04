@@ -159,7 +159,7 @@ export const useSentinel = () => {
 
     // Integrity Check: Compare pinned memory state with localStorage
     if (sentinel_blacklist_pin !== null) {
-      if (expiry === null || Math.abs(expiry - sentinel_blacklist_pin) > 1000) {
+      if (expiry === null || Number.isNaN(expiry) || Math.abs(expiry - sentinel_blacklist_pin) > 1000) {
         logSecurityEvent('CRITICAL: LocalStorage tampering detected. Restoring pinned security state.', 'CRITICAL');
         localStorage.setItem('sentinel_blacklist', sentinel_blacklist_pin.toString());
         expiry = sentinel_blacklist_pin;
