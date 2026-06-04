@@ -30,7 +30,8 @@ export const VideoViewer: React.FC = () => {
           {/* Scanlines */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[size:100%_2px,3px_100%] pointer-events-none" />
 
-          <div className={`w-full h-full bg-gradient-to-t ${status ? 'from-neon-amber/20' : 'from-neon-red/5'} to-transparent animate-pulse transition-colors duration-500`} />
+          <div className={`absolute inset-0 bg-gradient-to-t from-neon-red/5 to-transparent animate-pulse transition-opacity duration-500 ${status ? 'opacity-0' : 'opacity-100'}`} />
+          <div className={`absolute inset-0 bg-gradient-to-t from-neon-amber/20 to-transparent animate-pulse transition-opacity duration-500 ${status ? 'opacity-100' : 'opacity-0'}`} />
 
           {/* REC indicator */}
           <div className="absolute top-2 right-2 flex items-center gap-1 opacity-60">
