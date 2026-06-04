@@ -17,3 +17,7 @@
 ## 2025-05-18 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
+
+## 2025-05-19 - [Standardizing 3D Utility Transforms]
+**Learning:** In Tailwind 4, using inline `style={{ transform: '...' }}` for 3D counter-rotations clobbers the `transform` property, which can prevent utility classes like `active:translate-y-1` or `hover:scale-110` from functioning if they rely on the `transform` property or if the inline style doesn't account for Tailwind's transform variables. Explicitly including `translateY(var(--tw-translate-y, 0))` and `scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))` in the inline style preserves the "tactile" feel of Tailwind utilities.
+**Action:** When using inline transforms for 3D perspective, always include Tailwind's transform variables: `style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}`.
