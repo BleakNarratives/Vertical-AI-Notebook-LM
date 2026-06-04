@@ -219,7 +219,7 @@ export const useSentinel = () => {
         }
       }
 
-      lastStateRef.current = { blacklist: currentBlacklist, lockdown: currentLockdown };
+      lastStateRef.current = { blacklist: currentBlacklist, lockdown: currentLockdown, shadowLogs };
     };
 
     const interval = setInterval(performIntegrityPulse, 10000); // Pulse every 10s
