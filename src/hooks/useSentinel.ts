@@ -139,7 +139,7 @@ export const useSentinel = () => {
       /javascript:/i,   // Protocol injection
       /union\s+select/i, // SQL injection
       /data:/i,         // Data URI injection
-      /on\w+=/i,        // Event handler injection
+      /on(click|load|error|mouseover|focus|blur|change|submit)\w*=/i, // Event handler injection
       /\$(eq|gt|lt|ne|in|nin|exists|regex)/i // NoSQL operator injection
     ];
 
