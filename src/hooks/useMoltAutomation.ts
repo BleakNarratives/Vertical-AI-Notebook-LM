@@ -91,7 +91,7 @@ export const useMoltAutomation = () => {
         }
 
         const now = Date.now();
-        const recentAlerts = [...alerts.filter((a: number) => typeof a === 'number' && now - a < 300000), now];
+        const recentAlerts = [...alerts.filter((a: number) => typeof a === 'number' && now - a < 300000), now].slice(-50);
 
         try {
           localStorage.setItem('sentinel_alert_history', JSON.stringify(recentAlerts));
