@@ -48,8 +48,8 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
+        style={{ transform: 'rotateX(-20deg)' }}
+        className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none"
       >
         {/* Steam animation */}
         <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
