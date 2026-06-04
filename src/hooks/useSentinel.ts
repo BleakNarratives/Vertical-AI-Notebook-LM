@@ -189,8 +189,9 @@ export const useSentinel = () => {
       const shadowSig = localStorage.getItem('sentinel_shadow_sig');
 
       // 1. Verify Shadow Log Integrity
-      if (shadowLogs && shadowSig) {
-        const expectedSig = generateIntegrityHash(shadowLogs);
+      // 1. Verify Shadow Log Integrity
+      if (shadowLogs || shadowSig) {
+        const expectedSig = shadowLogs ? generateIntegrityHash(shadowLogs) : null;
         if (shadowSig !== expectedSig) {
           logSecurityEvent('CRITICAL: Shadow Log tampering detected. Integrity breach.', 'CRITICAL');
           // Clear offending logs to break potential reload loops
