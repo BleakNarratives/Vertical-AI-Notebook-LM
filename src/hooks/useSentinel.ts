@@ -62,7 +62,7 @@ export const useSentinel = () => {
     } catch { /* use original if decoding fails */ }
 
     // Basic allowlist check (using normalized input)
-    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
+    const allowlist = /^[a-zA-Z0-9\s._\-!?()[\]*|\/><=:$]+$/;
     if (!allowlist.test(normalized)) {
       logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
       return false;
