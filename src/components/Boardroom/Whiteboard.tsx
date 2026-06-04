@@ -41,7 +41,7 @@ export const Whiteboard: React.FC = () => {
                style={{ left: 'var(--x, 50%)', top: 'var(--y, 50%)', transform: 'translate(-50%, -50%)' }} />
 
           {/* Iteration Sketches (Boardroom Drawings) */}
-          <div className="w-full h-full border-l border-b border-neon-amber/20 flex flex-col gap-4 opacity-40 group-hover:opacity-60 transition-opacity">
+          <div className="w-full h-full border-l border-b border-neon-amber/20 flex flex-col gap-2 opacity-40 group-hover:opacity-60 transition-opacity">
              <div className="space-y-1">
                 <div className="h-0.5 w-3/4 bg-neon-amber/40" />
                 <div className="h-0.5 w-1/2 bg-neon-amber/40" />
