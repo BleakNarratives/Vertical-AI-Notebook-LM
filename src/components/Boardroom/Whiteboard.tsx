@@ -38,8 +38,8 @@ export const Whiteboard: React.FC = () => {
         onFocus={handleFocus}
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
-        style={{ transform: 'rotateX(-20deg) rotateZ(-3deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none transform-gpu cursor-none"
+        style={{ transform: 'rotateX(-20deg) rotateZ(-3deg)' }}
+        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none cursor-none"
       >
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           {/* Simulated Marker Tip (Delight) */}
