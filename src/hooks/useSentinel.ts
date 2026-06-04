@@ -124,6 +124,7 @@ export const useSentinel = () => {
 
   const validateInput = useCallback((input: string): boolean => {
     // Length limit check (DoS prevention)
+    if (!input) return false;
     if (input.length > 512) {
       logSecurityEvent(`Input rejected: Length exceeds 512 characters`, 'HIGH');
       return false;
