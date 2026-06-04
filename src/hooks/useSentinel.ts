@@ -176,7 +176,8 @@ export const useSentinel = () => {
   const lastStateRef = useRef<{
     blacklist: string | null;
     lockdown: string | null;
-  }>({ blacklist: null, lockdown: null });
+    shadowLogs: string | null;
+  }>({ blacklist: null, lockdown: null, shadowLogs: null });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
