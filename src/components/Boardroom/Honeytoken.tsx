@@ -46,7 +46,8 @@ export const Honeytoken = () => {
       type="button"
       onClick={() => triggerHoneytoken('click')}
       onFocus={() => triggerHoneytoken('focus')}
-      className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none transition-all duration-1000`}
+      style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+      className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none transition-all duration-1000 transform-gpu`}
       aria-label="System credentials fragment"
     >
       <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500">
