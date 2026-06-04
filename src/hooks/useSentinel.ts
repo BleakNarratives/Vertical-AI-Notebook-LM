@@ -196,7 +196,7 @@ export const useSentinel = () => {
           localStorage.removeItem('sentinel_shadow_logs');
           localStorage.removeItem('sentinel_shadow_sig');
           // Only reload if we are not already in a cleared state to avoid loops
-          if (shadowLogs !== null) window.location.reload();
+          window.location.reload();
         }
       }
 
