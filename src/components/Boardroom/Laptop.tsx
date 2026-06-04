@@ -41,7 +41,7 @@ export const Laptop: React.FC = () => {
         type="button"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation)"
-        style={{ transform: 'rotateX(-20deg)' }}
+        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
       >
         {/* Laptop Screen (Open) */}
