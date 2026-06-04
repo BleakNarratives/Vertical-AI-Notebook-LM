@@ -130,7 +130,7 @@ export const useSentinel = () => {
       /union\s+select/i, // SQL injection
       /data:/i,         // Data URI
       /on\w+=/i,        // Event handlers
-      /\$(eq|ne|gt|lt|gte|lte|in|nin|regex)/i // NoSQL injection
+      /\$(eq|ne|gt|lt|gte|lte|in|nin|regex)\b/i // NoSQL injection
     ];
 
     for (const pattern of maliciousPatterns) {
