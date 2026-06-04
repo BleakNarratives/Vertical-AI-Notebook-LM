@@ -79,6 +79,8 @@ export const useMoltAutomation = () => {
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
         // Track high-severity alerts for lockdown
+        if (event.includes('SYSTEM LOCKDOWN')) return;
+
         let alerts = [];
         try {
           alerts = JSON.parse(localStorage.getItem('sentinel_alert_history') || '[]');
