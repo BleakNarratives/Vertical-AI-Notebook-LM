@@ -150,7 +150,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
       };
     }
-  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore, secureRemove]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
 
   // Integrity Heartbeat: Verify storage consistency every 30s
   useEffect(() => {
