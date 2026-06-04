@@ -79,12 +79,13 @@ export const useSentinel = () => {
 
   const secureRemove = useCallback((key: string) => {
     if (typeof window === 'undefined') return;
-    try {
-      localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    } catch {
-      logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
-    }
+    [localStorage, sessionStorage].forEach((storage) => {
+      try {
+        storage.removeItem(key);
+      } catch {
+        logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
+      }
+    });
   }, [logSecurityEvent]);
 
   const sanitizeInput = useCallback((input: string): string => {
