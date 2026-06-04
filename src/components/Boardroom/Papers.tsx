@@ -36,7 +36,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap tracking-tighter">
+      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap tracking-tight">
         {title}
       </span>
     </button>
