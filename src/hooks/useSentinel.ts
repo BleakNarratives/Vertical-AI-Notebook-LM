@@ -71,7 +71,8 @@ export const useSentinel = () => {
 
     if (localVal !== sessionVal) {
       logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
-      return sessionVal || localVal;
+      // Fail secure: return null on divergence to prevent potentially tampered state from being used
+      return null;
     }
 
     return localVal;
@@ -147,7 +148,11 @@ export const useSentinel = () => {
       /onload\s*=/i,        // XSS Event handler
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
-      /\$(where|regex|ne)/i // NoSQL injection
+      /\$(where|regex|ne)/i,// NoSQL injection
+      /eval\s*\(/i,         // JavaScript execution
+      /<iframe/i,           // Clickjacking/XSS
+      /<svg/i,              // XSS via SVG
+      /base64/i             // Potential encoded payload
     ];
 
     for (const pattern of maliciousPatterns) {

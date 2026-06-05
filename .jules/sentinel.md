@@ -22,3 +22,13 @@
 **Vulnerability:** Static pattern matching is easily bypassed via simple obfuscation (e.g., URL encoding, mixed-case, or alternative event handlers).
 **Learning:** Security validation must always operate on normalized input. In a client-side environment, attackers often use encoded characters to bypass basic allowlists or regex patterns. Furthermore, depth defense must expand to include non-traditional vectors like NoSQL injection and data URIs.
 **Prevention:** Always normalize (URL decode, case-fold if appropriate) user input before running validation checks. Expand the `maliciousPatterns` suite to include common obfuscated XSS vectors (onerror, onload, data:) and database-specific injection signatures (NoSQL $where/regex).
+
+## 2026-06-05 - [Fail-Secure Storage Divergence & Autonomous Self-Healing]
+**Vulnerability:** Security state (lockdown, blacklist) could be bypassable if one storage medium (localStorage/sessionStorage) was tampered with while the other remained intact, due to a lenient fallback in the retrieval logic.
+**Learning:** In a multi-layered storage strategy, any divergence between layers must be treated as a high-severity integrity breach. Failing to a null state is safer than attempting to guess the "correct" value from mismatched sources.
+**Prevention:** Implement a strict fail-secure check in the  utility. If layers don't match, revoke access to the key entirely. Pair this with a "Self-Healing" trigger that autonomously initiates system reconstruction (Molt) when a critical alert threshold is exceeded.
+
+## 2026-04-30 - [Fail-Secure Storage Divergence & Autonomous Self-Healing]
+**Vulnerability:** Security state (lockdown, blacklist) could be bypassable if one storage medium (localStorage/sessionStorage) was tampered with while the other remained intact, due to a lenient fallback in the retrieval logic.
+**Learning:** In a multi-layered storage strategy, any divergence between layers must be treated as a high-severity integrity breach. Failing to a null state is safer than attempting to guess the "correct" value from mismatched sources.
+**Prevention:** Implement a strict fail-secure check in the `secureGet` utility. If layers don't match, revoke access to the key entirely. Pair this with a "Self-Healing" trigger that autonomously initiates system reconstruction (Molt) when a critical alert threshold is exceeded.

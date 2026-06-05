@@ -94,9 +94,10 @@ export const useMoltAutomation = () => {
 
         if (recentAlerts.length >= 3 && !isLockdown) {
           triggerLockdown();
+          attemptAutonomousImprovement('Self-Healing: Critical breach threshold reached. Initializing system reconstruction.');
+        } else {
+          attemptAutonomousImprovement(`Security hardening required: ${event}`);
         }
-
-        attemptAutonomousImprovement(`Security hardening required: ${event}`);
       }
     };
 
