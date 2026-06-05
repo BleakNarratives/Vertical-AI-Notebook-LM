@@ -19,5 +19,9 @@
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
 
 ## 2025-05-19 - [Standardizing 3D Utility Transforms]
-**Learning:** In Tailwind 4, using inline `style={{ transform: '...' }}` for 3D counter-rotations clobbers the `transform` property, which can prevent utility classes like `active:translate-y-1` or `hover:scale-110` from functioning if they rely on the `transform` property or if the inline style doesn't account for Tailwind's transform variables. Explicitly including `translateY(var(--tw-translate-y, 0))` and `scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))` in the inline style preserves the "tactile" feel of Tailwind utilities.
+**Learning:** In Tailwind 4, using inline `style={{ transform: '...' }}` for 3D counter-rotations clobbers the `transform` property, which can prevent utility classes like `active:translate-y-1` or `hover:scale-110` from functioning if they rely on the `transform` property or if the inline style doesn't account for Tailwind's transform variables. Explicitly including `translateY(var(--tw-translate-y, 0))` and `scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' in the inline style preserves the "tactile" feel of Tailwind utilities.
 **Action:** When using inline transforms for 3D perspective, always include Tailwind's transform variables: `style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}`.
+
+## 2025-05-20 - [Tactile Fanning Stacks]
+**Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
+**Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
