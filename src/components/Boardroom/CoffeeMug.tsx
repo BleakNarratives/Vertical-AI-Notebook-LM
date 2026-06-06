@@ -74,7 +74,7 @@ export const CoffeeMug: React.FC = () => {
         </span>
 
         {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-red opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
       </button>
     </div>
   );
