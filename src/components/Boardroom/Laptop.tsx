@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useMoltAutomation } from '@/hooks/useMoltAutomation';
+import { useMolt } from '@/hooks/useMolt';
 
 export const Laptop: React.FC = () => {
-  const { level } = useMoltAutomation();
+  const { level } = useMolt();
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
 
