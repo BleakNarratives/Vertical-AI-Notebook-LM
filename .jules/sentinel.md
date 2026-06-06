@@ -22,3 +22,8 @@
 **Vulnerability:** Static pattern matching is easily bypassed via simple obfuscation (e.g., URL encoding, mixed-case, or alternative event handlers).
 **Learning:** Security validation must always operate on normalized input. In a client-side environment, attackers often use encoded characters to bypass basic allowlists or regex patterns. Furthermore, depth defense must expand to include non-traditional vectors like NoSQL injection and data URIs.
 **Prevention:** Always normalize (URL decode, case-fold if appropriate) user input before running validation checks. Expand the `maliciousPatterns` suite to include common obfuscated XSS vectors (onerror, onload, data:) and database-specific injection signatures (NoSQL $where/regex).
+
+## 2026-06-06 - [Multi-Stage Normalization & Ascension Readiness]
+**Vulnerability:** Static single-pass decoding bypasses and lack of transport-layer security enforcement.
+**Learning:** Attackers can use multiple layers of URL encoding (e.g., %252E for '.') to bypass single-pass decoders. Security logic must recursively normalize input to reach the canonical form. Furthermore, transport security (HSTS) is a critical baseline for preventing protocol downgrade attacks in "Code City".
+**Prevention:** Implement recursive decoding in the normalization layer with a strict depth limit to prevent DoS. Enforce Strict-Transport-Security headers and expand malicious pattern matching to include legacy and proof-of-concept XSS vectors.

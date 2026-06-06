@@ -101,6 +101,20 @@ export const useSentinel = () => {
       .replace(/=/g, '&#x3D;');
   }, []);
 
+  const recursiveDecode = useCallback((input: string): string => {
+    const decode = (str: string, d: number): string => {
+      if (d > 3) return str; // Prevent infinite recursion/DoS
+      try {
+        const decoded = decodeURIComponent(str);
+        if (decoded === str) return decoded;
+        return decode(decoded, d + 1);
+      } catch {
+        return str;
+      }
+    };
+    return decode(input, 0);
+  }, []);
+
   const storeShadowLog = useCallback((input: string) => {
     if (typeof window === 'undefined') return;
     const key = 'sentinel_shadow_logs';
@@ -123,11 +137,12 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
-    // Input Normalization: Decode and clean to prevent obfuscation
-    let normalized = input;
-    try {
-      normalized = decodeURIComponent(input);
-    } catch { /* use original if decoding fails */ }
+    // Input Normalization: Recursive decode to prevent multi-stage obfuscation
+    const normalized = recursiveDecode(input);
+
+    if (normalized !== input) {
+      logSecurityEvent(`Input normalization detected bypass attempt`, 'MEDIUM');
+    }
 
     // Basic allowlist check (using normalized input)
     const allowlist = /^[a-zA-Z0-9\s._\-!?()[\]*|\/><=:$]+$/;
@@ -143,8 +158,12 @@ export const useSentinel = () => {
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
       /javascript:/i,       // Protocol injection
+      /\\bvbscript:/i,         // VBScript injection
       /onerror\s*=/i,       // XSS Event handler
       /onload\s*=/i,        // XSS Event handler
+      /\\beval\\s*\\(/i,         // Dangerous evaluation
+      /\\balert\\s*\\(/i,        // XSS proof-of-concept
+      /\\bexpression\\s*\\(/i,   // IE legacy XSS
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne)/i // NoSQL injection
@@ -158,7 +177,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, recursiveDecode]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
