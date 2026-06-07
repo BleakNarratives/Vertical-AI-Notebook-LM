@@ -158,12 +158,12 @@ export const useSentinel = () => {
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
       /javascript:/i,       // Protocol injection
-      /\\bvbscript:/i,         // VBScript injection
+      /\bvbscript:/i,       // VBScript injection
       /onerror\s*=/i,       // XSS Event handler
       /onload\s*=/i,        // XSS Event handler
-      /\\beval\\s*\\(/i,         // Dangerous evaluation
-      /\\balert\\s*\\(/i,        // XSS proof-of-concept
-      /\\bexpression\\s*\\(/i,   // IE legacy XSS
+      /\beval\s*\(/i,       // Dangerous evaluation
+      /\balert\s*\(/i,      // XSS proof-of-concept
+      /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne)/i // NoSQL injection
@@ -283,6 +283,42 @@ export const useSentinel = () => {
     return false;
   }, [logSecurityEvent, secureGet, secureStore]);
 
+  const monitorIntegrity = useCallback(() => {
+    if (typeof window === 'undefined') return () => {};
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        // Check for removed nodes that were sentinel protected
+        mutation.removedNodes.forEach((node) => {
+          if (node instanceof HTMLElement && (node.hasAttribute('data-sentinel') || node.querySelector('[data-sentinel]'))) {
+            logSecurityEvent('CRITICAL: Sentinel-protected UI element removed from DOM.', 'CRITICAL');
+            window.dispatchEvent(new CustomEvent('sentinel-integrity-breach', { detail: { type: 'REMOVAL' } }));
+          }
+        });
+
+        // Check for attribute changes (like hiding elements)
+        if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
+          if (mutation.target.hasAttribute('data-sentinel')) {
+            const style = window.getComputedStyle(mutation.target);
+            if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+              logSecurityEvent('CRITICAL: Sentinel-protected UI element hidden via styles.', 'CRITICAL');
+              window.dispatchEvent(new CustomEvent('sentinel-integrity-breach', { detail: { type: 'HIDING' } }));
+            }
+          }
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class', 'hidden']
+    });
+
+    return () => observer.disconnect();
+  }, [logSecurityEvent]);
+
   return {
     logSecurityEvent,
     sanitizeInput,
@@ -297,6 +333,7 @@ export const useSentinel = () => {
     checkBlacklist,
     secureStore,
     secureGet,
-    secureRemove
+    secureRemove,
+    monitorIntegrity
   };
 };

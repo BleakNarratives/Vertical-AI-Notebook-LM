@@ -38,6 +38,7 @@ export const Laptop: React.FC = () => {
         )}
       </div>
       <button
+        data-sentinel="laptop-terminal"
         type="button"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation)"
