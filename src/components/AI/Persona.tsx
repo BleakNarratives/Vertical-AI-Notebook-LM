@@ -18,7 +18,10 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       disabled={disabled}
       aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
-      style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+      style={{
+        transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))',
+        background: status === 'active' ? 'radial-gradient(circle at bottom, rgba(255, 0, 0, 0.15), transparent 70%)' : undefined
+      }}
       className={`flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
     >
       <div className={`
@@ -27,7 +30,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
         ${status === 'distorted' ? 'animate-pulse scale-95 opacity-50' : ''}
       `}>
         {/* Ragtag Business Suit Aesthetic (Abstract) */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full opacity-30 group-hover:opacity-60 group-focus-within:opacity-60 transition-opacity pointer-events-none">
           <div className="absolute top-8 left-4 w-16 h-20 border-l border-t border-grey-medium" />
           <div className="absolute top-10 left-6 w-12 h-16 border-r border-b border-grey-medium rotate-3" />
         </div>

@@ -62,7 +62,7 @@ export default function RootLayout({
                </div>
 
                {/* Boardroom Props */}
-               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom">
+               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom" role="region" aria-label="Interactive Boardroom Props">
                  <Papers context="user" />
 
                  <Laptop />
