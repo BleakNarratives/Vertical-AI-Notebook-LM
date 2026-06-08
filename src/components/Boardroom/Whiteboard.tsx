@@ -60,7 +60,7 @@ export const Whiteboard: React.FC = () => {
              <div className="h-0.5 w-5/6 bg-neon-amber/40" />
              <div className="mt-auto flex justify-between items-end">
                <div className="h-4 w-4 rounded-full border border-neon-red/40" />
-               <div className="text-[8px] font-mono text-neon-amber/40">v2.6.0</div>
+               <div className="text-xs font-mono text-neon-amber/40">v2.6.0</div>
              </div>
           </div>
         </div>

@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Narrative Snippets & Legibility]
+**Learning:** Immersive environments benefit from narrative "micro-feedback" that rewards interaction without overwhelming the UI. Using aria-live for these snippets ensures they are accessible. Standardizing on text-xs (12px) as a minimum size prevents "atmospheric" detail from becoming a legibility barrier.
+**Action:** Always provide semantic, live-region feedback for discovery-based interactions. Maintain text-xs as the floor for all UI text, even when aiming for a "minimalist" or "terminal" aesthetic.

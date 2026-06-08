@@ -50,63 +50,87 @@ interface PapersProps {
   context?: ContextType;
 }
 
-const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> = {
-  higgins: { p1: 'Gate Logs', p2: 'Entry Permits', p3: 'ID Samples' },
-  pytch: { p1: 'Story Beats', p2: 'Draft Scripts', p3: 'Plot Graphs' },
-  twoie: { p1: 'Op Manifest', p2: 'Exec Scripts', p3: 'Task Quotas' },
-  zeroclaw: { p1: 'Hive Pulse', p2: 'Swarm State', p3: 'Node Health' },
-  user: { p1: 'Source Docs', p2: 'Ref Images', p3: 'Local Notes' },
+const CONTEXT_DATA: Record<ContextType, {
+  p1: string; s1: string;
+  p2: string; s2: string;
+  p3: string; s3: string;
+}> = {
+  higgins: {
+    p1: 'Gate Logs', s1: 'Visitor clearance: PENDING',
+    p2: 'Entry Permits', s2: 'Authorized by Obelisk-4',
+    p3: 'ID Samples', s3: 'Biometric mismatch in Sector B'
+  },
+  pytch: {
+    p1: 'Story Beats', s1: 'The plot thickens in Sector 7',
+    p2: 'Draft Scripts', s2: 'Dialogue needs more "bleak"',
+    p3: 'Plot Graphs', s3: 'Narrative tension rising'
+  },
+  twoie: {
+    p1: 'Op Manifest', s1: 'Execution cycle 42 initiated',
+    p2: 'Exec Scripts', s2: 'Automated cleanup scheduled',
+    p3: 'Task Quotas', s3: 'Efficiency at 98.4%'
+  },
+  zeroclaw: {
+    p1: 'Hive Pulse', s1: 'Node 04 reporting heartbeat',
+    p2: 'Swarm State', s2: 'Collective focus: Optimized',
+    p3: 'Node Health', s3: 'Degradation detected in hive limb'
+  },
+  user: {
+    p1: 'Source Docs', s1: 'Encrypted fragments found',
+    p2: 'Ref Images', s2: 'Visualizing the obsidian shadows',
+    p3: 'Local Notes', s3: "Don't trust the coffee mug"
+  },
 };
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
-  const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
+  const [activeInfo, setActiveInfo] = React.useState<{title: string, snippet: string} | null>(null);
   const data = CONTEXT_DATA[context];
 
-  const handleView = (title: string) => {
-    setActiveTitle(title);
-    setTimeout(() => setActiveTitle(null), 2000);
+  const handleView = (title: string, snippet: string) => {
+    setActiveInfo({ title, snippet });
+    setTimeout(() => setActiveInfo(null), 3000);
   };
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center" aria-live="polite">
-        {activeTitle && (
-          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
-            Viewing {activeTitle}...
+      <div className="h-6 flex items-center justify-center" aria-live="polite">
+        {activeInfo && (
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase text-center max-w-[200px] leading-tight">
+            {activeInfo.title}: {activeInfo.snippet}
           </div>
         )}
       </div>
       <div className="group/papers relative flex items-end justify-center w-24 h-24 mb-4">
         {/* Paper 1: Bottom Left */}
-        <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover/papers:-translate-x-6 group-focus-within/papers:-translate-x-6 group-hover/papers:-rotate-6 group-focus-within/papers:-rotate-6">
+        <div className="absolute bottom-0 left-2 transition-all duration-300 group-hover/papers:-translate-x-8 group-focus-within/papers:-translate-x-8 group-hover/papers:-rotate-12 group-focus-within/papers:-rotate-12">
           <Paper
             label={`View ${data.p1}`}
             title={data.p1}
             rotation="-2deg"
-            isActive={activeTitle === data.p1}
-            onClick={() => handleView(data.p1)}
+            isActive={activeInfo?.title === data.p1}
+            onClick={() => handleView(data.p1, data.s1)}
           />
         </div>
 
         {/* Paper 3: Bottom Right (added for depth) */}
-        <div className="absolute bottom-0 right-0 transition-all duration-300 group-hover/papers:translate-x-6 group-focus-within/papers:translate-x-6 group-hover/papers:rotate-6 group-focus-within/papers:rotate-6">
+        <div className="absolute bottom-0 right-2 transition-all duration-300 group-hover/papers:translate-x-8 group-focus-within/papers:translate-x-8 group-hover/papers:rotate-12 group-focus-within/papers:rotate-12">
           <Paper
             label={`View ${data.p3}`}
             title={data.p3}
             rotation="4deg"
-            isActive={activeTitle === data.p3}
-            onClick={() => handleView(data.p3)}
+            isActive={activeInfo?.title === data.p3}
+            onClick={() => handleView(data.p3, data.s3)}
           />
         </div>
 
         {/* Paper 2: Center/Top */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover/papers:-translate-y-4 group-focus-within/papers:-translate-y-4">
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover/papers:-translate-y-6 group-focus-within/papers:-translate-y-6 group-hover/papers:rotate-2 group-focus-within/papers:rotate-2">
           <Paper
             label={`View ${data.p2}`}
             title={data.p2}
             rotation="1deg"
-            isActive={activeTitle === data.p2}
-            onClick={() => handleView(data.p2)}
+            isActive={activeInfo?.title === data.p2}
+            onClick={() => handleView(data.p2, data.s2)}
           />
         </div>
       </div>

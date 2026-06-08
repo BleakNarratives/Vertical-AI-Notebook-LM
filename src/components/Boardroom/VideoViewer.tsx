@@ -37,10 +37,10 @@ export const VideoViewer: React.FC = () => {
           {/* REC indicator */}
           <div className="absolute top-2 right-2 flex items-center gap-1 opacity-60">
             <div className={`w-1.5 h-1.5 rounded-full animate-pulse transition-colors duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-neon-red'}`} />
-            <span className={`text-[8px] font-mono uppercase transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>REC</span>
+            <span className={`text-xs font-mono uppercase transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>REC</span>
           </div>
 
-          <div className={`absolute text-[10px] font-mono tracking-widest animate-pulse transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red/60'}`}>
+          <div className={`absolute text-xs font-mono tracking-widest animate-pulse transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red/60'}`}>
             {isActive ? 'FEED_LIVE' : 'SIGNAL_WAITING...'}
           </div>
         </div>

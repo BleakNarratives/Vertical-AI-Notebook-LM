@@ -50,12 +50,12 @@ export const Honeytoken = () => {
       aria-label="System credentials fragment"
     >
       <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500">
-        <span className="text-[8px] font-mono text-grey-medium uppercase tracking-tighter">
+        <span className="text-xs font-mono text-grey-medium uppercase tracking-tighter">
           {config.payload.label}
         </span>
         <div className="flex gap-2 items-center">
           <div className="w-1 h-1 bg-neon-amber animate-pulse" />
-          <span className="text-[10px] font-mono text-neon-amber/50 group-hover:text-neon-amber transition-colors">
+          <span className="text-xs font-mono text-neon-amber/50 group-hover:text-neon-amber transition-colors">
             {config.payload.secret}
           </span>
         </div>

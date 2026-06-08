@@ -30,7 +30,7 @@ export const Laptop: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center" aria-live="polite">
+      <div className="h-6 flex items-center justify-center" aria-live="polite">
         {status && (
           <div className="text-xs font-mono text-neon-red animate-pulse uppercase">
             {status}
@@ -50,7 +50,7 @@ export const Laptop: React.FC = () => {
             <div className="w-1 h-1 rounded-full bg-neon-red/40" />
             <div className="w-1 h-1 rounded-full bg-neon-amber/40" />
           </div>
-          <div className={`flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
+          <div className={`flex-1 p-2 font-mono text-xs text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
             <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
             <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
             <div className="mt-1 opacity-40">System Link: ACTIVE</div>

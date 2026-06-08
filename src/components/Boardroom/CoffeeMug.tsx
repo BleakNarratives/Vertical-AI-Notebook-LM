@@ -37,9 +37,9 @@ export const CoffeeMug: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center" aria-live="polite">
+      <div className="h-6 flex items-center justify-center" aria-live="polite">
         {status && (
-          <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tighter">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tighter">
             {status}
           </div>
         )}
