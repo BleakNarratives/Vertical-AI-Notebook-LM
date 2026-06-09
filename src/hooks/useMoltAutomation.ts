@@ -138,16 +138,24 @@ export const useMoltAutomation = () => {
       setIsBlacklisted(true);
     };
 
+    const handleIntegrityViolation = () => {
+      // Soft response to integrity violation to avoid reload loops while maintaining security
+      attemptAutonomousImprovement('Integrity violation detected. Reconstructing environment.');
+      // After a short delay, if still violated, could reload, but for now we let Molt handle it
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
       window.addEventListener('sentinel-decoy-breach', handleDecoyBreach);
       window.addEventListener('sentinel-blacklist', handleBlacklist);
+      window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
         window.removeEventListener('sentinel-decoy-breach', handleDecoyBreach);
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
+        window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);

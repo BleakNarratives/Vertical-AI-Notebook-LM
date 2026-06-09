@@ -27,3 +27,8 @@
 **Vulnerability:** Static single-pass decoding bypasses and lack of transport-layer security enforcement.
 **Learning:** Attackers can use multiple layers of URL encoding (e.g., %252E for '.') to bypass single-pass decoders. Security logic must recursively normalize input to reach the canonical form. Furthermore, transport security (HSTS) is a critical baseline for preventing protocol downgrade attacks in "Code City".
 **Prevention:** Implement recursive decoding in the normalization layer with a strict depth limit to prevent DoS. Enforce Strict-Transport-Security headers and expand malicious pattern matching to include legacy and proof-of-concept XSS vectors.
+
+## 2026-06-07 - [DOM Integrity Guard & Recursive Reconstruction]
+**Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
+**Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
+**Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).

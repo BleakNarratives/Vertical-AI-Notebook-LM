@@ -29,7 +29,7 @@ export const Laptop: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div data-sentinel="laptop-terminal" className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && (
           <div className="text-xs font-mono text-neon-red animate-pulse uppercase">
