@@ -50,7 +50,7 @@ export const Laptop: React.FC = () => {
             <div className="w-1 h-1 rounded-full bg-neon-red/40" />
             <div className="w-1 h-1 rounded-full bg-neon-amber/40" />
           </div>
-          <div className={`flex-1 p-2 font-mono text-[10px] text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
+          <div className={`flex-1 p-2 font-mono text-xs text-left text-grey-medium leading-tight transition-all duration-300 ${isFlashing ? 'brightness-150' : ''}`}>
             <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
             <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
             <div className="mt-1 opacity-40">System Link: ACTIVE</div>
@@ -71,12 +71,17 @@ export const Laptop: React.FC = () => {
         </div>
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           Terminal / IDEal / 4ward
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-red/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        {/* Focus indicator (Corners) */}
+        <div className="absolute -inset-1 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-neon-red" />
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-neon-red" />
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-neon-red" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-neon-red" />
+        </div>
       </button>
     </div>
   );

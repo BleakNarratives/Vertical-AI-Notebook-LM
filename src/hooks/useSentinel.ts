@@ -158,12 +158,12 @@ export const useSentinel = () => {
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
       /javascript:/i,       // Protocol injection
-      /\\bvbscript:/i,         // VBScript injection
+      /\bvbscript:/i,         // VBScript injection
       /onerror\s*=/i,       // XSS Event handler
       /onload\s*=/i,        // XSS Event handler
-      /\\beval\\s*\\(/i,         // Dangerous evaluation
-      /\\balert\\s*\\(/i,        // XSS proof-of-concept
-      /\\bexpression\\s*\\(/i,   // IE legacy XSS
+      /\beval\s*\(/i,         // Dangerous evaluation
+      /\balert\s*\(/i,        // XSS proof-of-concept
+      /\bexpression\s*\(/i,   // IE legacy XSS
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne)/i // NoSQL injection

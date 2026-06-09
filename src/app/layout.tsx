@@ -36,7 +36,7 @@ export default function RootLayout({
           </div>
           <div className="ml-auto flex gap-4">
              <div className="h-2 w-2 rounded-full bg-neon-amber animate-pulse" />
-             <span className="text-[10px] font-mono text-neon-amber uppercase tracking-tighter">System Link Active</span>
+             <span className="text-xs font-mono text-neon-amber uppercase tracking-tighter">System Link Active</span>
           </div>
         </header>
 
@@ -76,7 +76,7 @@ export default function RootLayout({
           </div>
         </main>
 
-        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
+        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-xs font-mono text-grey-medium uppercase tracking-widest">
           <span>[ BLEAK NARRATIVES ]</span>
           <span className="ml-auto">TERM: 2829543670389124673</span>
         </footer>

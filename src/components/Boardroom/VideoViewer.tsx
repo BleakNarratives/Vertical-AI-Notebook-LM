@@ -26,7 +26,7 @@ export const VideoViewer: React.FC = () => {
         onClick={handleAction}
         aria-label="Remote Feed / Video Monitor"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className={`group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-2 outline-none transform-gpu ${isActive ? 'focus-visible:ring-neon-amber' : 'focus-visible:ring-neon-red'}`}
+        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-0 outline-none transform-gpu"
       >
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">
           {/* Scanlines */}
@@ -37,17 +37,25 @@ export const VideoViewer: React.FC = () => {
           {/* REC indicator */}
           <div className="absolute top-2 right-2 flex items-center gap-1 opacity-60">
             <div className={`w-1.5 h-1.5 rounded-full animate-pulse transition-colors duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-neon-red'}`} />
-            <span className={`text-[8px] font-mono uppercase transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>REC</span>
+            <span className={`text-xs font-mono uppercase transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>REC</span>
           </div>
 
-          <div className={`absolute text-[10px] font-mono tracking-widest animate-pulse transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red/60'}`}>
+          <div className={`absolute text-xs font-mono tracking-widest animate-pulse transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red/60'}`}>
             {isActive ? 'FEED_LIVE' : 'SIGNAL_WAITING...'}
           </div>
         </div>
         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-grey-medium" />
-        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Monitor
         </span>
+
+        {/* Focus indicator (Corners) */}
+        <div className="absolute -inset-1 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none">
+          <div className={`absolute top-0 left-0 w-3 h-3 border-t border-l transition-colors duration-500 ${isActive ? 'border-neon-amber' : 'border-neon-red'}`} />
+          <div className={`absolute top-0 right-0 w-3 h-3 border-t border-r transition-colors duration-500 ${isActive ? 'border-neon-amber' : 'border-neon-red'}`} />
+          <div className={`absolute bottom-0 left-0 w-3 h-3 border-b border-l transition-colors duration-500 ${isActive ? 'border-neon-amber' : 'border-neon-red'}`} />
+          <div className={`absolute bottom-0 right-0 w-3 h-3 border-b border-r transition-colors duration-500 ${isActive ? 'border-neon-amber' : 'border-neon-red'}`} />
+        </div>
       </button>
     </div>
   );

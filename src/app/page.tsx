@@ -170,7 +170,7 @@ export default function Home() {
       <Honeytoken />
 
       <div className="absolute bottom-12 right-12 opacity-20 hover:opacity-100 transition-opacity duration-1000">
-        <span className="text-[10px] font-mono text-neon-amber">
+        <span className="text-xs font-mono text-neon-amber">
           Looking for Easter eggs? Try the obsidian shadows.
         </span>
       </div>

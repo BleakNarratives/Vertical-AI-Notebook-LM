@@ -39,7 +39,7 @@ export const CoffeeMug: React.FC = () => {
     <div className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && (
-          <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tighter">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tighter">
             {status}
           </div>
         )}
@@ -69,12 +69,17 @@ export const CoffeeMug: React.FC = () => {
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
+        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
           SAVE / LOAD / SETTINGS
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        {/* Focus indicator (Corners) */}
+        <div className="absolute -inset-1 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-neon-amber" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-neon-amber" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-neon-amber" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-neon-amber" />
+        </div>
       </button>
     </div>
   );

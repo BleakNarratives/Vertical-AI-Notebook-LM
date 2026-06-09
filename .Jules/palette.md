@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Thematic Focus Indicators]
+**Learning:** In highly stylized, immersive environments like 'Code City', standard browser focus rings can feel visually jarring and out of place. Terminal-style corner brackets provide a highly thematic alternative that reinforces the aesthetic while still meeting critical WCAG accessibility requirements for focus visibility.
+**Action:** Use absolute-positioned corner elements (e.g., small divs with partial borders) triggered by `focus-visible` on interactive 3D props to maintain thematic immersion while ensuring keyboard navigation is intuitive and accessible.

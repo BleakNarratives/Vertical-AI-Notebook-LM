@@ -39,7 +39,7 @@ export const Whiteboard: React.FC = () => {
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none transform-gpu cursor-none"
+        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-0 outline-none transform-gpu cursor-none"
       >
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           {/* Simulated Marker Tip (Delight) */}
@@ -60,13 +60,21 @@ export const Whiteboard: React.FC = () => {
              <div className="h-0.5 w-5/6 bg-neon-amber/40" />
              <div className="mt-auto flex justify-between items-end">
                <div className="h-4 w-4 rounded-full border border-neon-red/40" />
-               <div className="text-[8px] font-mono text-neon-amber/40">v2.6.0</div>
+               <div className="text-xs font-mono text-neon-amber/40">v2.6.0</div>
              </div>
           </div>
         </div>
         <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Whiteboard
         </span>
+
+        {/* Focus indicator (Corners) */}
+        <div className="absolute -inset-1 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-neon-amber" />
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-neon-amber" />
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-neon-amber" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-neon-amber" />
+        </div>
       </button>
     </div>
   );
