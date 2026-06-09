@@ -1,5 +1,6 @@
 import { EasterEgg } from "@/components/AI/EasterEgg";
 import { SecurityOverlay } from "@/components/SecurityOverlay";
+import { SentinelIntegrity } from "@/components/SentinelIntegrity";
 import { CoffeeMug } from "@/components/Boardroom/CoffeeMug";
 import { Laptop } from "@/components/Boardroom/Laptop";
 import { Whiteboard } from "@/components/Boardroom/Whiteboard";
@@ -71,6 +72,7 @@ export default function RootLayout({
 
                <EasterEgg />
                <SecurityOverlay />
+               <SentinelIntegrity />
                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber to-transparent opacity-30" />
              </PerspectiveWrapper>
           </div>

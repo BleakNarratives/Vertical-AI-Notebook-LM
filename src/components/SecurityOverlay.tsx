@@ -26,7 +26,7 @@ export const SecurityOverlay: React.FC = () => {
   if (!alert) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
+    <div data-sentinel="security-overlay" className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
       <div className="absolute inset-0 bg-neon-red/20 animate-pulse" />
       <div className="relative p-6 border-2 border-neon-red bg-obsidian shadow-[0_0_30px_rgba(255,0,0,0.4)] max-w-sm w-full font-mono animate-in zoom-in duration-300">
         <div className="flex items-center gap-3 mb-3 border-b border-neon-red/30 pb-2">
