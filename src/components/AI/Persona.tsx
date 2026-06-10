@@ -6,7 +6,7 @@ interface PersonaProps {
   name: string;
   role: string;
   status: 'idle' | 'active' | 'distorted';
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
   disabled?: boolean;
 }
 

@@ -115,6 +115,14 @@ export const useSentinel = () => {
     return decode(input, 0);
   }, []);
 
+  const verifyInteraction = useCallback((e: React.UIEvent | Event): boolean => {
+    if (e && 'isTrusted' in e && e.isTrusted === false) {
+      logSecurityEvent('Synthetic interaction detected', 'HIGH');
+      return false;
+    }
+    return true;
+  }, [logSecurityEvent]);
+
   const storeShadowLog = useCallback((input: string) => {
     if (typeof window === 'undefined') return;
     const key = 'sentinel_shadow_logs';
@@ -153,20 +161,25 @@ export const useSentinel = () => {
 
     // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
     const maliciousPatterns = [
-      /\.\.\//,             // Path traversal
-      /etc\/passwd/,        // LFI target
-      /cmd\.exe/,           // RCE attempt
-      /<script/i,           // XSS attempt
-      /javascript:/i,       // Protocol injection
-      /\bvbscript:/i,       // VBScript injection
-      /onerror\s*=/i,       // XSS Event handler
-      /onload\s*=/i,        // XSS Event handler
-      /\beval\s*\(/i,       // Dangerous evaluation
-      /\balert\s*\(/i,      // XSS proof-of-concept
-      /\bexpression\s*\(/i, // IE legacy XSS
-      /data:/i,             // Data URI scheme
-      /union\s+select/i,    // SQL injection
-      /\$(where|regex|ne)/i // NoSQL injection
+      /\.\.\//,                   // Path traversal
+      /etc\/passwd/,              // LFI target
+      /cmd\.exe/,                 // RCE attempt
+      /<script/i,                 // XSS attempt
+      /javascript:/i,             // Protocol injection
+      /\bvbscript:/i,             // VBScript injection
+      /onerror\s*=/i,             // XSS Event handler
+      /onload\s*=/i,              // XSS Event handler
+      /\beval\s*\(/i,             // Dangerous evaluation
+      /\balert\s*\(/i,            // XSS proof-of-concept
+      /\bexpression\s*\(/i,       // IE legacy XSS
+      /data:/i,                   // Data URI scheme
+      /union\s+select/i,          // SQL injection
+      /\$(where|regex|ne)/i,      // NoSQL injection
+      /__proto__/i,               // Prototype Pollution
+      /\bconstructor\b/i,         // Prototype Pollution / constructor
+      /prototype/i,               // Prototype Pollution
+      /String\.fromCharCode/i,    // Obfuscation bypass
+      /\bbase64\b/i               // Suspicious encoding
     ];
 
     for (const pattern of maliciousPatterns) {
@@ -335,6 +348,7 @@ export const useSentinel = () => {
     secureStore,
     secureGet,
     secureRemove,
-    monitorIntegrity
+    monitorIntegrity,
+    verifyInteraction
   };
 };

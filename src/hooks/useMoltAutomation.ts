@@ -17,8 +17,8 @@ interface SecurityAlertEvent extends CustomEvent {
  * Listens for system activity and security events to trigger improvements "within reason".
  */
 export const useMoltAutomation = () => {
-  const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet, secureRemove } = useSentinel();
+  const { triggerMolt: baseTriggerMolt, level, isImproving } = useMolt();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet, secureRemove, verifyInteraction } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
@@ -56,6 +56,11 @@ export const useMoltAutomation = () => {
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
   }, [logSecurityEvent, secureStore]);
+
+  const triggerMolt = useCallback(async (e?: React.UIEvent | Event) => {
+    if (e && !verifyInteraction(e)) return;
+    return baseTriggerMolt();
+  }, [baseTriggerMolt, verifyInteraction]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
