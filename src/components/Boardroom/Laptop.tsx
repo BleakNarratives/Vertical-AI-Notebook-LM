@@ -41,7 +41,7 @@ export const Laptop: React.FC = () => {
         type="button"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation)"
-        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+        style={{ transform: 'rotateX(-25deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
       >
         {/* Laptop Screen (Open) */}
@@ -75,8 +75,13 @@ export const Laptop: React.FC = () => {
           Terminal / IDEal / 4ward
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-red/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        {/* Focus indicator - Terminal Corner Brackets */}
+        <div className="absolute -inset-2 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-neon-red" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-neon-red" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-neon-red" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-neon-red" />
+        </div>
       </button>
     </div>
   );

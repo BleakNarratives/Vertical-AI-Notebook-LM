@@ -48,7 +48,7 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+        style={{ transform: 'rotateX(-25deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
@@ -73,8 +73,13 @@ export const CoffeeMug: React.FC = () => {
           SAVE / LOAD / SETTINGS
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        {/* Focus indicator - Terminal Corner Brackets */}
+        <div className="absolute -inset-2 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-neon-amber" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-neon-amber" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-neon-amber" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-neon-amber" />
+        </div>
       </button>
     </div>
   );
