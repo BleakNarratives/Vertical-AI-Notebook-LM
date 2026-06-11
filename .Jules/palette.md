@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Thematic Keyboard Accessibility]
+**Learning:** Standard browser focus rings can clash with high-immersion, "bleak-minimalist" UIs. Creating thematic focus indicators (like terminal corner brackets) that only appear on `focus-visible` maintains the aesthetic while providing clear feedback for keyboard users. Furthermore, adjusting label positioning based on an element's depth in the 3D perspective prevents viewport clipping and overlapping with sticky UI headers.
+**Action:** Implement "Terminal Corner Brackets" for focus states in thematic UIs. Standardize label positioning: `-top-8` for props at the bottom of the table, and `-bottom-8` for props at the top/sides of the table.

@@ -69,12 +69,15 @@ export const CoffeeMug: React.FC = () => {
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
           SAVE / LOAD / SETTINGS
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        {/* Focus indicator (Corner Brackets) */}
+        <div className="absolute -top-2 -left-2 w-2 h-2 border-t-2 border-l-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -top-2 -right-2 w-2 h-2 border-t-2 border-r-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -bottom-2 -left-2 w-2 h-2 border-b-2 border-l-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -bottom-2 -right-2 w-2 h-2 border-b-2 border-r-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
       </button>
     </div>
   );

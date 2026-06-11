@@ -39,7 +39,7 @@ export const Whiteboard: React.FC = () => {
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-2 focus-visible:ring-neon-amber outline-none transform-gpu cursor-none"
+        className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu cursor-none"
       >
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           {/* Simulated Marker Tip (Delight) */}
@@ -64,9 +64,15 @@ export const Whiteboard: React.FC = () => {
              </div>
           </div>
         </div>
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Whiteboard
         </span>
+
+        {/* Focus indicator (Corner Brackets) */}
+        <div className="absolute -top-2 -left-2 w-2 h-2 border-t-2 border-l-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -top-2 -right-2 w-2 h-2 border-t-2 border-r-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -bottom-2 -left-2 w-2 h-2 border-b-2 border-l-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <div className="absolute -bottom-2 -right-2 w-2 h-2 border-b-2 border-r-2 border-neon-amber/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
       </button>
     </div>
   );
