@@ -4,7 +4,7 @@ import React from 'react';
 
 interface ModuleButtonProps {
   label: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
   isLoading?: boolean;
@@ -22,7 +22,7 @@ export const ModuleButton: React.FC<ModuleButtonProps> = ({
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={(e) => onClick?.(e)}
       disabled={isActuallyDisabled}
       aria-busy={isLoading}
       className={`

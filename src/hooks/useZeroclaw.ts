@@ -6,9 +6,10 @@ import { useSentinel } from './useSentinel';
 
 export const useZeroclaw = () => {
   const [isSwarming, setIsSwarming] = useState(false);
-  const { logSecurityEvent, checkRateLimit } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, verifyInteraction } = useSentinel();
 
-  const triggerSwarm = useCallback(async () => {
+  const triggerSwarm = useCallback(async (event?: React.MouseEvent | React.KeyboardEvent) => {
+    if (!verifyInteraction(event)) return;
     if (!checkRateLimit('triggerSwarm', 2, 120000)) return;
 
     setIsSwarming(true);
@@ -20,7 +21,7 @@ export const useZeroclaw = () => {
 
     console.log('Zeroclaw: Intelligence distributed. The swarm knows all.');
     setIsSwarming(false);
-  }, [logSecurityEvent, checkRateLimit]);
+  }, [logSecurityEvent, checkRateLimit, verifyInteraction]);
 
   return { triggerSwarm, isSwarming };
 };

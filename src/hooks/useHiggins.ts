@@ -7,9 +7,11 @@ import { useSentinel } from './useSentinel';
 export const useHiggins = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [, setShadowCounter] = useState(0);
-  const { logSecurityEvent, checkRateLimit, storeShadowLog } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, storeShadowLog, verifyInteraction } = useSentinel();
 
-  const consultHiggins = useCallback(async () => {
+  const consultHiggins = useCallback(async (event?: React.MouseEvent | React.KeyboardEvent) => {
+    if (!verifyInteraction(event)) return;
+
     // Enforce rate limiting: 3 calls per 60 seconds
     if (!checkRateLimit('consultHiggins', 3, 60000)) {
       setShadowCounter(prev => {
@@ -36,7 +38,7 @@ export const useHiggins = () => {
 
     console.log('Higgins: Welcome to the Code City. Please proceed to the Obelisk.');
     setIsProcessing(false);
-  }, [logSecurityEvent, checkRateLimit, storeShadowLog]);
+  }, [logSecurityEvent, checkRateLimit, storeShadowLog, verifyInteraction]);
 
   return { consultHiggins, isProcessing };
 };

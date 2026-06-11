@@ -6,7 +6,7 @@ interface PersonaProps {
   name: string;
   role: string;
   status: 'idle' | 'active' | 'distorted';
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
   disabled?: boolean;
 }
 
@@ -14,7 +14,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={(e) => onClick?.(e)}
       disabled={disabled}
       aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
