@@ -8,7 +8,7 @@ export const useMolt = () => {
   const [isImproving, setIsImproving] = useState(false);
   const { logSecurityEvent, verifyInteraction } = useSentinel();
 
-  const triggerMolt = useCallback(async (event?: React.MouseEvent | React.KeyboardEvent) => {
+  const triggerMolt = useCallback(async (event: React.MouseEvent | React.KeyboardEvent) => {
     if (!verifyInteraction(event)) return;
 
     setIsImproving(true);
