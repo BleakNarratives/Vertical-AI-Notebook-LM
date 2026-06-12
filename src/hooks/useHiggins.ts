@@ -9,7 +9,7 @@ export const useHiggins = () => {
   const [, setShadowCounter] = useState(0);
   const { logSecurityEvent, checkRateLimit, storeShadowLog, verifyInteraction } = useSentinel();
 
-  const consultHiggins = useCallback(async (event?: React.MouseEvent | React.KeyboardEvent) => {
+  const consultHiggins = useCallback(async (event: React.MouseEvent | React.KeyboardEvent) => {
     if (!verifyInteraction(event)) return;
 
     // Enforce rate limiting: 3 calls per 60 seconds
