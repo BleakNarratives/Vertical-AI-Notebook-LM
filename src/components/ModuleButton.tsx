@@ -22,7 +22,7 @@ export const ModuleButton: React.FC<ModuleButtonProps> = ({
   return (
     <button
       type="button"
-      onClick={(e) => onClick?.(e)}
+      onClick={onClick}
       disabled={isActuallyDisabled}
       aria-busy={isLoading}
       className={`
