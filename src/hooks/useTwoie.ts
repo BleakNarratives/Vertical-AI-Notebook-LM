@@ -8,7 +8,7 @@ export const useTwoie = () => {
   const [isExecuting, setIsExecuting] = useState(false);
   const { logSecurityEvent, checkRateLimit, sanitizeInput, validateInput, verifyInteraction } = useSentinel();
 
-  const executeTask = useCallback(async (task: string, event?: React.MouseEvent | React.KeyboardEvent) => {
+  const executeTask = useCallback(async (task: string, event: React.MouseEvent | React.KeyboardEvent) => {
     if (!verifyInteraction(event)) return;
     if (!checkRateLimit('executeTask', 5, 30000)) return;
     if (!validateInput(task)) return;
