@@ -62,7 +62,7 @@ export default function Home() {
             name="Mrs. Higgins"
             role="Gateway"
             status={isHigginsActive ? 'active' : 'idle'}
-            onClick={(e) => consultHiggins(e)}
+            onClick={consultHiggins}
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
