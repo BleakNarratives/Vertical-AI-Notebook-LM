@@ -14,7 +14,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
   return (
     <button
       type="button"
-      onClick={(e) => onClick?.(e)}
+      onClick={onClick}
       disabled={disabled}
       aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
