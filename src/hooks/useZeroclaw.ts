@@ -8,7 +8,7 @@ export const useZeroclaw = () => {
   const [isSwarming, setIsSwarming] = useState(false);
   const { logSecurityEvent, checkRateLimit, verifyInteraction } = useSentinel();
 
-  const triggerSwarm = useCallback(async (event?: React.MouseEvent | React.KeyboardEvent) => {
+  const triggerSwarm = useCallback(async (event: React.MouseEvent | React.KeyboardEvent) => {
     if (!verifyInteraction(event)) return;
     if (!checkRateLimit('triggerSwarm', 2, 120000)) return;
 
