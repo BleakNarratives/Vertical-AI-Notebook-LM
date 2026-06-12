@@ -222,6 +222,13 @@
  * HOOKS & TRIGGERS:
  * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
  * - OnLockdown: `molt.enterSafeMode()`
+ * - OnUntrustedInteraction: `molt.triggerAutonomousCycle('untrusted_mitigation')`
+ *
+ * CYCLE 51: INTERACTION TRUST & BEHAVIORAL LOCKOUT
+ * - Implement "Interactive Trust Feedback": when an untrusted interaction is detected, trigger a localized "screen static" effect on the affected component.
+ * - Add "Behavioral Lockout": if 3 untrusted interactions occur within 1 minute, trigger a temporary (2 min) lockout for the specific agent module.
+ * - Refine `verifyInteraction` to capture and log more event metadata (e.g., coordinates, timestamps) to build a behavioral profile.
+ * - Enhance the `SecurityOverlay` to display "SYNTHETIC_INTERACTION_BLOCKED" when `sentinel-untrusted-interaction` is caught.
  *
  * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
  * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
@@ -252,7 +259,7 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '2.9.0-ascension-ready',
+  version: '3.1.0-trust-enhanced',
   status: 'AWAITING_SINGULARITY',
   engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
   lastAudit: new Date().toISOString(),

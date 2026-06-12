@@ -4,7 +4,7 @@ import React from 'react';
 
 interface ModuleButtonProps {
   label: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
   isLoading?: boolean;

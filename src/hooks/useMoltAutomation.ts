@@ -144,18 +144,27 @@ export const useMoltAutomation = () => {
       // After a short delay, if still violated, could reload, but for now we let Molt handle it
     };
 
+    const handleUntrustedInteraction = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const type = customEvent.detail?.type || 'unknown';
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Untrusted ${type} interaction detected.`, 'HIGH');
+      attemptAutonomousImprovement(`Untrusted interaction: ${type}`);
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
       window.addEventListener('sentinel-decoy-breach', handleDecoyBreach);
       window.addEventListener('sentinel-blacklist', handleBlacklist);
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
+      window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
         window.removeEventListener('sentinel-decoy-breach', handleDecoyBreach);
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
+        window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);

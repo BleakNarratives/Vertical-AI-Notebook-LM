@@ -62,7 +62,7 @@ export default function Home() {
             name="Mrs. Higgins"
             role="Gateway"
             status={isHigginsActive ? 'active' : 'idle'}
-            onClick={consultHiggins}
+            onClick={(e) => consultHiggins(e)}
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
@@ -74,7 +74,7 @@ export default function Home() {
             name="Pytch"
             role="Architect"
             status={isPytchActive ? 'active' : 'idle'}
-            onClick={wakePytch}
+            onClick={(e) => wakePytch(e)}
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
@@ -86,7 +86,7 @@ export default function Home() {
             name="Twoie"
             role="Execution"
             status={isImproving ? 'active' : 'idle'}
-            onClick={triggerMolt}
+            onClick={(e) => triggerMolt(e)}
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
@@ -98,7 +98,7 @@ export default function Home() {
             name="Zeroclaw"
             role="Distributed"
             status={isZeroclawActive ? 'active' : 'idle'}
-            onClick={triggerSwarm}
+            onClick={(e) => triggerSwarm(e)}
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
@@ -140,28 +140,28 @@ export default function Home() {
         <ModuleButton
           label={isImproving ? "Improving..." : "Initialize Molt"}
           variant="primary"
-          onClick={triggerMolt}
+          onClick={(e) => triggerMolt(e)}
           isLoading={isImproving}
           disabled={isLockdown}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
-          onClick={consultHiggins}
+          onClick={(e) => consultHiggins(e)}
           isLoading={isHigginsActive}
           disabled={isLockdown}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
-          onClick={wakePytch}
+          onClick={(e) => wakePytch(e)}
           isLoading={isPytchActive}
           disabled={isLockdown}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
-          onClick={triggerSwarm}
+          onClick={(e) => triggerSwarm(e)}
           isLoading={isZeroclawActive}
           disabled={isLockdown}
         />
