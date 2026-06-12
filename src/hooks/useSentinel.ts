@@ -323,7 +323,8 @@ export const useSentinel = () => {
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
 
-    if (e.isTrusted === false) {
+    const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+    if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
