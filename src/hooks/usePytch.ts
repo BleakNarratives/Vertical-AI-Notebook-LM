@@ -8,7 +8,7 @@ export const usePytch = () => {
   const [isConstructing, setIsConstructing] = useState(false);
   const { logSecurityEvent, checkRateLimit, verifyInteraction } = useSentinel();
 
-  const wakePytch = useCallback(async (event?: React.MouseEvent | React.KeyboardEvent) => {
+  const wakePytch = useCallback(async (event: React.MouseEvent | React.KeyboardEvent) => {
     if (!verifyInteraction(event)) return;
     if (!checkRateLimit('wakePytch', 3, 60000)) return;
 
