@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -320,6 +320,22 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
+  const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
+    if (!e) return true;
+
+    const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+    if (nativeEvent && nativeEvent.isTrusted === false) {
+      logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
+          detail: { type: e.type, timestamp: new Date().toISOString() }
+        }));
+      }
+      return false;
+    }
+    return true;
+  }, [logSecurityEvent]);
+
   return {
     logSecurityEvent,
     sanitizeInput,
@@ -335,6 +351,7 @@ export const useSentinel = () => {
     secureStore,
     secureGet,
     secureRemove,
-    monitorIntegrity
+    monitorIntegrity,
+    verifyInteraction
   };
 };
