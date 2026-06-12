@@ -161,9 +161,7 @@ export const useSentinel = () => {
       /\\bvbscript:/i,         // VBScript injection
       /onerror\s*=/i,       // XSS Event handler
       /onload\s*=/i,        // XSS Event handler
-      /eval\s*\(/i,         // Dangerous evaluation
-      /alert\s*\(/i,        // XSS proof-of-concept
-      /expression\s*\(/i,   // IE legacy XSS
+      /\\beval\\s*\\(/i,         // Dangerous evaluation\n      /\\balert\\s*\\(/i,        // XSS proof-of-concept\n      /\\bexpression\\s*\\(/i,   // IE legacy XSS
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne)/i // NoSQL injection
