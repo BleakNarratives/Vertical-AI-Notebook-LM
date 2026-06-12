@@ -190,7 +190,7 @@ export const useSentinel = () => {
   /**
    * verifyInteraction - Checks if an interaction is trusted (human-originated).
    */
-  const verifyInteraction = useCallback((event?: { isTrusted: boolean; type: string }): boolean => {
+  const verifyInteraction = useCallback((event: { isTrusted: boolean; type: string }): boolean => {
     if (!event) {
       logSecurityEvent('Untrusted interaction: No event object provided', 'MEDIUM');
       return false;
