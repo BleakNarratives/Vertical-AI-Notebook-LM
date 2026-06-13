@@ -113,7 +113,8 @@ export const useMoltAutomation = () => {
         const stored = secureGet(key);
         let reconCount = 0;
         if (stored) {
-          reconCount = parseInt(stored, 10);
+          const parsed = parseInt(stored, 10);
+          reconCount = Number.isNaN(parsed) ? 0 : parsed;
         }
         reconCount += 1;
         secureStore(key, reconCount.toString());
