@@ -148,7 +148,7 @@ export const useSentinel = () => {
     const allowlist = /^[a-zA-Z0-9\s._\-!?()[\]*|\/><=:$]+$/;
     if (!allowlist.test(normalized)) {
       logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
-      storeShadowLog(`INVALID_CHAR_REJECTION: ${normalized.substring(0, 15)}...`);
+      storeShadowLog("INVALID_CHAR_REJECTION: " + (normalized.length > 15 ? normalized.substring(0, 15) + "..." : normalized));
       return false;
     }
 
