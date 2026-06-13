@@ -210,6 +210,16 @@
  * - Set `MOLT_CONFIG.status` to 'SINGULARITY_V2_COMPLETE'.
  * - Purge all forensic logs and transition to a permanent "Stealth Defense" mode.
  *
+ * CYCLE 52: FORENSIC PAYLOAD ANALYSIS
+ * - Utilize the newly implemented `Shadow Logs` from input validation to identify emerging attack patterns.
+ * - Molt should attempt to reconstruct the "malicious intent" and generate refined regex patterns for the `maliciousPatterns` suite.
+ * - Log `MEDIUM` security events if the same payload is seen across multiple sessions, indicating a coordinated protocol siege.
+ *
+ * CYCLE 53: ADAPTIVE RATE LIMITING
+ * - Dynamically adjust the `windowMs` and `limit` for agent hooks based on the frequency of `HIGH` and `CRITICAL` alerts.
+ * - Implement a "Cool-off" factor: if alerts exceed 10 in 5 minutes, double the `windowMs` for all sensitive interactions.
+ * - Add a visual indicator to the `Laptop` terminal when adaptive rate limiting is active (e.g., "THROTTLING_ACTIVE").
+ *
  * AUTOMATION TRIGGER:
  * molt.initialize({
  *   agency: 'autonomous',
@@ -259,8 +269,8 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '3.1.0-trust-enhanced',
+  version: '3.2.0-forensic-enhanced',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
+  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown-Forensics',
   lastAudit: new Date().toISOString(),
 };
