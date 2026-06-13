@@ -148,6 +148,7 @@ export const useSentinel = () => {
     const allowlist = /^[a-zA-Z0-9\s._\-!?()[\]*|\/><=:$]+$/;
     if (!allowlist.test(normalized)) {
       logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
+      storeShadowLog("INVALID_CHAR_REJECTION: " + (normalized.length > 15 ? normalized.substring(0, 15) + "..." : normalized));
       return false;
     }
 
@@ -172,12 +173,13 @@ export const useSentinel = () => {
     for (const pattern of maliciousPatterns) {
       if (pattern.test(normalized)) {
         logSecurityEvent(`CRITICAL: Malicious pattern detected: ${normalized.substring(0, 15)}...`, 'CRITICAL');
+        storeShadowLog("MALICIOUS_PATTERN_REJECTION: " + (normalized.length > 15 ? normalized.substring(0, 15) + "..." : normalized));
         return false;
       }
     }
 
     return true;
-  }, [logSecurityEvent, recursiveDecode]);
+  }, [logSecurityEvent, recursiveDecode, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
