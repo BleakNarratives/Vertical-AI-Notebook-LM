@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 const MESSAGES = [
   'SYSTEM_SNAPSHOT_SAVED',
@@ -48,7 +49,7 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+        style={{ transform: 'rotateX(-25deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
@@ -69,12 +70,12 @@ export const CoffeeMug: React.FC = () => {
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
           SAVE / LOAD / SETTINGS
         </span>
 
         {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <FocusIndicator color="amber" />
       </button>
     </div>
   );
