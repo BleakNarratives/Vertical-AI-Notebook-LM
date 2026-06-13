@@ -173,7 +173,7 @@ export const useSentinel = () => {
     for (const pattern of maliciousPatterns) {
       if (pattern.test(normalized)) {
         logSecurityEvent(`CRITICAL: Malicious pattern detected: ${normalized.substring(0, 15)}...`, 'CRITICAL');
-        storeShadowLog(`MALICIOUS_PATTERN_REJECTION: ${normalized.substring(0, 15)}...`);
+        storeShadowLog("MALICIOUS_PATTERN_REJECTION: " + (normalized.length > 15 ? normalized.substring(0, 15) + "..." : normalized));
         return false;
       }
     }
