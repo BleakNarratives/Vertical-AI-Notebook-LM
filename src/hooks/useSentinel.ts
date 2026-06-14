@@ -137,6 +137,12 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Length limit to prevent ReDoS/DoS
+    if (input.length > 1000) {
+      logSecurityEvent(`Input rejected: Length limit exceeded`, 'HIGH');
+      return false;
+    }
+
     // Input Normalization: Recursive decode to prevent multi-stage obfuscation
     const normalized = recursiveDecode(input);
 
@@ -167,7 +173,8 @@ export const useSentinel = () => {
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
-      /\$(where|regex|ne)/i // NoSQL injection
+      /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection operators
+      /\{\{.*\}\}/          // Template injection
     ];
 
     for (const pattern of maliciousPatterns) {
@@ -324,6 +331,22 @@ export const useSentinel = () => {
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
+
+    // Interaction Velocity Check
+    if (typeof window !== 'undefined') {
+      const now = Date.now();
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction?: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+
+      if (lastInteraction !== 0 && velocity < 50) {
+        logSecurityEvent(`High velocity interaction detected (${velocity}ms)`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+    }
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
     if (nativeEvent && nativeEvent.isTrusted === false) {
