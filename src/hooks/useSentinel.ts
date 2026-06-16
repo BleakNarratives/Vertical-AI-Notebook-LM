@@ -326,6 +326,8 @@ export const useSentinel = () => {
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // 1. Trust Check
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
@@ -335,6 +337,25 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // 2. Velocity Check (Behavioral Profiling)
+    if (typeof window !== 'undefined') {
+      const now = Date.now();
+      const win = window as unknown as { _sentinel_last_interaction?: number };
+      const lastInteraction = win._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+
+      if (lastInteraction > 0 && velocity < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${velocity}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        win._sentinel_last_interaction = now;
+        return false;
+      }
+      win._sentinel_last_interaction = now;
+    }
+
     return true;
   }, [logSecurityEvent]);
 
