@@ -32,3 +32,8 @@
 **Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
+
+## 2026-06-08 - [Behavioral Velocity Profiling & Hardened Input Defense]
+**Vulnerability:** Automation scripts and macros can bypass basic "isTrusted" checks by simulating events with perfect precision or sub-human speeds. Additionally, lack of input length limits poses a DoS/ReDoS risk.
+**Learning:** Client-side security must look beyond "what" was sent to "how" it was sent. By profiling interaction velocity (timing between events), we can distinguish between erratic human jitter and deterministic script execution. Furthermore, strict length capping is a primary defense against resource-exhaustion attacks on the normalization layer.
+**Prevention:** Implement interaction velocity tracking with a sub-human threshold (e.g., < 50ms) to trigger autonomous forensic cycles. Enforce strict 1000-char limits on all validated inputs and expand malicious pattern suites to include Prototype Pollution and advanced NoSQL operators.
