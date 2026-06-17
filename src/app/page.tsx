@@ -56,8 +56,8 @@ export default function Home() {
         </div>
       )}
       {/* Top of the table - Personas */}
-      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-12">
-        <div className="flex flex-col items-center gap-2">
+      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-20">
+        <div className="flex flex-col items-center gap-12">
           <Persona
             name="Mrs. Higgins"
             role="Gateway"
@@ -66,10 +66,10 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="higgins" />
+            <Papers context="higgins" labelPosition="bottom" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-12">
           <Persona
             name="Pytch"
             role="Architect"
@@ -78,10 +78,10 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="pytch" />
+            <Papers context="pytch" labelPosition="bottom" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-12">
           <Persona
             name="Twoie"
             role="Execution"
@@ -90,10 +90,10 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="twoie" />
+            <Papers context="twoie" labelPosition="bottom" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-12">
           <Persona
             name="Zeroclaw"
             role="Distributed"
@@ -102,7 +102,7 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="zeroclaw" />
+            <Papers context="zeroclaw" labelPosition="bottom" />
           </div>
         </div>
       </div>

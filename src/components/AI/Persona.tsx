@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { FocusIndicator } from '../Boardroom/FocusIndicator';
 
 interface PersonaProps {
   name: string;
@@ -19,11 +20,14 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
       style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-      className={`flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
+      className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group/persona transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
     >
+      {/* Floor Glow */}
+      <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-4 bg-neon-red/10 blur-xl rounded-full transition-opacity duration-500 ${status === 'active' ? 'opacity-100' : 'opacity-0 group-hover/persona:opacity-100 group-focus-visible/persona:opacity-100'}`} />
+
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
-        ${status === 'active' ? 'border-neon-red border-2 animate-pulse' : 'border-grey-medium border'}
+        ${status === 'active' ? 'border-neon-red border-2 animate-pulse shadow-[0_0_20px_rgba(255,0,0,0.4)]' : 'border-grey-medium border'}
         ${status === 'distorted' ? 'animate-pulse scale-95 opacity-50' : ''}
       `}>
         {/* Ragtag Business Suit Aesthetic (Abstract) */}
@@ -39,9 +43,11 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       </div>
 
       <div className="text-center">
-        <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em]">{name}</h3>
-        <p className="text-xs font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors">{role}</p>
+        <h3 className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap">{name}</h3>
+        <p className="text-xs font-mono text-white/40 uppercase transition-colors">{role}</p>
       </div>
+
+      <FocusIndicator color="neon-red" group="persona" />
     </button>
   );
 };
