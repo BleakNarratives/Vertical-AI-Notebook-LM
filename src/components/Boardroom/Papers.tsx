@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 interface PaperProps {
   label: string;
@@ -8,21 +9,22 @@ interface PaperProps {
   rotation?: string;
   translateY?: string;
   isActive?: boolean;
+  labelPosition?: 'top' | 'bottom';
   onClick?: () => void;
 }
 
-const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translateY = '0px', isActive, onClick }) => {
+const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translateY = '0px', isActive, labelPosition = 'top', onClick }) => {
   return (
     <button
       type="button"
       aria-label={label}
-      title={title}
       onClick={onClick}
       style={{
-        transform: `rotateX(-20deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
+        transform: `rotateX(-20deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-8px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
       }}
-      className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
+      className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_25px_rgba(255,191,0,0.4)]' : 'border-grey-medium'}`}
     >
+      <FocusIndicator color="neon-amber" />
       {/* Paper Content Simulation */}
       <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity">
         <div className="h-0.5 w-full bg-grey-medium" />
@@ -37,7 +39,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+      <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap`}>
         {title}
       </span>
     </button>
@@ -48,6 +50,7 @@ type ContextType = 'higgins' | 'pytch' | 'twoie' | 'zeroclaw' | 'user';
 
 interface PapersProps {
   context?: ContextType;
+  labelPosition?: 'top' | 'bottom';
 }
 
 const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> = {
@@ -58,7 +61,7 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> 
   user: { p1: 'Source Docs', p2: 'Ref Images', p3: 'Local Notes' },
 };
 
-export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
+export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition = 'top' }) => {
   const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
   const data = CONTEXT_DATA[context];
 
@@ -76,36 +79,39 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
           </div>
         )}
       </div>
-      <div className="group/papers relative flex items-end justify-center w-24 h-24 mb-4">
+      <div className="group relative flex items-end justify-center w-24 h-24 mb-4">
         {/* Paper 1: Bottom Left */}
-        <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover/papers:-translate-x-6 group-focus-within/papers:-translate-x-6 group-hover/papers:-rotate-6 group-focus-within/papers:-rotate-6">
+        <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover:-translate-x-8 group-focus-within:-translate-x-8 group-hover:-rotate-12 group-focus-within:-rotate-12">
           <Paper
             label={`View ${data.p1}`}
             title={data.p1}
             rotation="-2deg"
             isActive={activeTitle === data.p1}
+            labelPosition={labelPosition}
             onClick={() => handleView(data.p1)}
           />
         </div>
 
         {/* Paper 3: Bottom Right (added for depth) */}
-        <div className="absolute bottom-0 right-0 transition-all duration-300 group-hover/papers:translate-x-6 group-focus-within/papers:translate-x-6 group-hover/papers:rotate-6 group-focus-within/papers:rotate-6">
+        <div className="absolute bottom-0 right-0 transition-all duration-300 group-hover:translate-x-8 group-focus-within:translate-x-8 group-hover:rotate-12 group-focus-within:rotate-12">
           <Paper
             label={`View ${data.p3}`}
             title={data.p3}
             rotation="4deg"
             isActive={activeTitle === data.p3}
+            labelPosition={labelPosition}
             onClick={() => handleView(data.p3)}
           />
         </div>
 
         {/* Paper 2: Center/Top */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover/papers:-translate-y-4 group-focus-within/papers:-translate-y-4">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover:-translate-y-8 group-focus-within:-translate-y-8 group-hover:rotate-3 group-focus-within:rotate-3">
           <Paper
             label={`View ${data.p2}`}
             title={data.p2}
             rotation="1deg"
             isActive={activeTitle === data.p2}
+            labelPosition={labelPosition}
             onClick={() => handleView(data.p2)}
           />
         </div>

@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2026-06-09 - [Unified Focus & Named Groups]
+**Learning:** In complex 3D environments with nested interactions, standard `group` selectors can conflict. While named groups (e.g., `group/name`) solve collision issues, reusable sub-components like `FocusIndicator` must be designed to either target specific groups or rely on the nearest standard `group`. Reverting to standard `group` for independent props while keeping the layout wrapper as `group/perspective` ensures both local interactions and global atmospheric effects work without selector mismatch.
+**Action:** Use named groups for high-level layout containers (e.g., `group/perspective`) and standard `group` for leaf-level interactive props to maintain compatibility with generic interaction-aware sub-components.
