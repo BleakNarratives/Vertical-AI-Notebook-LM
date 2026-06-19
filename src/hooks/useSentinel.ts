@@ -325,6 +325,20 @@ export const useSentinel = () => {
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
 
+    if (typeof window !== 'undefined' && e.type === 'click') {
+      const now = Date.now();
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const delta = now - lastInteraction;
+
+      if (lastInteraction !== 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: new Date().toISOString() }
+        }));
+      }
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+    }
+
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
