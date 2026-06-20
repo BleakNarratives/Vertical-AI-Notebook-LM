@@ -155,6 +155,9 @@ export const useSentinel = () => {
     // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
     const maliciousPatterns = [
       /\.\.\//,             // Path traversal
+      /\b__proto__\b/,      // Prototype pollution
+      /\bconstructor\b/,    // Prototype pollution
+      /\{\{.*\}\}/,         // Template injection
       /etc\/passwd/,        // LFI target
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
@@ -324,6 +327,21 @@ export const useSentinel = () => {
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
+
+    const now = Date.now();
+    const win = window as unknown as { _sentinel_last_interaction: number };
+
+    // Behavioral Velocity Profiling
+    if (e.type === 'click' && win._sentinel_last_interaction) {
+      const velocity = now - win._sentinel_last_interaction;
+      if (velocity < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${velocity}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+      }
+    }
+    win._sentinel_last_interaction = now;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
     if (nativeEvent && nativeEvent.isTrusted === false) {
