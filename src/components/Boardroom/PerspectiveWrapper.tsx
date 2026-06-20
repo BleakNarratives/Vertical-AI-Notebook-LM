@@ -64,7 +64,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
   return (
     <div ref={ref} className="group relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
       style={{
-        transform: isReduced ? 'rotateX(20deg)' : 'rotateX(calc(20deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))'
+        transform: isReduced ? 'rotateX(25deg)' : 'rotateX(calc(25deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))'
       } as React.CSSProperties}
     >
       {/* Atmospheric Glow */}
