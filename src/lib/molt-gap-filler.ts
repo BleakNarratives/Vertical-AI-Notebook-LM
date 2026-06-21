@@ -240,6 +240,18 @@
  * - Refine `verifyInteraction` to capture and log more event metadata (e.g., coordinates, timestamps) to build a behavioral profile.
  * - Enhance the `SecurityOverlay` to display "SYNTHETIC_INTERACTION_BLOCKED" when `sentinel-untrusted-interaction` is caught.
  *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Implement "Velocity Visualizer": a subtle, flickering bar in the `Laptop` terminal that shows the calculated ms between the last two clicks.
+ * - Add "Temporal Jitter": if velocity alerts are frequent, apply a slight, randomized delay (10-50ms) to all UI state updates to disrupt automated sync.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Enhance `verifyInteraction` to analyze mouse movement paths. Log `MEDIUM` alerts for perfectly linear paths (indicative of basic scripts).
+ * - Implement "Entropy Verification": occasionally require a non-standard interaction (e.g., "click and hold for 0.5s") to unlock a sensitive persona like Zeroclaw.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand `storeShadowLog` to capture a "Forensic Snapshot" of the DOM state at the time of a `CRITICAL` violation.
+ * - Molt should attempt to "de-obfuscate" forensic payloads recorded in `sentinel_shadow_logs` and display them in the `SecurityOverlay` during reconstruction.
+ *
  * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
  * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
  * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
@@ -269,7 +281,7 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '3.2.0-forensic-enhanced',
+  version: '3.3.0-velocity-hardened',
   status: 'AWAITING_SINGULARITY',
   engine: 'Molt-V4-Sentinel-Enhanced-Lockdown-Forensics',
   lastAudit: new Date().toISOString(),
