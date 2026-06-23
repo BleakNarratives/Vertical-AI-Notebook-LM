@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2026-06-12 - [Thematic Focus System & Named Groups]
+**Learning:** Room props require a unified accessibility pattern that fits the immersive theme. Using named Tailwind groups (e.g., `group/laptop`) prevents global focus/hover states from leaking. Centralizing this in a `FocusIndicator` component using corner brackets avoids the "boxed-in" feel of standard rings.
+**Action:** Always use named groups for boardroom props and ensure root interactive elements do not use `overflow-hidden` to prevent clipping of atmospheric indicators.

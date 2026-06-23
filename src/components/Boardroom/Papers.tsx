@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 interface PaperProps {
   label: string;
@@ -16,15 +17,14 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
     <button
       type="button"
       aria-label={label}
-      title={title}
       onClick={onClick}
       style={{
         transform: `rotateX(-20deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
       }}
-      className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg focus-visible:ring-2 focus-visible:ring-neon-amber outline-none overflow-hidden transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
+      className={`group/paper relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
     >
       {/* Paper Content Simulation */}
-      <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity">
+      <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover/paper:opacity-40 group-focus-visible/paper:opacity-40 transition-opacity">
         <div className="h-0.5 w-full bg-grey-medium" />
         <div className="h-0.5 w-3/4 bg-grey-medium" />
         <div className="h-0.5 w-full bg-grey-medium" />
@@ -37,9 +37,10 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+      <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover/paper:opacity-100 group-focus-visible/paper:opacity-100 transition-opacity uppercase whitespace-nowrap">
         {title}
       </span>
+      <FocusIndicator color="neon-amber" group="paper" />
     </button>
   );
 };
@@ -48,6 +49,7 @@ type ContextType = 'higgins' | 'pytch' | 'twoie' | 'zeroclaw' | 'user';
 
 interface PapersProps {
   context?: ContextType;
+  labelPosition?: 'top' | 'bottom';
 }
 
 const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> = {
@@ -58,7 +60,7 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> 
   user: { p1: 'Source Docs', p2: 'Ref Images', p3: 'Local Notes' },
 };
 
-export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
+export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition = 'top' }) => {
   const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
   const data = CONTEXT_DATA[context];
 
@@ -68,8 +70,8 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user' }) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center" aria-live="polite">
+    <div className="flex flex-col items-center gap-2 relative">
+      <div className={`absolute left-1/2 -translate-x-1/2 h-4 flex items-center justify-center whitespace-nowrap ${labelPosition === 'top' ? '-top-8' : '-bottom-8'}`} aria-live="polite">
         {activeTitle && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
             Viewing {activeTitle}...
