@@ -324,6 +324,11 @@ export const useSentinel = () => {
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
+    if (typeof window === 'undefined') return true;
+
+    const now = Date.now();
+    const win = window as unknown as { _sentinel_last_interaction?: number };
+    const lastInteraction = win._sentinel_last_interaction || 0;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
     if (nativeEvent && nativeEvent.isTrusted === false) {
@@ -335,6 +340,22 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // Velocity Profiling: Check for sub-human interaction speeds (bots)
+    if (e.type === 'click' && lastInteraction > 0 && now - lastInteraction < 50) {
+      logSecurityEvent(`Velocity anomaly detected: ${now - lastInteraction}ms since last interaction`, 'HIGH');
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity: now - lastInteraction, type: e.type, timestamp: new Date().toISOString() }
+        }));
+      }
+      return false;
+    }
+
+    if (typeof window !== 'undefined') {
+      win._sentinel_last_interaction = now;
+    }
+
     return true;
   }, [logSecurityEvent]);
 
