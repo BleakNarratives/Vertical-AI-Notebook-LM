@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2026-06-09 - [Standardized Boardroom Focus Indicators]
+**Learning:** In immersive 3D environments with complex transforms, standard browser focus rings often appear distorted or get clipped by absolute containers. Implementing a custom, standardized `FocusIndicator` component using corner brackets and subtle atmospheric glow ensures a consistent, high-contrast focus experience that respects the 3D perspective without visual noise.
+**Action:** Use absolute-positioned corner brackets with `-inset-3` spacing and monospaced thematic labels positioned toward the visual center of the interactive surface (e.g., `-top-8` for foreground items, `-bottom-8` for background items) to maintain legibility and immersion.

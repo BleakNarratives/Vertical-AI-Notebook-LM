@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -71,12 +72,11 @@ export const Laptop: React.FC = () => {
         </div>
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           Terminal / IDEal / 4ward
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-red/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <FocusIndicator color="red" />
       </button>
     </div>
   );
