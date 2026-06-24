@@ -32,3 +32,8 @@
 **Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
+
+## 2026-06-08 - [Recursive Security Alerts & Feedback Loops]
+**Vulnerability:** Infinite recursion in the autonomous security layer when high-severity alerts trigger responses that themselves generate new high-severity alerts.
+**Learning:** In a system where security alerts trigger autonomous hardening (Molt), logging a "SYSTEM LOCKDOWN" as a CRITICAL/HIGH event can create a feedback loop if the event listener for those severities is not guarded against existing lockdown states.
+**Prevention:** Always implement state guards (e.g., `if (isLockdown) return`) in autonomous response triggers. Log system-initiated security actions (like lockdown entry/exit) at a lower severity (MEDIUM) than the triggers that caused them to prevent re-triggering the same logic.
