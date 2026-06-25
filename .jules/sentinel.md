@@ -32,3 +32,8 @@
 **Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
+
+## 2026-06-08 - [Behavioral Velocity Profiling & Bot Defense]
+**Vulnerability:** Automated scripts can bypass standard rate limits by staying just under the threshold but executing with sub-human precision and speed across multiple endpoints.
+**Learning:** Interaction speed is a high-fidelity signal for distinguishing between human users and automated bots. By implementing velocity tracking in the core interaction verification layer, we can detect sub-human speeds (e.g., < 50ms per click) that represent synthetic traffic even if they don't trigger traditional rate limits.
+**Prevention:** Track inter-event timestamps in a global (window-scoped) state. Dispatch high-severity security alerts upon detecting sub-human velocity to trigger autonomous system hardening and behavioral lockout protocols.
