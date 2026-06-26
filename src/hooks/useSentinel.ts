@@ -326,6 +326,25 @@ export const useSentinel = () => {
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // Behavioral Velocity Profiling
+    if (typeof window !== 'undefined' && e.type === 'click') {
+      const now = Date.now();
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+
+      // Detect sub-human interaction speeds (< 50ms between clicks)
+      if (lastInteraction > 0 && velocity < 50) {
+        logSecurityEvent(`Sub-human velocity detected: ${velocity}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
