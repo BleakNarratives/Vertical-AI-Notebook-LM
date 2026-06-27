@@ -33,7 +33,7 @@ export default function RootLayout({
         {/* Obelisk Center Layout */}
         <header className="h-16 border-b border-grey-dark flex items-center px-8 bg-obsidian/80 backdrop-blur-md sticky top-0 z-50">
           <div className="text-neon-red font-mono text-lg tracking-[0.3em] font-bold">
-            CODE CITY // <span className="text-grey-medium">v0.1.0</span>
+            CODE CITY {"//"} <span className="text-grey-medium">v0.1.0</span>
           </div>
           <div className="ml-auto flex gap-4">
              <div className="h-2 w-2 rounded-full bg-neon-amber animate-pulse" />
@@ -64,7 +64,7 @@ export default function RootLayout({
 
                {/* Boardroom Props */}
                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom">
-                 <Papers context="user" />
+                 <Papers context="user" labelPosition="top" />
 
                  <Laptop />
                  <CoffeeMug />
