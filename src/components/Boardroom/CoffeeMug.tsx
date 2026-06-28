@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 const MESSAGES = [
   'SYSTEM_SNAPSHOT_SAVED',
@@ -73,8 +74,7 @@ export const CoffeeMug: React.FC = () => {
           SAVE / LOAD / SETTINGS
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <FocusIndicator color="neon-amber" />
       </button>
     </div>
   );

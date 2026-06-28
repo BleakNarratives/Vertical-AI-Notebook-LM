@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { FocusIndicator } from '../Boardroom/FocusIndicator';
 
 interface PersonaProps {
   name: string;
@@ -19,7 +20,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       aria-busy={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
       style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-      className={`flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red focus-visible:ring-2 focus-visible:ring-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
+      className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
     >
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
@@ -42,6 +43,8 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
         <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em]">{name}</h3>
         <p className="text-xs font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors">{role}</p>
       </div>
+
+      <FocusIndicator color="neon-red" />
     </button>
   );
 };
