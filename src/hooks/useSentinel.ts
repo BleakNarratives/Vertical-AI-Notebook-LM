@@ -335,6 +335,24 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // Velocity Profiling: Detect sub-human interaction speeds (< 50ms)
+    if (typeof window !== 'undefined' && e.type === 'click') {
+      const now = Date.now();
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+
+      if (lastInteraction > 0 && velocity < 50) {
+        logSecurityEvent(`Velocity anomaly: Sub-human interaction speed detected (${velocity}ms)`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent]);
 
