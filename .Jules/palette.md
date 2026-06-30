@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Isolating Immersive Hover States]
+**Learning:** Deeply nested `group` utilities in Tailwind can lead to "hover leakage" where interacting with a child triggers unexpected state changes in a parent or sibling (e.g., a prop hover triggering the global atmospheric glow). Using named groups (e.g., `group/perspective`, `group/laptop`) ensures that interaction states remain isolated and predictable within their respective components.
+**Action:** Always use named Tailwind groups (`group/{name}`) and corresponding `group-hover/{name}` or `group-focus-visible/{name}` utilities for complex immersive layouts to prevent global state bleed.

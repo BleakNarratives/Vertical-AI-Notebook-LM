@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 const MESSAGES = [
   'SYSTEM_SNAPSHOT_SAVED',
@@ -49,7 +50,7 @@ export const CoffeeMug: React.FC = () => {
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
         style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
+        className="group/mug group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
       >
         {/* Steam animation */}
         <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
@@ -74,7 +75,7 @@ export const CoffeeMug: React.FC = () => {
         </span>
 
         {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-amber opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <FocusIndicator color="amber" />
       </button>
     </div>
   );
