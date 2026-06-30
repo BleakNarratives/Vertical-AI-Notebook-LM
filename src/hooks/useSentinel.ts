@@ -210,9 +210,15 @@ export const useSentinel = () => {
       { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
     ];
 
+    const getRandomIndex = (length: number) => {
+      const array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      return array[0] % length;
+    };
+
     const config = {
-      posIndex: positions[Math.floor(Math.random() * positions.length)],
-      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      posIndex: positions[getRandomIndex(positions.length)],
+      payload: payloads[getRandomIndex(payloads.length)],
       timestamp: Date.now()
     };
 
@@ -324,17 +330,35 @@ export const useSentinel = () => {
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
+    if (typeof window === 'undefined') return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // 1. Trust Check: Immediate rejection of synthetic events
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
-          detail: { type: e.type, timestamp: new Date().toISOString() }
-        }));
-      }
+      window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
+        detail: { type: e.type, timestamp: new Date().toISOString() }
+      }));
       return false;
     }
+
+    // 2. Velocity Profiling: Detect sub-human interaction speeds
+    const now = Date.now();
+    const win = window as unknown as { _sentinel_last_interaction: number };
+    const last = win._sentinel_last_interaction || 0;
+    const delta = now - last;
+
+    win._sentinel_last_interaction = now;
+
+    if (e.type === 'click' && last !== 0 && delta < 50) {
+      logSecurityEvent(`Velocity anomaly detected: ${delta}ms between interactions`, 'HIGH');
+      window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+        detail: { delta, type: e.type, timestamp: new Date().toISOString() }
+      }));
+      return false;
+    }
+
     return true;
   }, [logSecurityEvent]);
 
