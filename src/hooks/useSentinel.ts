@@ -210,9 +210,16 @@ export const useSentinel = () => {
       { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
     ];
 
+    // Cryptographically strong random index selection
+    const buffer = new Uint32Array(2);
+    window.crypto.getRandomValues(buffer);
+
+    const posIndex = buffer[0] % positions.length;
+    const payloadIndex = buffer[1] % payloads.length;
+
     const config = {
-      posIndex: positions[Math.floor(Math.random() * positions.length)],
-      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      posIndex: positions[posIndex],
+      payload: payloads[payloadIndex],
       timestamp: Date.now()
     };
 
@@ -326,6 +333,8 @@ export const useSentinel = () => {
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // 1. Check Trust
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
@@ -335,6 +344,25 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // 2. Velocity Profiling (for clicks)
+    if (e.type === 'click' && typeof window !== 'undefined') {
+      const win = window as unknown as { _sentinel_last_interaction?: number };
+      const now = Date.now();
+      const last = win._sentinel_last_interaction || 0;
+      const velocity = now - last;
+
+      win._sentinel_last_interaction = now;
+
+      if (velocity < 50 && last !== 0) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${velocity}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent]);
 
