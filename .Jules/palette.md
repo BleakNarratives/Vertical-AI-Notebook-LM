@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Tailwind Group Scoping & FocusIndicators]
+**Learning:** Generic `group-*` utility classes (e.g., `group-hover:opacity-100`) require the immediate interactive parent to use the standard `group` class. Named Tailwind groups (e.g., `group/laptop`) on the parent will block these generic selectors from triggering. To avoid global atmospheric hover/focus collisions in a complex 3D environment, outer wrappers should use named groups (e.g., `group/perspective`), while individual interactive props must retain the generic `group` class for internal indicators.
+**Action:** Always use the standard `group` class on interactive components that contain sub-elements like `FocusIndicator`. Reserve named groups for container-level atmospheric effects.

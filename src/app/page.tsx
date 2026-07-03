@@ -56,8 +56,8 @@ export default function Home() {
         </div>
       )}
       {/* Top of the table - Personas */}
-      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-12">
-        <div className="flex flex-col items-center gap-2">
+      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mt-20 mb-20">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Mrs. Higgins"
             role="Gateway"
@@ -69,7 +69,7 @@ export default function Home() {
             <Papers context="higgins" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Pytch"
             role="Architect"
@@ -81,7 +81,7 @@ export default function Home() {
             <Papers context="pytch" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Twoie"
             role="Execution"
@@ -93,7 +93,7 @@ export default function Home() {
             <Papers context="twoie" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Zeroclaw"
             role="Distributed"
