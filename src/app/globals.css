@@ -4,8 +4,13 @@
   --color-obsidian: #050505;
   --color-grey-dark: #1a1a1a;
   --color-grey-medium: #2e2e2e;
-  --color-neon-red: #ff0000;
+  --color-neon-red: #ff2b2b;
   --color-neon-amber: #ffbf00;
+  --color-neon-cyan: #21e6ff;
+  --color-neon-green: #35ff9e;
+
+  --font-sans: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
 
   @keyframes glitch {
     0% { transform: translate(0); }
@@ -16,7 +21,19 @@
     100% { transform: translate(0); }
   }
 
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  @keyframes rise {
+    0% { opacity: 0; transform: translateY(12px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
   --animate-glitch: glitch 0.2s infinite;
+  --animate-scan: scan 4s linear infinite;
+  --animate-rise: rise 0.5s ease-out both;
 
   --background: var(--color-obsidian);
   --foreground: #ededed;
@@ -30,13 +47,14 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   cursor: crosshair;
 }
 
 /* Custom scrollbar for Code City aesthetic */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -45,6 +63,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-grey-dark);
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
