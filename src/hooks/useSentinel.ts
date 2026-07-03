@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -210,9 +210,13 @@ export const useSentinel = () => {
       { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
     ];
 
+    // Secure randomness using window.crypto
+    const buffer = new Uint32Array(2);
+    window.crypto.getRandomValues(buffer);
+
     const config = {
-      posIndex: positions[Math.floor(Math.random() * positions.length)],
-      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      posIndex: positions[buffer[0] % positions.length],
+      payload: payloads[buffer[1] % payloads.length],
       timestamp: Date.now()
     };
 
@@ -322,10 +326,13 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
+  const lastInteractionRef = useRef<number>(0);
+
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
@@ -335,6 +342,24 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // Behavioral Velocity Profiling: Detect sub-human automation speeds
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const delta = now - lastInteractionRef.current;
+      lastInteractionRef.current = now;
+
+      if (delta < 50) { // 50ms threshold for sub-human velocity
+        logSecurityEvent(`Velocity violation: ${delta}ms between interactions`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: new Date().toISOString() }
+          }));
+        }
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent]);
 

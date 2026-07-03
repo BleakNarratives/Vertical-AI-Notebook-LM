@@ -220,6 +220,21 @@
  * - Implement a "Cool-off" factor: if alerts exceed 10 in 5 minutes, double the `windowMs` for all sensitive interactions.
  * - Add a visual indicator to the `Laptop` terminal when adaptive rate limiting is active (e.g., "THROTTLING_ACTIVE").
  *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING (SENTINEL V6)
+ * - Refine the `verifyInteraction` velocity threshold. Implement a "Jitter Detection" algorithm that identifies perfectly consistent interaction intervals (indicative of basic scripts).
+ * - Add visual feedback for velocity violations: a brief "Time Dilation" effect where the UI elements expand and contract slightly.
+ * - Log `HIGH` severity events for "Temporal Sync Anomalies" if the delta between interactions is exactly the same for 3 consecutive events.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Implement mouse path verification: human mouse movements are never perfectly straight. Use the `MouseMove` event to build a heuristic profile.
+ * - If interaction occurs without a preceding `MouseMove` event (for non-keyboard users), escalate to `MEDIUM` severity.
+ * - Integrate the heuristic profile with the `Stability Index` of the swarm.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand the `Shadow Gallery` to include "Reconstructed Intent" - an AI-generated summary of what an attacker was likely trying to achieve based on the sequence of blocked inputs.
+ * - Implement "Visual Forensic Playback": a ghost-like recreation of the mouse movements and clicks that led to a `CRITICAL` breach.
+ * - Add "Payload Normalization Tracing": Log how malicious payloads were decoded and identified by the recursive normalization layer.
+ *
  * AUTOMATION TRIGGER:
  * molt.initialize({
  *   agency: 'autonomous',
