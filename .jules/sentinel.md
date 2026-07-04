@@ -32,3 +32,8 @@
 **Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
+
+## 2026-06-08 - [Behavioral Velocity Profiling & Secure Randomness]
+**Vulnerability:** Deterministic decoy selection and lack of sub-human interaction speed detection.
+**Learning:** Standard rate limits protect against volume, but not against the precision of automated interaction tools that simulate single, high-speed clicks. By profiling the 'velocity' (time delta) between interactions, we can detect synthetic behavior even when it respects volume limits. Furthermore, using insecure PRNGs for defensive signatures (decoys) allows for predictable pattern analysis by sophisticated attackers.
+**Prevention:** Implement interaction velocity profiling with a strict < 50ms delta floor for high-trust components. Transition all defensive randomness to the Web Crypto API (`window.crypto.getRandomValues`) to ensure non-deterministic decoy rotation.

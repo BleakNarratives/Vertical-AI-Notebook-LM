@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
  */
 export const useSentinel = () => {
+  const lastInteractionRef = useRef<number>(0);
+
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
     console.warn(`[🛡️ SENTINEL][${severity}][${timestamp}] ${event}`);
@@ -210,9 +212,13 @@ export const useSentinel = () => {
       { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
     ];
 
+    // Use cryptographically secure random values for decoy selection
+    const buffer = new Uint32Array(2);
+    window.crypto.getRandomValues(buffer);
+
     const config = {
-      posIndex: positions[Math.floor(Math.random() * positions.length)],
-      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      posIndex: positions[buffer[0] % positions.length],
+      payload: payloads[buffer[1] % payloads.length],
       timestamp: Date.now()
     };
 
@@ -323,18 +329,35 @@ export const useSentinel = () => {
   }, [logSecurityEvent]);
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
+    if (typeof window === 'undefined') return true;
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // First check: native trust (synthetic events)
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
-          detail: { type: e.type, timestamp: new Date().toISOString() }
-        }));
-      }
+      window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
+        detail: { type: e.type, timestamp: new Date().toISOString() }
+      }));
       return false;
     }
+
+    // Second check: velocity profiling (automation speed)
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const delta = now - lastInteractionRef.current;
+      lastInteractionRef.current = now;
+
+      if (delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: now }
+        }));
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent]);
 
