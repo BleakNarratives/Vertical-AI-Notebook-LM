@@ -22,6 +22,9 @@ export const usePytch = () => {
 
     console.log('Pytch: The narrative has been solidified. Reality is now compliant.');
     setIsConstructing(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("agent-complete", { detail: { agentId: "pytch" } }));
+    }
   }, [logSecurityEvent, checkRateLimit, verifyInteraction]);
 
   return { wakePytch, isConstructing };

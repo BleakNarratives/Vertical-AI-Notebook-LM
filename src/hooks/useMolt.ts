@@ -20,6 +20,9 @@ export const useMolt = () => {
 
     setLevel(prev => prev + 1);
     setIsImproving(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("agent-complete", { detail: { agentId: "twoie" } }));
+    }
     console.log('Molt: Improvement cycle complete. Current Level:', level + 1);
   }, [level, logSecurityEvent, verifyInteraction]);
 

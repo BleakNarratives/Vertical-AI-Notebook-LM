@@ -22,6 +22,7 @@ export const useMoltAutomation = () => {
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
+  const [isReactive, setIsReactive] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
 
   // Check for security states on mount
@@ -44,10 +45,28 @@ export const useMoltAutomation = () => {
 
       // Check Blacklist
       setIsBlacklisted(checkBlacklist());
+      const storedReactive = secureGet('sentinel_reactive_mode');
+      if (storedReactive === 'true') setIsReactive(true);
     };
 
     checkSecurityStates();
+
+    const handleSync = (e: Event) => {
+      const { isReactive: next } = (e as CustomEvent).detail;
+      setIsReactive(next);
+    };
+
+    window.addEventListener("sentinel-reactive-sync", handleSync);
+    return () => window.removeEventListener("sentinel-reactive-sync", handleSync);
   }, [checkBlacklist, secureGet, secureRemove]);
+
+  const toggleReactive = useCallback(() => {
+    const next = !isReactive;
+    setIsReactive(next);
+    window.dispatchEvent(new CustomEvent("sentinel-reactive-sync", { detail: { isReactive: next } }));
+    secureStore('sentinel_reactive_mode', next.toString());
+    logSecurityEvent(`REACTIVE_MODE: ${next ? 'ENABLED' : 'DISABLED'}`, 'LOW');
+  }, [isReactive, logSecurityEvent, secureStore]);
 
   const triggerLockdown = useCallback(() => {
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
@@ -63,14 +82,14 @@ export const useMoltAutomation = () => {
       return;
     }
 
-    if (isImproving) return;
+    if (isImproving || !isReactive) return;
 
     console.log(`[🤖 MOLT] Autonomous trigger activated: ${reason}`);
     logSecurityEvent(`Autonomous Molt cycle ${cyclesRun + 1} triggered: ${reason}`, 'MEDIUM');
 
     setCyclesRun(prev => prev + 1);
     await triggerMolt();
-  }, [triggerMolt, isImproving, logSecurityEvent, cyclesRun]);
+  }, [triggerMolt, isImproving, logSecurityEvent, cyclesRun, isReactive]);
 
   useEffect(() => {
     const handleSecurityAlert = (e: Event) => {
@@ -179,5 +198,5 @@ export const useMoltAutomation = () => {
     return () => clearInterval(interval);
   }, [secureGet]);
 
-  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
+  return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt, isReactive, toggleReactive };
 };

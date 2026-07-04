@@ -21,6 +21,9 @@ export const useZeroclaw = () => {
 
     console.log('Zeroclaw: Intelligence distributed. The swarm knows all.');
     setIsSwarming(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("agent-complete", { detail: { agentId: "zeroclaw" } }));
+    }
   }, [logSecurityEvent, checkRateLimit, verifyInteraction]);
 
   return { triggerSwarm, isSwarming };

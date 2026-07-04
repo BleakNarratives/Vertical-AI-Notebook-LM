@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useMoltAutomation } from '@/hooks/useMoltAutomation';
 
 export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
+  const { isReactive, toggleReactive } = useMoltAutomation();
 
   const handleAccess = () => {
     if (status) return; // Prevent spamming during sequence
@@ -31,9 +33,13 @@ export const Laptop: React.FC = () => {
   return (
     <div data-sentinel="laptop-terminal" className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
-        {status && (
+        {status ? (
           <div className="text-xs font-mono text-neon-red animate-pulse uppercase">
             {status}
+          </div>
+        ) : isReactive && (
+          <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-widest">
+            REACTIVE_LINK_STABLE
           </div>
         )}
       </div>
@@ -54,7 +60,17 @@ export const Laptop: React.FC = () => {
             <div className="text-neon-red opacity-80">{">"} AUTH_INIT...</div>
             <div className="mt-1 opacity-40">Loading Obelisk OS v0.1.0</div>
             <div className="mt-1 opacity-40">System Link: ACTIVE</div>
-            <div className="mt-2 animate-pulse">_</div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleReactive();
+              }}
+              className={`mt-2 px-1 border ${isReactive ? 'bg-neon-amber text-obsidian border-neon-amber' : 'border-grey-medium text-grey-medium hover:border-neon-amber hover:text-neon-amber'} transition-colors duration-300 font-bold uppercase tracking-tighter`}
+            >
+              {isReactive ? '[ REACTIVE_ON ]' : '[ REACTIVE_OFF ]'}
+            </button>
+            <div className="mt-1 animate-pulse">_</div>
           </div>
           {/* Screen Glare and Data Flash */}
           <div className={`absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none transition-opacity duration-300 ${isFlashing ? 'bg-white/20 opacity-100' : ''}`} />

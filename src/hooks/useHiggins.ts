@@ -38,6 +38,9 @@ export const useHiggins = () => {
 
     console.log('Higgins: Welcome to the Code City. Please proceed to the Obelisk.');
     setIsProcessing(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("agent-complete", { detail: { agentId: "higgins" } }));
+    }
   }, [logSecurityEvent, checkRateLimit, storeShadowLog, verifyInteraction]);
 
   return { consultHiggins, isProcessing };

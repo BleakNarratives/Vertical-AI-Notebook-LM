@@ -12,7 +12,7 @@ import { useMoltAutomation } from "@/hooks/useMoltAutomation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
+  const { isLockdown, isBlacklisted, level, isImproving, triggerMolt, isReactive } = useMoltAutomation();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
@@ -37,6 +37,24 @@ export default function Home() {
     window.addEventListener('sentinel-decoy-breach', handleBreach);
     return () => window.removeEventListener('sentinel-decoy-breach', handleBreach);
   }, []);
+
+  useEffect(() => {
+    if (!isReactive) return;
+
+    const handleComplete = (e: Event) => {
+      const { agentId } = (e as CustomEvent).detail;
+
+      setTimeout(() => {
+        if (agentId === "higgins") wakePytch();
+        else if (agentId === "pytch") triggerMolt();
+        else if (agentId === "twoie") triggerSwarm();
+        else if (agentId === "zeroclaw") consultHiggins();
+      }, 1500);
+    };
+
+    window.addEventListener("agent-complete", handleComplete);
+    return () => window.removeEventListener("agent-complete", handleComplete);
+  }, [isReactive, wakePytch, triggerMolt, triggerSwarm, consultHiggins]);
 
   return (
     <div className={`flex flex-col items-center justify-between h-full gap-8 p-8 py-16 transition-all duration-75 ${isGlitching || isBlacklisted ? 'animate-pulse bg-neon-red/30' : ''}`}>
@@ -122,6 +140,11 @@ export default function Home() {
           {level > 0 && !isLockdown && (
             <span aria-live="polite" className="block mt-2 text-neon-amber animate-pulse">
               Current Molt Level: {level}
+            </span>
+          )}
+          {isReactive && (
+            <span className="block mt-2 text-[10px] text-neon-amber uppercase tracking-widest animate-pulse">
+              [ REACTIVE MODE ACTIVE ]
             </span>
           )}
         </p>
