@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Unified Immersive Focus Indicators]
+**Learning:** Generic focus rings often clash with specialized 3D aesthetics. Implementing a reusable `FocusIndicator` component that uses corner brackets and atmospheric glows provides a "high-tech" feel while maintaining accessibility. To avoid atmospheric collisions when nesting interactive elements, using named Tailwind groups (e.g., `group/perspective`) allows specific sub-elements to respond to parent states without being clobbered by generic `group-*` selectors.
+**Action:** For immersive UIs, replace standard focus rings with a unified `FocusIndicator` component and use named Tailwind groups to isolate atmospheric effects from interactive element states.

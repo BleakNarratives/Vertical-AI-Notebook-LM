@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { FocusIndicator } from './FocusIndicator';
 
 export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -75,8 +76,7 @@ export const Laptop: React.FC = () => {
           Terminal / IDEal / 4ward
         </span>
 
-        {/* Focus indicator */}
-        <div className="absolute -inset-2 border border-neon-red/50 opacity-0 group-focus-visible:opacity-100 transition-opacity pointer-events-none" />
+        <FocusIndicator color="red" />
       </button>
     </div>
   );
