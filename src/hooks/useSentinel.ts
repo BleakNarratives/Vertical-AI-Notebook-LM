@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -322,6 +322,8 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
+  const lastInteractionRef = useRef<number>(0);
+
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
 
@@ -335,6 +337,24 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // Behavioral Velocity Profiling
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const delta = now - lastInteractionRef.current;
+      lastInteractionRef.current = now;
+
+      if (delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human velocity detected: ${delta}ms between interactions`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: new Date().toISOString() }
+          }));
+        }
+        return false;
+      }
+    }
+
     return true;
   }, [logSecurityEvent]);
 

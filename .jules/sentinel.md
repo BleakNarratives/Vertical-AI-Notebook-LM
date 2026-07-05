@@ -32,3 +32,8 @@
 **Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
+
+## 2026-06-08 - [Behavioral Velocity Profiling & Interaction Trust]
+**Vulnerability:** Deterministic interaction patterns (sub-50ms clicks) allowing for rapid-fire automated exploitation of agent hooks.
+**Learning:** Even with rate limiting, high-velocity interactions can bypass human-expected cadence. In Code City's recursive environment, these bursts can overwhelm the Molt engine or trigger unintended state transitions.
+**Prevention:** Implement `verifyInteraction` with a `lastInteractionRef` to enforce a minimum 50ms delta between interactions. Dispatch specific velocity alerts to trigger autonomous hardening cycles.
