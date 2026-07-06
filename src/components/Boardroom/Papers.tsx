@@ -84,7 +84,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     <div className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {activeTitle && (
-          <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tight">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
             Viewing {activeTitle}...
           </div>
         )}
