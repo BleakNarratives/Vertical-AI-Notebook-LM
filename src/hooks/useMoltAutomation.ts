@@ -52,8 +52,10 @@ export const useMoltAutomation = () => {
     checkSecurityStates();
 
     const handleSync = (e: Event) => {
-      const { isReactive: next } = (e as CustomEvent).detail;
-      setIsReactive(next);
+      const next = (e as CustomEvent).detail?.isReactive;
+      if (typeof next === 'boolean') {
+        setIsReactive(next);
+      }
     };
 
     window.addEventListener("sentinel-reactive-sync", handleSync);
