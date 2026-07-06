@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
  */
 export const useSentinel = () => {
+  const lastInteractionRef = useRef<number>(0);
+
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
     console.warn(`[🛡️ SENTINEL][${severity}][${timestamp}] ${event}`);
@@ -210,9 +212,15 @@ export const useSentinel = () => {
       { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
     ];
 
+    const getRandomIndex = (max: number) => {
+      const array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      return array[0] % max;
+    };
+
     const config = {
-      posIndex: positions[Math.floor(Math.random() * positions.length)],
-      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      posIndex: positions[getRandomIndex(positions.length)],
+      payload: payloads[getRandomIndex(payloads.length)],
       timestamp: Date.now()
     };
 
@@ -326,6 +334,8 @@ export const useSentinel = () => {
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // 1. Trust Verification
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
@@ -335,6 +345,26 @@ export const useSentinel = () => {
       }
       return false;
     }
+
+    // 2. Velocity Profiling (Behavioral Analysis)
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const delta = now - lastInteractionRef.current;
+
+      // Detection of sub-human interaction speeds (< 50ms)
+      if (lastInteractionRef.current !== 0 && delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: now }
+          }));
+        }
+        // We don't return false here yet to avoid false positives,
+        // but we flag it for the autonomous system to respond.
+      }
+      lastInteractionRef.current = now;
+    }
+
     return true;
   }, [logSecurityEvent]);
 
