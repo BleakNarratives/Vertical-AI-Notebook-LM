@@ -25,3 +25,7 @@
 ## 2025-05-20 - [Tactile Fanning Stacks]
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
+
+## 2025-05-21 - [Unified Focus Mechanics for 3D Props]
+**Learning:** In complex 3D boardroom layouts where interactive props (like Paper stacks) have multiple sub-elements or absolute labels, using `group-focus-visible` can cause visual flickering or state loss if focus moves between internal parts. `group-focus-within` provides a more stable experience, ensuring focus indicators and labels remain active during nested interactions.
+**Action:** Use `group-focus-within` for visual indicators on complex multi-element props to ensure stability during deep navigation.
