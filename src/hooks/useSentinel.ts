@@ -349,10 +349,11 @@ export const useSentinel = () => {
     // 2. Velocity Profiling (Behavioral Analysis)
     if (e.type === 'click' || e.type === 'mousedown') {
       const now = Date.now();
-      const delta = now - lastInteractionRef.current;
+      const lastTime = lastInteractionRef.current[e.type] || 0;
+      const delta = now - lastTime;
 
       // Detection of sub-human interaction speeds (< 50ms)
-      if (lastInteractionRef.current !== 0 && delta >= 0 && delta < 50) {
+      if (lastTime !== 0 && delta >= 0 && delta < 50) {
         logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
@@ -362,7 +363,7 @@ export const useSentinel = () => {
         // We don't return false here yet to avoid false positives,
         // but we flag it for the autonomous system to respond.
       }
-      lastInteractionRef.current = now;
+      lastInteractionRef.current[e.type] = now;
     }
 
     return true;
