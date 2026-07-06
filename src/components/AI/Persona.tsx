@@ -50,7 +50,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       </div>
 
       <div className="text-center">
-        <p className="text-[10px] font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors tracking-widest">{role}</p>
+        <p className="text-xs font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors tracking-widest">{role}</p>
       </div>
 
       <FocusIndicator color="red" />
