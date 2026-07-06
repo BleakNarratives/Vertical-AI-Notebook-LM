@@ -66,7 +66,7 @@ export const Whiteboard: React.FC = () => {
              </div>
           </div>
         </div>
-        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
           Whiteboard
         </span>
       </button>
