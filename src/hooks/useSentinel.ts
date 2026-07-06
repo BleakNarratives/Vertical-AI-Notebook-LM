@@ -339,7 +339,7 @@ export const useSentinel = () => {
     }
 
     // Behavioral Velocity Profiling
-    if (e.type === 'click' || e.type === 'mousedown') {
+    if (e.type === 'click') {
       const now = Date.now();
       const delta = now - lastInteractionRef.current;
       lastInteractionRef.current = now;
