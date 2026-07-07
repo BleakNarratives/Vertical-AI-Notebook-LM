@@ -37,3 +37,8 @@
 **Vulnerability:** Sub-human interaction speeds (automation) and predictable decoy rotation patterns.
 **Learning:** Standard rate limiting is effective for frequency, but does not account for velocity (the time between individual clicks). Automated scripts often fire events with near-zero latency, which is a clear behavioral signal. Additionally, `Math.random()` in the client is predictable; security-sensitive decoys (Honeytokens) require cryptographically secure randomness to remain effective bait.
 **Prevention:** Implement velocity profiling in the interaction verification layer, flagging deltas < 50ms as `HIGH` severity anomalies. Always use `window.crypto.getRandomValues()` for any logic that determines the placement or payload of security decoys.
+
+## 2026-06-09 - [Sustained Velocity Blocking & DoS Payload Mitigation]
+**Vulnerability:** Velocity profiling alone only alerts but doesn't block, and lack of input length limits allows for oversized payloads (DoS).
+**Learning:** Purely alerting on sub-human velocity allows automated tools to continue their sequence, potentially finding a bypass. Blocking interaction after a sustained violation threshold (e.g., 3 consecutive anomalies) provides an active defense. Furthermore, without explicit length limits, the system is vulnerable to DoS attacks via multi-megabyte string injections in voodoo-hooked inputs.
+**Prevention:** Track consecutive velocity violations and return `false` in the verification layer once the threshold is exceeded. Implement strict character limits (e.g., 500 chars) on all interactive text inputs to prevent resource exhaustion.

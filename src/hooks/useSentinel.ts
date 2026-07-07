@@ -8,6 +8,7 @@ import React, { useCallback, useRef } from 'react';
  */
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
+  const velocityViolationsRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -139,6 +140,12 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // 0. Length check: mitigate DoS risk from oversized payloads
+    if (input && input.length > 500) {
+      logSecurityEvent(`Input rejected: Payload too large (${input.length} chars)`, 'MEDIUM');
+      return false;
+    }
+
     // Input Normalization: Recursive decode to prevent multi-stage obfuscation
     const normalized = recursiveDecode(input);
 
@@ -354,14 +361,23 @@ export const useSentinel = () => {
 
       // Detection of sub-human interaction speeds (< 50ms)
       if (lastTime !== 0 && delta >= 0 && delta < 50) {
+        const violations = (velocityViolationsRef.current[e.type] || 0) + 1;
+        velocityViolationsRef.current[e.type] = violations;
+
+        if (violations >= 3) {
+          logSecurityEvent(`CRITICAL: Sustained velocity anomaly detected (${violations}x). Blocking interaction.`, 'CRITICAL');
+          return false;
+        }
+
         logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
             detail: { delta, type: e.type, timestamp: now }
           }));
         }
-        // We don't return false here yet to avoid false positives,
-        // but we flag it for the autonomous system to respond.
+      } else if (delta > 500) {
+        // Reset violations on human-paced interaction
+        velocityViolationsRef.current[e.type] = 0;
       }
       lastInteractionRef.current[e.type] = now;
     }
