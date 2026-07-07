@@ -62,7 +62,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
   }, [isReduced]);
 
   return (
-    <div ref={ref} className="group relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
+    <div ref={ref} className="group/perspective relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
       style={{
         transform: isReduced ? 'rotateX(20deg)' : 'rotateX(calc(20deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))'
       } as React.CSSProperties}
@@ -70,7 +70,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
       {/* Atmospheric Glow */}
       {!isReduced && (
         <div
-          className="fixed inset-0 pointer-events-none z-50 mix-blend-screen opacity-30 transition-opacity duration-1000 group-hover:opacity-50"
+          className="fixed inset-0 pointer-events-none z-50 mix-blend-screen opacity-30 transition-opacity duration-1000 group-hover/perspective:opacity-50"
           style={{
             background: `radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 191, 0, 0.15) 0%, transparent 40%)`
           }}

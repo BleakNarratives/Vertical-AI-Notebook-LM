@@ -29,3 +29,7 @@
 ## 2025-05-21 - [Unified Focus Mechanics for 3D Props]
 **Learning:** In complex 3D boardroom layouts where interactive props (like Paper stacks) have multiple sub-elements or absolute labels, using `group-focus-visible` can cause visual flickering or state loss if focus moves between internal parts. `group-focus-within` provides a more stable experience, ensuring focus indicators and labels remain active during nested interactions.
 **Action:** Use `group-focus-within` for visual indicators on complex multi-element props to ensure stability during deep navigation.
+
+## 2025-05-22 - [Immersive Component Isolation]
+**Learning:** High-level atmospheric effects (like global hover glows) can accidentally trigger on any interactive child if using generic Tailwind `group` classes on large containers. Utilizing named groups (e.g., `group/perspective`) allows for isolated state management, ensuring global effects only respond to the container itself while nested props maintain their own interaction logic.
+**Action:** Use named Tailwind groups for layout-level atmospheric containers to prevent interaction state leakage to children.
