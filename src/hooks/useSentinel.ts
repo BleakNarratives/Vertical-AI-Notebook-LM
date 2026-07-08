@@ -8,6 +8,7 @@ import React, { useCallback, useRef } from 'react';
  */
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
+  const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -360,10 +361,31 @@ export const useSentinel = () => {
             detail: { delta, type: e.type, timestamp: now }
           }));
         }
-        // We don't return false here yet to avoid false positives,
-        // but we flag it for the autonomous system to respond.
       }
       lastInteractionRef.current[e.type] = now;
+    }
+
+    // 3. Entropy Analysis (Spatial Variance)
+    if (e.type === 'click' && 'clientX' in nativeEvent && 'clientY' in nativeEvent) {
+      const mouseEvent = nativeEvent as MouseEvent;
+      const x = mouseEvent.clientX;
+      const y = mouseEvent.clientY;
+      const coords = lastCoordinatesRef.current;
+
+      // Exact spatial repetition in sequence is a high-confidence bot signal
+      const isExactRepetition = coords.some((c) => c.x === x && c.y === y);
+
+      coords.push({ x, y });
+      if (coords.length > 5) coords.shift();
+
+      if (coords.length >= 3 && isExactRepetition) {
+        logSecurityEvent(`Low behavioral entropy detected: Spatial precision anomaly`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+            detail: { x, y, timestamp: Date.now() }
+          }));
+        }
+      }
     }
 
     return true;
