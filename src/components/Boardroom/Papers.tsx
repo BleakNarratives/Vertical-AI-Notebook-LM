@@ -29,7 +29,7 @@ const Paper: React.FC<PaperProps> = ({
       title={title}
       onClick={onClick}
       style={{
-        transform: `rotateX(-20deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
+        transform: `rotateX(-35deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
       }}
       className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
     >
@@ -77,6 +77,9 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
 
   const handleView = (title: string) => {
     setActiveTitle(title);
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title, timestamp: new Date().toLocaleTimeString() }
+    }));
     setTimeout(() => setActiveTitle(null), 2000);
   };
 
