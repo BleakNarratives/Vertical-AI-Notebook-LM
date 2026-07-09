@@ -33,7 +33,7 @@
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
 
-## 2026-06-08 - [Behavioral Velocity Profiling & Synthetic Interaction Defense]
-**Vulnerability:** Client-side interactions (clicks) can be triggered by automated scripts at sub-human speeds, allowing for rapid exploitation of rate-limited triggers.
-**Learning:** Pure rate limiting protects the backend/logic but doesn't necessarily identify the *nature* of the interaction. By measuring the interval between interactions (velocity), we can distinguish between human rhythm and synthetic execution.
-**Prevention:** Track session-wide interaction timestamps and enforce a minimum velocity threshold (e.g., 50ms) for critical actions. Use these "Velocity Alerts" to autonomously trigger system hardening or forensic reconstruction.
+## 2026-06-08 - [Behavioral Velocity Profiling & Heuristic Interaction Trust]
+**Vulnerability:** Client-side triggers were susceptible to sub-human interaction speeds, allowing automated scripts to bypass standard rate limits and flood the system with events.
+**Learning:** Pure rate limiting (e.g., 5 requests per 30s) is easily gamed by bots that operate at the millisecond scale. Security logic must analyze the *velocity* of interactions, not just the count. Using `window` as a persistent session-wide timestamp store allows for cross-hook velocity verification without expensive context providers.
+**Prevention:** Implement a velocity threshold (e.g., 50ms) for critical UI interactions. Integrate velocity alerts with autonomous system responses (Molt) to force system hardening when sub-human behavior is detected.
