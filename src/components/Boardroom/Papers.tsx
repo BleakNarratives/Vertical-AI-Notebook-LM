@@ -42,7 +42,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
         {title}
       </span>
 
-      <FocusIndicator color="neon-amber" className="-inset-1.5" group="stack" />
+      <FocusIndicator color="neon-amber" inset="-inset-1.5" group="stack" />
     </button>
   );
 };
