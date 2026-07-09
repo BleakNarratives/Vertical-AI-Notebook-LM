@@ -9,7 +9,7 @@ export const VideoViewer: React.FC = () => {
   const handleAction = () => {
     setStatus('FEED_SYNCHRONIZED');
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
-      detail: { source: 'MONITOR', action: 'FEED_SYNC', timestamp: new Date().toLocaleTimeString() }
+      detail: { source: 'MONITOR', action: 'FEED_SYNC' }
     }));
     setTimeout(() => setStatus(null), 2000);
   };
