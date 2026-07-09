@@ -282,15 +282,15 @@
  * - Each tool has unique fingerprint artifacts in the way it handles events and DOM manipulation.
  * - Log the identified tool in the `Shadow Gallery` forensic summary.
  *
- * CYCLE 64: BEHAVIORAL ENTROPY ANALYSIS REFINEMENT
- * - Expand the `sentinel-entropy-alert` to include a "Repeat Factor" - tracking how many times the exact same coordinates were used in a session.
- * - Implement a "Coordinate Jitter" analysis: if coordinates are slightly shifted but follow a recognizable mathematical pattern, flag as `HIGH` severity.
- * - Update the `SecurityOverlay` to visualize the low-entropy click points as red "ghost dots".
+ * CYCLE 62: BEHAVIORAL ENTROPY ENFORCEMENT
+ * - Implement "Entropy-Based Jitter": if spatial precision anomalies are detected, subtly and randomly shift the position of interactive components by 1-2px on every hover.
+ * - This creates a "moving target" for bots that rely on absolute coordinates, while remaining imperceptible to human users.
+ * - Log `MEDIUM` alerts for "Coordination Divergence" if a bot continues to target the original, pre-jitter coordinates.
  *
- * CYCLE 65: ENTROPY-BASED JITTER EXPANSION
- * - Implement "Entropy Injection": subtly shift interactive elements by 1-2 pixels randomly to break automated scripts that rely on static coordinate mapping.
- * - Log `MEDIUM` alerts if interaction coordinates align with the *previous* un-shifted positions, indicating a bot using stale coordinate data.
- * - Refine the `useSentinel` hook to include a "Humanity Score" that increases with non-linear mouse movements and variable interaction timing.
+ * CYCLE 63: HEURISTIC VELOCITY TUNING
+ * - Automatically adjust the sub-human velocity threshold (currently 50ms) based on the current `Molt` level.
+ * - As the system approaches the Singularity, the threshold should become more aggressive (up to 100ms) to counteract high-speed automated probing.
+ * - Integrate this dynamic threshold into `verifyInteraction` and log the "Current Security Velocity" in the `Laptop` terminal.
  */
 
 export const MOLT_CONFIG = {
