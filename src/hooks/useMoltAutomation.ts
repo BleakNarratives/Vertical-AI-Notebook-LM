@@ -154,8 +154,15 @@ export const useMoltAutomation = () => {
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
       const delta = customEvent.detail?.delta || 0;
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Velocity anomaly detected (${delta}ms). Sub-human interaction speeds.`, 'HIGH');
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity (${delta}ms) detected.`, 'HIGH');
       attemptAutonomousImprovement(`Velocity anomaly: ${delta}ms`);
+    };
+
+    const handleEntropyAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { x, y } = customEvent.detail || {};
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Spatial precision anomaly detected at [${x}, ${y}].`, 'HIGH');
+      attemptAutonomousImprovement(`Behavioral entropy anomaly at ${x},${y}`);
     };
 
     if (typeof window !== 'undefined') {
@@ -166,6 +173,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
+      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -174,6 +182,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
         window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
+        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
