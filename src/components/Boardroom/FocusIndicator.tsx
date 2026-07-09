@@ -17,13 +17,13 @@ export const FocusIndicator: React.FC<FocusIndicatorProps> = ({ theme = 'red' })
   return (
     <div className="absolute -inset-3 pointer-events-none opacity-0 group-focus-visible:opacity-100 transition-opacity duration-200 z-50">
       {/* Top Left */}
-      <div className={`absolute top-0 left-0 w-1.5 h-1.5 border-l-[1.5px] border-t-[1.5px] ${borderColor} ${shadowClass}`} />
+      <div className={"absolute top-0 left-0 w-2 h-2 border-l-2 border-t-2 " + borderColor + " " + shadowClass} />
       {/* Top Right */}
-      <div className={`absolute top-0 right-0 w-1.5 h-1.5 border-r-[1.5px] border-t-[1.5px] ${borderColor} ${shadowClass}`} />
+      <div className={"absolute top-0 right-0 w-2 h-2 border-r-2 border-t-2 " + borderColor + " " + shadowClass} />
       {/* Bottom Left */}
-      <div className={`absolute bottom-0 left-0 w-1.5 h-1.5 border-l-[1.5px] border-b-[1.5px] ${borderColor} ${shadowClass}`} />
+      <div className={"absolute bottom-0 left-0 w-2 h-2 border-l-2 border-b-2 " + borderColor + " " + shadowClass} />
       {/* Bottom Right */}
-      <div className={`absolute bottom-0 right-0 w-1.5 h-1.5 border-r-[1.5px] border-b-[1.5px] ${borderColor} ${shadowClass}`} />
+      <div className={"absolute bottom-0 right-0 w-2 h-2 border-r-2 border-b-2 " + borderColor + " " + shadowClass} />
     </div>
   );
 };
