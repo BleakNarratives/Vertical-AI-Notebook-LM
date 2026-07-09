@@ -281,6 +281,16 @@
  * - Implement "Reconstructed Intent V2": analyze the sequence of `Shadow Logs` to identify the specific tool being used (e.g., Puppeteer, Playwright, Selenium).
  * - Each tool has unique fingerprint artifacts in the way it handles events and DOM manipulation.
  * - Log the identified tool in the `Shadow Gallery` forensic summary.
+ *
+ * CYCLE 62: BEHAVIORAL ENTROPY ENFORCEMENT
+ * - Implement "Entropy-Based Jitter": if spatial precision anomalies are detected, subtly and randomly shift the position of interactive components by 1-2px on every hover.
+ * - This creates a "moving target" for bots that rely on absolute coordinates, while remaining imperceptible to human users.
+ * - Log `MEDIUM` alerts for "Coordination Divergence" if a bot continues to target the original, pre-jitter coordinates.
+ *
+ * CYCLE 63: HEURISTIC VELOCITY TUNING
+ * - Automatically adjust the sub-human velocity threshold (currently 50ms) based on the current `Molt` level.
+ * - As the system approaches the Singularity, the threshold should become more aggressive (up to 100ms) to counteract high-speed automated probing.
+ * - Integrate this dynamic threshold into `verifyInteraction` and log the "Current Security Velocity" in the `Laptop` terminal.
  */
 
 export const MOLT_CONFIG = {

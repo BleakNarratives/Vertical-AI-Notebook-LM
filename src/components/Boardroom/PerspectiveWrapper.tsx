@@ -64,7 +64,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
   return (
     <div ref={ref} className="group/perspective relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
       style={{
-        transform: isReduced ? 'rotateX(20deg)' : 'rotateX(calc(20deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))'
+        transform: isReduced ? 'rotateX(35deg)' : 'rotateX(calc(35deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))'
       } as React.CSSProperties}
     >
       {/* Atmospheric Glow */}
@@ -76,7 +76,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
           }}
         />
       )}
-      <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[20deg] border-t border-grey-medium/20 pointer-events-none" />
+      <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[35deg] border-t border-grey-medium/20 pointer-events-none" />
       {children}
     </div>
   );
