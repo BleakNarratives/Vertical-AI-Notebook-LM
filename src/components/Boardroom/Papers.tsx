@@ -107,7 +107,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
       </div>
       <div className="group/papers relative flex items-end justify-center w-24 h-24">
         {/* Paper 1: Bottom Left */}
-        <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover/papers:-translate-x-6 group-focus-within/papers:-translate-x-6 group-hover/papers:-rotate-6 group-focus-within/papers:-rotate-6">
+        <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover:-translate-x-8 group-focus-within:-translate-x-8 group-hover:-rotate-12 group-focus-within:-rotate-12">
           <Paper
             label={`View ${data.p1}`}
             title={data.p1}
@@ -120,7 +120,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
         </div>
 
         {/* Paper 3: Bottom Right (added for depth) */}
-        <div className="absolute bottom-0 right-0 transition-all duration-300 group-hover/papers:translate-x-6 group-focus-within/papers:translate-x-6 group-hover/papers:rotate-6 group-focus-within/papers:rotate-6">
+        <div className="absolute bottom-0 right-0 transition-all duration-300 group-hover:translate-x-8 group-focus-within:translate-x-8 group-hover:rotate-12 group-focus-within:rotate-12">
           <Paper
             label={`View ${data.p3}`}
             title={data.p3}
@@ -133,7 +133,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
         </div>
 
         {/* Paper 2: Center/Top */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover/papers:-translate-y-4 group-focus-within/papers:-translate-y-4">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover:-translate-y-8 group-focus-within:-translate-y-8 group-hover:rotate-3 group-focus-within:rotate-3">
           <Paper
             label={`View ${data.p2}`}
             title={data.p2}

@@ -1,16 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { FocusIndicator } from './FocusIndicator';
-
-interface BoardroomEvent extends CustomEvent {
-  detail: {
-    source: string;
-    action: string;
-    payload?: string;
-    timestamp: string;
-  };
-}
 
 export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
