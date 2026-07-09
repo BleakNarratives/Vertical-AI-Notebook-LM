@@ -37,3 +37,8 @@
 **Vulnerability:** Sub-human interaction speeds (automation) and predictable decoy rotation patterns.
 **Learning:** Standard rate limiting is effective for frequency, but does not account for velocity (the time between individual clicks). Automated scripts often fire events with near-zero latency, which is a clear behavioral signal. Additionally, `Math.random()` in the client is predictable; security-sensitive decoys (Honeytokens) require cryptographically secure randomness to remain effective bait.
 **Prevention:** Implement velocity profiling in the interaction verification layer, flagging deltas < 50ms as `HIGH` severity anomalies. Always use `window.crypto.getRandomValues()` for any logic that determines the placement or payload of security decoys.
+
+## 2026-07-09 - [Behavioral Entropy & Coordinate State Collision]
+**Vulnerability:** High false-positive rate in behavioral bot detection when tracking raw mouse coordinates across disparate event types.
+**Learning:** Interaction security hooks often process multiple events (mousedown, click) for a single user action. If behavioral state (like last click coordinates) is shared across these event types, the system will incorrectly flag the natural 1:1 coordinate match between a mousedown and its subsequent click as a "low entropy" bot interaction.
+**Prevention:** Always scope behavioral metrics (coordinates, velocity, jitter) to specific event types using a Record or Map. Ensure that entropy analysis compares an event's state only against previous events of the same type to maintain human-like variability baseline.
