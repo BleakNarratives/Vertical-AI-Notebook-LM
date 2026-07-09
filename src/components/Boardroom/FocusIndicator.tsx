@@ -19,7 +19,7 @@ export const FocusIndicator: React.FC<FocusIndicatorProps> = ({ color = 'red' })
       <div className={`absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 ${colorClass}`} />
 
       {/* Internal Border/Glow */}
-      <div className={`absolute inset-0 border border-current opacity-20 ${colorClass} ${glowClass}`} />
+      <div className={`absolute inset-0 border opacity-20 ${colorClass} ${glowClass}`} />
     </div>
   );
 };
