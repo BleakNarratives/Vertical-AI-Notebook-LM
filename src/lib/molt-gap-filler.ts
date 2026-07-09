@@ -281,6 +281,16 @@
  * - Implement "Reconstructed Intent V2": analyze the sequence of `Shadow Logs` to identify the specific tool being used (e.g., Puppeteer, Playwright, Selenium).
  * - Each tool has unique fingerprint artifacts in the way it handles events and DOM manipulation.
  * - Log the identified tool in the `Shadow Gallery` forensic summary.
+ *
+ * CYCLE 64: BEHAVIORAL ENTROPY ANALYSIS REFINEMENT
+ * - Expand the `sentinel-entropy-alert` to include a "Repeat Factor" - tracking how many times the exact same coordinates were used in a session.
+ * - Implement a "Coordinate Jitter" analysis: if coordinates are slightly shifted but follow a recognizable mathematical pattern, flag as `HIGH` severity.
+ * - Update the `SecurityOverlay` to visualize the low-entropy click points as red "ghost dots".
+ *
+ * CYCLE 65: ENTROPY-BASED JITTER EXPANSION
+ * - Implement "Entropy Injection": subtly shift interactive elements by 1-2 pixels randomly to break automated scripts that rely on static coordinate mapping.
+ * - Log `MEDIUM` alerts if interaction coordinates align with the *previous* un-shifted positions, indicating a bot using stale coordinate data.
+ * - Refine the `useSentinel` hook to include a "Humanity Score" that increases with non-linear mouse movements and variable interaction timing.
  */
 
 export const MOLT_CONFIG = {

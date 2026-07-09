@@ -8,6 +8,7 @@ import React, { useCallback, useRef } from 'react';
  */
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
+  const lastCoordinatesRef = useRef<Record<string, { x: number; y: number }>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -335,7 +336,28 @@ export const useSentinel = () => {
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
-    // 1. Trust Verification
+    // 1. Behavioral Entropy Analysis (Detection of exact coordinate repetition)
+    // Run this before trust verification to capture behavioral signals for all events.
+    // Coordinates are tracked PER EVENT TYPE to avoid false positives between mousedown/click.
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const mouseEvent = nativeEvent as MouseEvent;
+      const currentX = mouseEvent.clientX;
+      const currentY = mouseEvent.clientY;
+      const lastPos = lastCoordinatesRef.current[e.type];
+
+      if (lastPos && lastPos.x === currentX && lastPos.y === currentY) {
+        logSecurityEvent(`Non-human interaction entropy detected (Event: ${e.type}, Coords: ${currentX},${currentY})`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+            detail: { type: e.type, x: currentX, y: currentY, timestamp: now }
+          }));
+        }
+      }
+      lastCoordinatesRef.current[e.type] = { x: currentX, y: currentY };
+    }
+
+    // 2. Trust Verification
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       if (typeof window !== 'undefined') {
@@ -346,7 +368,7 @@ export const useSentinel = () => {
       return false;
     }
 
-    // 2. Velocity Profiling (Behavioral Analysis)
+    // 3. Velocity Profiling (Behavioral Analysis)
     if (e.type === 'click' || e.type === 'mousedown') {
       const now = Date.now();
       const lastTime = lastInteractionRef.current[e.type] || 0;
