@@ -50,12 +50,14 @@ export const useMoltAutomation = () => {
   }, [checkBlacklist, secureGet, secureRemove]);
 
   const triggerLockdown = useCallback(() => {
+    if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
-    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    // Log as MEDIUM to avoid triggering a new high-severity alert loop
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [logSecurityEvent, secureStore]);
+  }, [isLockdown, logSecurityEvent, secureStore]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -166,7 +168,6 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
-      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
