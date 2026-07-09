@@ -23,7 +23,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
     >
       {/* Floor Glow */}
-      <div className={`absolute -inset-4 bg-radial-gradient(circle,rgba(255,0,0,0.15)_0%,transparent_70%) opacity-0 transition-opacity duration-500 pointer-events-none ${status === 'active' ? 'opacity-100' : ''}`}
+      <div className={`absolute -inset-4 opacity-0 transition-opacity duration-500 pointer-events-none ${status === 'active' ? 'opacity-100' : ''}`}
            style={{ background: 'radial-gradient(circle, rgba(255, 0, 0, 0.15) 0%, transparent 70%)' }} />
 
       <div className={`
