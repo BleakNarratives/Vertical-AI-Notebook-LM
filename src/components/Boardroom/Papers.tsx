@@ -78,7 +78,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
   const handleView = (title: string) => {
     setActiveTitle(title);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
-      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title, timestamp: new Date().toLocaleTimeString() }
+      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title }
     }));
     setTimeout(() => setActiveTitle(null), 2000);
   };
