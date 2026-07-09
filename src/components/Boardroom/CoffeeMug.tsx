@@ -21,6 +21,9 @@ export const CoffeeMug: React.FC = () => {
 
     const randomMessage = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     setStatus(randomMessage);
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: 'COFFEE_MUG', action: 'SNAPSHOT', payload: randomMessage }
+    }));
 
     timeoutRef.current = setTimeout(() => {
       setStatus(null);
@@ -49,7 +52,7 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
-        style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+        style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
       >
         <FocusIndicator color="amber" />
@@ -72,6 +75,7 @@ export const CoffeeMug: React.FC = () => {
 
         {/* Label hidden until focus/hover */}
         <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity z-50">
           SAVE / LOAD / SETTINGS
         </span>
       </button>
