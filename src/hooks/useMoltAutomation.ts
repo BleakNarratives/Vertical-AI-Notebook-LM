@@ -154,7 +154,7 @@ export const useMoltAutomation = () => {
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
       const velocity = customEvent.detail?.velocity || 0;
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity detected (${velocity}ms). Escalating defense.`, 'HIGH');
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity detected (${velocity}ms). Possible automation.`, 'HIGH');
       attemptAutonomousImprovement(`Velocity anomaly: ${velocity}ms`);
     };
 
@@ -166,6 +166,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
+      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -174,6 +175,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
         window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
+        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
