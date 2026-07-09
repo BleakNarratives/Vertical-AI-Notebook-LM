@@ -33,6 +33,7 @@ const Paper: React.FC<PaperProps> = ({
       }}
       className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
     >
+      <FocusIndicator color="amber" />
       {/* Paper Content Simulation */}
       <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity">
         <div className="h-0.5 w-full bg-grey-medium" />
@@ -82,6 +83,8 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     }));
     setTimeout(() => setActiveTitle(null), 2000);
   };
+
+  const labelClass = labelPosition === 'top' ? '-top-8' : '-bottom-8';
 
   return (
     <div className="flex flex-col items-center gap-2">

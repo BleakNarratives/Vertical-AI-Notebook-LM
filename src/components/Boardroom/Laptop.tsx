@@ -72,7 +72,7 @@ export const Laptop: React.FC = () => {
       >
         <FocusIndicator color="red" />
         {/* Laptop Screen (Open) */}
-        <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col">
+        <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col pointer-events-none">
           <div className="h-1.5 bg-grey-dark border-b border-grey-medium flex items-center px-1 gap-0.5">
             <div className="w-1 h-1 rounded-full bg-neon-red/40" />
             <div className="w-1 h-1 rounded-full bg-neon-amber/40" />

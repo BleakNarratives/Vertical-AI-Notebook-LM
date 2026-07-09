@@ -10,6 +10,10 @@
 **Learning:** Applying a perspective transform (like `rotateX(20deg)`) to a container tilts all children. To make interactive props appear "upright" on a 3D surface without breaking Tailwind 4's independent transform utilities (like `hover:scale`), use the `style` attribute to apply a counter-rotation (e.g., `rotateX(-20deg)`).
 **Action:** Use `style={{ transform: 'rotateX(-20deg)' }}` for perspective-countering transforms to avoid clobbering Tailwind's utility-based transforms.
 
+## 2025-05-22 - [Unified Focus Feedback]
+**Learning:** In a complex 3D boardroom environment, disparate focus styles create visual clutter and confuse keyboard users. A unified `FocusIndicator` using corner brackets (targeting `-inset-3`) provides a consistent "high-tech" feel while avoiding clipping issues when parent containers are properly configured (removing `overflow-hidden` where absolute labels/indicators are used).
+**Action:** Use the `FocusIndicator` component for all interactive boardroom props and ensure parent buttons do not use `overflow-hidden`.
+
 ## 2025-05-17 - [Immersive Grid & Accessibility]
 **Learning:** Reinforcing 3D perspective with a digital grid requires a fade-out mask (`mask-image`) to prevent visual noise at the "horizon" and maintain focus on interactive elements. Additionally, immersive UI labels should not sacrifice legibility; `text-xs` (12px) should be the minimum target even for "atmospheric" text.
 **Action:** Always apply linear-gradient masks to background grids and prefer `text-xs` over smaller custom sizes for accessibility.
