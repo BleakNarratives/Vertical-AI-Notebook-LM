@@ -103,7 +103,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
           </div>
         )}
       </div>
-      <div className="group/papers relative flex items-end justify-center w-24 h-24 mb-4">
+      <div className="group/papers relative flex items-end justify-center w-24 h-24">
         {/* Paper 1: Bottom Left */}
         <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover/papers:-translate-x-6 group-focus-within/papers:-translate-x-6 group-hover/papers:-rotate-6 group-focus-within/papers:-rotate-6">
           <Paper
