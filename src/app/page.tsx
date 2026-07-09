@@ -69,6 +69,7 @@ export default function Home() {
             <Papers context="higgins" labelPosition="bottom" />
           </div>
         </div>
+        <div className="flex flex-col items-center gap-12">
         <div className="flex flex-col items-center gap-16">
           <Persona
             name="Pytch"

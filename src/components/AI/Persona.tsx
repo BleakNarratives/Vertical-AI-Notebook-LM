@@ -36,7 +36,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
 
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
-        ${status === 'active' ? 'border-neon-red border-2 animate-pulse' : 'border-grey-medium border'}
+        ${status === 'active' ? 'border-neon-red border-2 animate-pulse shadow-[0_0_20px_rgba(255,0,0,0.4)]' : 'border-grey-medium border'}
         ${status === 'distorted' ? 'animate-pulse scale-95 opacity-50' : ''}
       `}>
         {/* Floor Glow */}
@@ -51,11 +51,9 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
         </div>
         <div className="absolute top-1/4 left-1/3 w-0.5 h-6 bg-neon-amber/40 rotate-45" />
         <div className="absolute top-1/2 left-2/3 w-0.5 h-8 bg-neon-red/40 -rotate-12" />
-        <div className="absolute top-2/3 left-1/4 w-0.5 h-5 bg-white/20 rotate-[120deg]" />
-      </div>
-
-      <div className="text-center">
-        <p className="text-xs font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors">{role}</p>
+      <div className="text-center mt-2">
+        <p className="text-xs font-mono text-white/40 uppercase transition-colors">{role}</p>
+        <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em] mt-1">{name}</h3>
       </div>
       {/* Persistent Atmospheric Name Label */}
       <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap">
