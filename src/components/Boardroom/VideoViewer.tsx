@@ -16,7 +16,7 @@ export const VideoViewer: React.FC = () => {
   return (
     <div className="absolute top-16 -right-12 flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
-        {status && <div className={`text-[10px] font-mono animate-pulse uppercase ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>{status}</div>}
+        {status && <div className="text-[10px] font-mono animate-pulse uppercase text-neon-amber">{status}</div>}
       </div>
       <button
         type="button"
