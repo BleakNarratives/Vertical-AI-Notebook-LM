@@ -336,6 +336,11 @@ export const useSentinel = () => {
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (typeof window === 'undefined') return true;
     if (!e) return true;
+    if (typeof window === 'undefined') return true;
+
+    const now = Date.now();
+    const win = window as unknown as { _sentinel_last_interaction?: number };
+    const lastInteraction = win._sentinel_last_interaction || 0;
 
     const now = Date.now();
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
