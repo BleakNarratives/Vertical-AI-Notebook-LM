@@ -32,3 +32,13 @@
 **Vulnerability:** Critical security UI elements (overlays, terminals) could be hidden or removed by client-side scripts without triggering system alerts.
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
+
+## 2026-06-08 - [Behavioral Velocity Profiling & Secure Randomness]
+**Vulnerability:** Sub-human interaction speeds (automation) and predictable decoy rotation patterns.
+**Learning:** Standard rate limiting is effective for frequency, but does not account for velocity (the time between individual clicks). Automated scripts often fire events with near-zero latency, which is a clear behavioral signal. Additionally, `Math.random()` in the client is predictable; security-sensitive decoys (Honeytokens) require cryptographically secure randomness to remain effective bait.
+**Prevention:** Implement velocity profiling in the interaction verification layer, flagging deltas < 50ms as `HIGH` severity anomalies. Always use `window.crypto.getRandomValues()` for any logic that determines the placement or payload of security decoys.
+
+## 2026-06-09 - [Behavioral Entropy Analysis & Spatial Precision Detection]
+**Vulnerability:** Sophisticated automated interaction scripts bypassing velocity checks by adding artificial delays but maintaining robotic precision in click coordinates.
+**Learning:** Automated tools often target specific DOM coordinates with pixel-perfect accuracy. While velocity profiling catches "speed" anomalies, it doesn't account for "spatial" anomalies. Human interactions naturally exhibit spatial entropy (variance), whereas bots often repeat identical coordinate sequences across multiple interactions.
+**Prevention:** Implement spatial entropy analysis by tracking interaction coordinates (`clientX`, `clientY`). Flag exact spatial repetitions in sequential interactions as `HIGH` severity behavioral anomalies. Use this signal to trigger autonomous UI jitter countermeasures to disrupt coordinate-based automation.
