@@ -85,7 +85,7 @@ export const Laptop: React.FC = () => {
             {logs.length > 0 ? (
               <div className="mt-1 space-y-0.5">
                 {logs.map((log, i) => (
-                  <div key={i} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
+                  <div key={log} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
                 ))}
               </div>
             ) : (
