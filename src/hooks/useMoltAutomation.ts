@@ -154,8 +154,8 @@ export const useMoltAutomation = () => {
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
       const velocity = customEvent.detail?.velocity || 0;
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity detected (${velocity}ms). Possible automation.`, 'HIGH');
-      attemptAutonomousImprovement(`Velocity anomaly: ${velocity}ms`);
+      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
+      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
     };
 
     if (typeof window !== 'undefined') {
