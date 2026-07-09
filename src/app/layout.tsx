@@ -41,7 +41,7 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1000px] overflow-hidden">
+        <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:2000px] overflow-hidden">
           {/* Floor/Table Shadow */}
           <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent opacity-60 pointer-events-none" />
 
@@ -64,7 +64,7 @@ export default function RootLayout({
 
                {/* Boardroom Props */}
                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom">
-                 <Papers context="user" />
+                 <Papers context="user" labelPosition="top" />
 
                  <Laptop />
                  <CoffeeMug />

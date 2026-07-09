@@ -10,10 +10,18 @@ interface PaperProps {
   translateY?: string;
   isActive?: boolean;
   onClick?: () => void;
-  labelClass?: string;
+  labelPosition?: 'top' | 'bottom';
 }
 
-const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translateY = '0px', isActive, onClick, labelClass = '-bottom-8' }) => {
+const Paper: React.FC<PaperProps> = ({
+  label,
+  title,
+  rotation = '0deg',
+  translateY = '0px',
+  isActive,
+  onClick,
+  labelPosition = 'top'
+}) => {
   return (
     <button
       type="button"
@@ -21,7 +29,7 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       title={title}
       onClick={onClick}
       style={{
-        transform: `rotateX(-20deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
+        transform: `rotateX(-35deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
       }}
       className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
     >
@@ -40,9 +48,11 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className={`absolute ${labelClass} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap`}>
+      <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap z-50`}>
         {title}
       </span>
+
+      <FocusIndicator color="amber" />
     </button>
   );
 };
@@ -68,6 +78,9 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
 
   const handleView = (title: string) => {
     setActiveTitle(title);
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title }
+    }));
     setTimeout(() => setActiveTitle(null), 2000);
   };
 
@@ -77,7 +90,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     <div className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {activeTitle && (
-          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
             Viewing {activeTitle}...
           </div>
         )}
@@ -91,7 +104,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             rotation="-2deg"
             isActive={activeTitle === data.p1}
             onClick={() => handleView(data.p1)}
-            labelClass={labelClass}
+            labelPosition={labelPosition}
           />
         </div>
 
@@ -103,7 +116,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             rotation="4deg"
             isActive={activeTitle === data.p3}
             onClick={() => handleView(data.p3)}
-            labelClass={labelClass}
+            labelPosition={labelPosition}
           />
         </div>
 
@@ -115,7 +128,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             rotation="1deg"
             isActive={activeTitle === data.p2}
             onClick={() => handleView(data.p2)}
-            labelClass={labelClass}
+            labelPosition={labelPosition}
           />
         </div>
       </div>
