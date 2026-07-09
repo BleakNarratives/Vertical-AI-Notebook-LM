@@ -71,7 +71,7 @@ export const CoffeeMug: React.FC = () => {
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity z-50">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity z-50">
           SAVE / LOAD / SETTINGS
         </span>
       </button>
