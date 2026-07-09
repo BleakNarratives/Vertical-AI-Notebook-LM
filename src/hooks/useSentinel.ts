@@ -158,6 +158,9 @@ export const useSentinel = () => {
     // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
     const maliciousPatterns = [
       /\.\.\//,             // Path traversal
+      /\b__proto__\b/,      // Prototype pollution
+      /\bconstructor\b/,    // Prototype pollution
+      /\{\{[\s\S]*?\}\}/,         // Template injection
       /etc\/passwd/,        // LFI target
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
