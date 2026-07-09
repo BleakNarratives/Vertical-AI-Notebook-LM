@@ -17,7 +17,7 @@ export const VideoViewer: React.FC = () => {
   const isActive = status === 'FEED_SYNCHRONIZED';
 
   return (
-    <div className="absolute top-16 -right-12 flex flex-col items-center gap-2">
+    <div className="absolute top-16 right-4 flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && (
           <div className={`text-xs font-mono animate-pulse uppercase ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>

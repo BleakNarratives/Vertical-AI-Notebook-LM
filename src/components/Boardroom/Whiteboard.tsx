@@ -28,7 +28,7 @@ export const Whiteboard: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-12 -left-12 flex flex-col items-center gap-2">
+    <div className="absolute top-12 left-4 flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
