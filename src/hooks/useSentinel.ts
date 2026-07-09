@@ -331,6 +331,8 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
+  const lastInteractionRef = useRef<Record<string, number>>({});
+
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (typeof window === 'undefined') return true;
     if (!e) return true;
