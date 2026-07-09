@@ -39,7 +39,7 @@ export const Whiteboard: React.FC = () => {
         onFocus={handleFocus}
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
-        aria-pressed={!!status}
+        aria-busy={!!status}
         title="Iteration Whiteboard"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu cursor-none"
