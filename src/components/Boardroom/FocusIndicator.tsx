@@ -10,15 +10,15 @@ export const FocusIndicator: React.FC<FocusIndicatorProps> = ({ color = 'neon-am
   const colorClass = color === 'neon-red' ? 'border-neon-red' : 'border-neon-amber';
 
   return (
-    <div className="absolute -inset-3 pointer-events-none opacity-0 group-focus-visible:opacity-100 transition-opacity z-50">
+    <span className="absolute -inset-3 pointer-events-none opacity-0 group-focus-visible:opacity-100 transition-opacity z-50">
       {/* Top Left */}
-      <div className={`absolute top-0 left-0 w-1.5 h-1.5 border-t border-l ${colorClass}`} />
+      <span className={"absolute top-0 left-0 w-1.5 h-1.5 border-t border-l " + colorClass} />
       {/* Top Right */}
-      <div className={`absolute top-0 right-0 w-1.5 h-1.5 border-t border-r ${colorClass}`} />
+      <span className={"absolute top-0 right-0 w-1.5 h-1.5 border-t border-r " + colorClass} />
       {/* Bottom Left */}
-      <div className={`absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l ${colorClass}`} />
+      <span className={"absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l " + colorClass} />
       {/* Bottom Right */}
-      <div className={`absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r ${colorClass}`} />
-    </div>
+      <span className={"absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r " + colorClass} />
+    </span>
   );
 };
