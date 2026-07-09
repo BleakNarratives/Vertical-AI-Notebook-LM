@@ -342,6 +342,7 @@ export const useSentinel = () => {
       const now = Date.now();
       const lastInteraction = win._sentinel_last_interaction || 0;
       const velocity = now - lastInteraction;
+      win._sentinel_last_interaction = now;
 
       if (lastInteraction > 0 && velocity < 50) {
         logSecurityEvent(`Velocity alert: Sub-human interaction speed detected (${velocity}ms)`, 'MEDIUM');
@@ -350,7 +351,6 @@ export const useSentinel = () => {
         }));
         return false;
       }
-      win._sentinel_last_interaction = now;
     }
 
     return true;
