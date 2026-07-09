@@ -18,7 +18,6 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       onClick={onClick}
       disabled={disabled}
       aria-busy={status === 'active'}
-      aria-pressed={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
       title={name}
       style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
