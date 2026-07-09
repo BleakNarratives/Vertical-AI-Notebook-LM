@@ -141,7 +141,10 @@ export const useSentinel = () => {
 
   const validateInput = useCallback((input: string): boolean => {
     // 0. Length check: mitigate DoS risk from oversized payloads
-    if (input && input.length > 500) {
+    if (typeof input !== 'string') {
+      return false;
+    }
+    if (input.length > 500) {
       logSecurityEvent(`Input rejected: Payload too large (${input.length} chars)`, 'MEDIUM');
       return false;
     }
