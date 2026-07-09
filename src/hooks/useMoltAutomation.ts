@@ -156,8 +156,8 @@ export const useMoltAutomation = () => {
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
       const velocity = customEvent.detail?.velocity || 0;
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity anomaly (${velocity}ms).`, 'HIGH');
-      attemptAutonomousImprovement(`Velocity anomaly detected: ${velocity}ms`);
+      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
+      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
     };
 
     if (typeof window !== 'undefined') {
@@ -176,6 +176,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
         window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
+        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
