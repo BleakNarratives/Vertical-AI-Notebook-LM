@@ -85,7 +85,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {activeTitle && (
           <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tighter">
-            Verified: Pytch, Twoie, Zeroclaw... // {activeTitle}
+            {context === "user" ? "Viewing" : "Verified: " + context} // {activeTitle}
           </div>
         )}
       </div>
