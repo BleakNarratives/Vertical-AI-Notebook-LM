@@ -73,6 +73,7 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> 
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition = 'top' }) => {
   const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const data = CONTEXT_DATA[context];
 
   const handleView = (title: string) => {
