@@ -48,7 +48,7 @@ export const Whiteboard: React.FC = () => {
         <FocusIndicator color="amber" />
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           {/* Simulated Marker Tip (Delight) */}
-          <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
+          <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover/whiteboard:opacity-100 group-focus-visible/whiteboard:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
                style={{ left: 'var(--x, 50%)', top: 'var(--y, 50%)', transform: 'translate(-50%, -50%)' }} />
 
           {/* Voodoo Loop Sketch */}
