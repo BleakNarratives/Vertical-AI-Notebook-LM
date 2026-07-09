@@ -326,7 +326,7 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
-  const lastInteractionRef = useRef<number>(0);
+  const lastInteractionRef = useRef<Record<string, number>>({});
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (!e) return true;
