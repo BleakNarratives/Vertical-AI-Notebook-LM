@@ -338,7 +338,7 @@ export const useSentinel = () => {
 
     // Behavioral Velocity Profiling: Detect sub-human interaction speeds
     if (typeof window !== 'undefined' && e.type === 'click') {
-      const now = Date.now();
+      const now = performance.now();
       const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
       const velocity = now - lastInteraction;
 
