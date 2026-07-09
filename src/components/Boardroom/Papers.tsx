@@ -43,8 +43,6 @@ const Paper: React.FC<PaperProps> = ({
         <div className="h-0.5 w-full bg-grey-medium" />
         <div className="h-0.5 w-full bg-grey-medium" />
       </div>
-
-      {/* Stack effect shadow */}
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
@@ -58,6 +56,8 @@ const Paper: React.FC<PaperProps> = ({
 };
 
 type ContextType = 'higgins' | 'pytch' | 'twoie' | 'zeroclaw' | 'user';
+interface PapersProps { context?: ContextType; labelPosition?: 'top' | 'bottom'; }
+interface DocInfo { title: string; snippet: string; }
 
 interface PapersProps {
   context?: ContextType;

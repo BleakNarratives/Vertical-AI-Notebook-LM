@@ -33,35 +33,18 @@ export const Laptop: React.FC = () => {
   }, [handleRemoteAction]);
 
   const handleAccess = () => {
-    if (status) return; // Prevent spamming during sequence
-
+    if (status) return;
     setStatus('Synchronizing...');
     setIsFlashing(true);
-
-    setTimeout(() => {
-      setStatus('Authenticating...');
-      setIsFlashing(false);
-    }, 800);
-
-    setTimeout(() => {
-      setStatus('Terminal Synchronized');
-      setIsFlashing(true);
-    }, 1600);
-
-    setTimeout(() => {
-      setStatus(null);
-      setIsFlashing(false);
-    }, 3000);
+    setTimeout(() => { setStatus('Authenticating...'); setIsFlashing(false); }, 800);
+    setTimeout(() => { setStatus('Terminal Synchronized'); setIsFlashing(true); }, 1600);
+    setTimeout(() => { setStatus(null); setIsFlashing(false); }, 3000);
   };
 
   return (
     <div data-sentinel="laptop-terminal" className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
-        {status && (
-          <div className="text-xs font-mono text-neon-red animate-pulse uppercase">
-            {status}
-          </div>
-        )}
+        {status && <div className="text-[10px] font-mono text-neon-red animate-pulse uppercase">{status}</div>}
       </div>
       <button
         type="button"
@@ -74,8 +57,7 @@ export const Laptop: React.FC = () => {
         {/* Laptop Screen (Open) */}
         <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col pointer-events-none">
           <div className="h-1.5 bg-grey-dark border-b border-grey-medium flex items-center px-1 gap-0.5">
-            <div className="w-1 h-1 rounded-full bg-neon-red/40" />
-            <div className="w-1 h-1 rounded-full bg-neon-amber/40" />
+            <div className="w-1 h-1 rounded-full bg-neon-red/40" /><div className="w-1 h-1 rounded-full bg-neon-amber/40" />
           </div>
           <div
             aria-live="polite"
@@ -96,18 +78,9 @@ export const Laptop: React.FC = () => {
             )}
             <div className="mt-2 animate-pulse">_</div>
           </div>
-          {/* Screen Glare and Data Flash */}
-          <div className={`absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none transition-opacity duration-300 ${isFlashing ? 'bg-white/20 opacity-100' : ''}`} />
         </div>
-
-        {/* Laptop Base (Keyboard area) */}
-        <div className="absolute bottom-0 left-0 right-0 h-10 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm shadow-xl [transform:rotateX(45deg)] origin-top">
-          <div className="absolute inset-2 grid grid-cols-6 gap-0.5 opacity-20">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="bg-grey-medium h-1" />
-            ))}
-          </div>
-          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-8 h-4 border border-grey-medium/50 rounded-sm" />
+        <div className="absolute bottom-0 left-0 right-0 h-10 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm [transform:rotateX(45deg)] origin-top">
+          <div className="absolute inset-2 grid grid-cols-6 gap-0.5 opacity-20">{Array.from({ length: 12 }).map((_, i) => (<div key={i} className="bg-grey-medium h-1" />))}</div>
         </div>
 
         {/* Label hidden until focus/hover */}

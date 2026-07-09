@@ -3,14 +3,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
 
-const MESSAGES = [
-  'SYSTEM_SNAPSHOT_SAVED',
-  'CACHE_PURGED',
-  'STATE_LOADED',
-  'LOGS_ARCHIVED',
-  'MEMORY_SYNCHRONIZED',
-  'SESSION_RECONSTRUCTED'
-];
+const MESSAGES = ['SYSTEM_SNAPSHOT_SAVED', 'CACHE_PURGED', 'STATE_LOADED', 'LOGS_ARCHIVED', 'MEMORY_SYNCHRONIZED', 'SESSION_RECONSTRUCTED'];
 
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -18,7 +11,6 @@ export const CoffeeMug: React.FC = () => {
 
   const handleAction = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
     const randomMessage = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     setStatus(randomMessage);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
@@ -31,22 +23,14 @@ export const CoffeeMug: React.FC = () => {
     }, 2000);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
+  useEffect(() => { return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }; }, []);
 
   const isActive = status !== null;
 
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
-        {status && (
-          <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tighter">
-            {status}
-          </div>
-        )}
+        {status && <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tighter">{status}</div>}
       </div>
       <button
         type="button"
@@ -62,15 +46,10 @@ export const CoffeeMug: React.FC = () => {
           <div className={`w-0.5 h-6 animate-[bounce_1.5s_infinite] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-grey-medium/40'}`} />
           <div className={`w-0.5 h-3 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
         </div>
-
-        {/* Mug Body */}
         <div className={`absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm transition-colors duration-500 ${isActive ? 'shadow-[0_0_15px_rgba(255,191,0,0.2)]' : ''}`}>
            <div className="absolute top-0 left-0 w-full h-2 bg-obsidian border-b border-grey-medium" />
-           {/* Heat Glow */}
            <div className={`absolute inset-0 bg-neon-amber opacity-0 transition-opacity duration-500 ${isActive ? 'opacity-5' : ''}`} />
         </div>
-
-        {/* Mug Handle */}
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}

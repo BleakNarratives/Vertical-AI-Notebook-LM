@@ -49,8 +49,6 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
           <div className="absolute top-8 left-4 w-16 h-20 border-l border-t border-grey-medium" />
           <div className="absolute top-10 left-6 w-12 h-16 border-r border-b border-grey-medium rotate-3" />
         </div>
-
-        {/* Pin Cushion Effect (Easter Egg/Visual) */}
         <div className="absolute top-1/4 left-1/3 w-0.5 h-6 bg-neon-amber/40 rotate-45" />
         <div className="absolute top-1/2 left-2/3 w-0.5 h-8 bg-neon-red/40 -rotate-12" />
         <div className="absolute top-2/3 left-1/4 w-0.5 h-5 bg-white/20 rotate-[120deg]" />

@@ -39,7 +39,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className={`flex flex-col items-center justify-between h-full gap-8 p-8 py-16 transition-all duration-75 ${isGlitching || isBlacklisted ? 'animate-pulse bg-neon-red/30' : ''}`}>
+    <div className={`flex flex-col items-center justify-between h-full gap-4 p-4 py-8 transition-all duration-75 ${isGlitching || isBlacklisted ? 'animate-pulse bg-neon-red/30' : ''}`}>
       {isGlitching && (
         <div className="fixed inset-0 z-[200] pointer-events-none bg-white/5 mix-blend-overlay animate-glitch" />
       )}
@@ -107,8 +107,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="space-y-4 text-center z-10 flex-1 flex flex-col justify-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white uppercase">
+      <div className="space-y-2 text-center z-10 flex-1 flex flex-col justify-center">
+        <h1 className="text-2xl md:text-4xl font-bold tracking-tighter text-white uppercase">
           Vertical AI <br/>
           <span className="text-neon-red">Notebook LM</span>
         </h1>
