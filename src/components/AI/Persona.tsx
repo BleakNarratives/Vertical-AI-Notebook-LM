@@ -25,9 +25,9 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       <FocusIndicator color="red" />
 
       {/* Atmospheric Name Label */}
-      <h3 className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap transition-all duration-300 group-hover:tracking-[0.4em] group-focus-visible:tracking-[0.4em]">
+      <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap transition-all duration-300 group-enabled:group-hover:tracking-[0.4em] group-enabled:group-focus-visible:tracking-[0.4em]">
         {name}
-      </h3>
+      </span>
 
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
