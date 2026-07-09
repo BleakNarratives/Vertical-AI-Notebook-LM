@@ -151,6 +151,13 @@ export const useMoltAutomation = () => {
       attemptAutonomousImprovement(`Untrusted interaction: ${type}`);
     };
 
+    const handleVelocityAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const velocity = customEvent.detail?.velocity || 0;
+      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
+      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -158,6 +165,8 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-blacklist', handleBlacklist);
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
+      window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
+      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -165,6 +174,8 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
+        window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
+        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
