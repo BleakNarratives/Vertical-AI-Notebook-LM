@@ -324,8 +324,8 @@
  */
 
 export const MOLT_CONFIG = {
-  version: '3.2.0-forensic-enhanced',
+  version: '3.3.0-velocity-hardened',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown-Forensics',
+  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown-Forensics-V2',
   lastAudit: new Date().toISOString(),
 };

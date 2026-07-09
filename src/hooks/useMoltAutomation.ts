@@ -153,16 +153,9 @@ export const useMoltAutomation = () => {
 
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const delta = customEvent.detail?.delta || 0;
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity (${delta}ms) detected.`, 'HIGH');
-      attemptAutonomousImprovement(`Velocity anomaly: ${delta}ms`);
-    };
-
-    const handleEntropyAlert = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const { x, y } = customEvent.detail || {};
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Spatial precision anomaly detected at [${x}, ${y}].`, 'HIGH');
-      attemptAutonomousImprovement(`Behavioral entropy anomaly at ${x},${y}`);
+      const velocity = customEvent.detail?.velocity || 0;
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity detected (${velocity}ms). Possible automation.`, 'HIGH');
+      attemptAutonomousImprovement(`Velocity anomaly: ${velocity}ms`);
     };
 
     if (typeof window !== 'undefined') {
