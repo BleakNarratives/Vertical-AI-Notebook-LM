@@ -157,7 +157,7 @@ export const useSentinel = () => {
       /\.\.\//,             // Path traversal
       /\b__proto__\b/,      // Prototype pollution
       /\bconstructor\b/,    // Prototype pollution
-      /\{\{.*\}\}/,         // Template injection
+      /\{\{[\s\S]*?\}\}/,         // Template injection
       /etc\/passwd/,        // LFI target
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
