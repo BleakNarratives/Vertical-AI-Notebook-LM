@@ -337,6 +337,7 @@ export const useSentinel = () => {
     if (typeof window === 'undefined') return true;
     if (!e) return true;
 
+    const now = Date.now();
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification
