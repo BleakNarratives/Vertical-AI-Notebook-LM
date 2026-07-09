@@ -16,11 +16,14 @@ export const Whiteboard: React.FC = () => {
 
   const handleAction = () => {
     setStatus('ITERATION_LOOP_LOGGED');
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: 'WHITEBOARD', action: 'STRATEGY_LOG' }
+    }));
     setTimeout(() => setStatus(null), 2000);
   };
 
   return (
-    <div className="absolute top-12 -left-12 flex flex-col items-center gap-2">
+    <div className="absolute top-12 left-4 flex flex-col items-center gap-2">
       <div className="h-4 flex items-center justify-center" aria-live="polite">
         {status && <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase">{status}</div>}
       </div>
@@ -29,12 +32,13 @@ export const Whiteboard: React.FC = () => {
         onMouseMove={handleMouseMove}
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy)"
-        style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
+        style={{ transform: 'rotateX(-35deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu cursor-none"
       >
-        <FocusIndicator />
+        <FocusIndicator color="amber" />
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
-          <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
+          {/* Simulated Marker Tip (Delight) */}
+          <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover/whiteboard:opacity-100 group-focus-visible/whiteboard:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
                style={{ left: 'var(--x, 50%)', top: 'var(--y, 50%)', transform: 'translate(-50%, -50%)' }} />
           <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none stroke-neon-red" viewBox="0 0 100 150" fill="none">
             <path d="M50,30 Q80,30 80,60 Q80,90 50,90 Q20,90 20,60 Q20,30 50,30 Z" strokeWidth="0.5" />
@@ -48,6 +52,7 @@ export const Whiteboard: React.FC = () => {
         <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Whiteboard
         </span>
+        <FocusIndicator color="neon-amber" />
       </button>
     </div>
   );
