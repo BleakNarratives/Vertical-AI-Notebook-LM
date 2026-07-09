@@ -29,3 +29,7 @@
 ## 2025-05-21 - [Unified Focus Mechanics for 3D Props]
 **Learning:** In complex 3D boardroom layouts where interactive props (like Paper stacks) have multiple sub-elements or absolute labels, using `group-focus-visible` can cause visual flickering or state loss if focus moves between internal parts. `group-focus-within` provides a more stable experience, ensuring focus indicators and labels remain active during nested interactions.
 **Action:** Use `group-focus-within` for visual indicators on complex multi-element props to ensure stability during deep navigation.
+
+## 2025-05-22 - [Deep Boardroom Spacing]
+**Learning:** Steepening the boardroom perspective (e.g., from 20deg to 35deg) creates a more immersive "long table" feel but significantly compresses the perceived vertical space between elements in the Z-axis. Proportional increases to vertical spacing (e.g., moving from `gap-16` to `gap-24`) are required to prevent absolute-positioned labels from colliding with counter-rotated 3D props.
+**Action:** Always test vertical spacing and label positioning after adjusting base perspective angles to maintain visual clarity and accessibility.
