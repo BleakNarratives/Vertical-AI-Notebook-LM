@@ -22,7 +22,7 @@ export const Whiteboard: React.FC = () => {
   const handleAction = () => {
     setStatus('ITERATION_LOOP_LOGGED');
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
-      detail: { source: 'WHITEBOARD', action: 'STRATEGY_LOG', timestamp: new Date().toLocaleTimeString() }
+      detail: { source: 'WHITEBOARD', action: 'STRATEGY_LOG' }
     }));
     setTimeout(() => setStatus(null), 2000);
   };
