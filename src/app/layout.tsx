@@ -33,7 +33,7 @@ export default function RootLayout({
         {/* Obelisk Center Layout */}
         <header className="h-16 border-b border-grey-dark flex items-center px-8 bg-obsidian/80 backdrop-blur-md sticky top-0 z-50">
           <div className="text-neon-red font-mono text-lg tracking-[0.3em] font-bold">
-            CODE CITY // <span className="text-grey-medium">v0.1.0</span>
+            CODE CITY {"//"} <span className="text-grey-medium">v0.1.0</span>
           </div>
           <div className="ml-auto flex gap-4">
              <div className="h-2 w-2 rounded-full bg-neon-amber animate-pulse" />
@@ -41,12 +41,12 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:1000px] overflow-hidden">
+        <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col items-center justify-center p-4 [perspective:2000px] overflow-hidden">
           {/* Floor/Table Shadow */}
           <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent opacity-60 pointer-events-none" />
 
           {/* Central Obelisk container - with Boardroom Perspective */}
-          <div className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
+          <div className="w-full max-w-5xl min-h-[85vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
              <PerspectiveWrapper>
                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
 

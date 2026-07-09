@@ -11,22 +11,31 @@ interface PaperProps {
   isActive?: boolean;
   labelPosition?: 'top' | 'bottom';
   onClick?: () => void;
+  labelPosition?: 'top' | 'bottom';
 }
 
-const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translateY = '0px', isActive, labelPosition = 'top', onClick }) => {
+const Paper: React.FC<PaperProps> = ({
+  label,
+  title,
+  rotation = '0deg',
+  translateY = '0px',
+  isActive,
+  onClick,
+  labelPosition = 'top'
+}) => {
   return (
     <button
       type="button"
       aria-label={label}
       onClick={onClick}
       style={{
-        transform: `rotateX(-20deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-8px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
+        transform: `rotateX(-35deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
       }}
-      className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_25px_rgba(255,191,0,0.4)]' : 'border-grey-medium'}`}
+      className={`group relative w-12 h-16 bg-white/5 border transition-all hover:rotate-0 hover:translate-y-0 hover:scale-110 active:translate-y-1 hover:bg-white/10 shadow-lg outline-none transform-gpu ${isActive ? 'border-neon-amber shadow-[0_0_15px_rgba(255,191,0,0.2)]' : 'border-grey-medium'}`}
     >
-      <FocusIndicator color="neon-amber" />
+      <FocusIndicator color="amber" />
       {/* Paper Content Simulation */}
-      <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity">
+      <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover/paper:opacity-40 group-focus-visible/paper:opacity-40 transition-opacity">
         <div className="h-0.5 w-full bg-grey-medium" />
         <div className="h-0.5 w-3/4 bg-grey-medium" />
         <div className="h-0.5 w-full bg-grey-medium" />
@@ -34,19 +43,21 @@ const Paper: React.FC<PaperProps> = ({ label, title, rotation = '0deg', translat
         <div className="h-0.5 w-full bg-grey-medium" />
         <div className="h-0.5 w-full bg-grey-medium" />
       </div>
-
-      {/* Stack effect shadow */}
       <div className="absolute -bottom-1 -right-1 w-full h-full border-r border-b border-grey-dark/50 -z-10" />
 
       {/* Label on hover/focus */}
-      <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap`}>
+      <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap z-50`}>
         {title}
       </span>
+
+      <FocusIndicator color="amber" />
     </button>
   );
 };
 
 type ContextType = 'higgins' | 'pytch' | 'twoie' | 'zeroclaw' | 'user';
+interface PapersProps { context?: ContextType; labelPosition?: 'top' | 'bottom'; }
+interface DocInfo { title: string; snippet: string; }
 
 interface PapersProps {
   context?: ContextType;
@@ -63,23 +74,38 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> 
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition = 'top' }) => {
   const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
   const data = CONTEXT_DATA[context];
+
+  // Default labelPosition based on context if not provided
+  const resolvedLabelPosition = labelPosition || (context === 'user' ? 'top' : 'bottom');
 
   const handleView = (title: string) => {
     setActiveTitle(title);
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title }
+    }));
     setTimeout(() => setActiveTitle(null), 2000);
   };
 
+  const labelClass = labelPosition === 'top' ? '-top-8' : '-bottom-8';
+
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center" aria-live="polite">
+      <div className={`h-4 flex items-center justify-center ${labelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
         {activeTitle && (
-          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase">
+          <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
             Viewing {activeTitle}...
           </div>
         )}
       </div>
-      <div className="group relative flex items-end justify-center w-24 h-24 mb-4">
+      <div className="group/papers relative flex items-end justify-center w-24 h-24">
         {/* Paper 1: Bottom Left */}
         <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover:-translate-x-8 group-focus-within:-translate-x-8 group-hover:-rotate-12 group-focus-within:-rotate-12">
           <Paper
@@ -89,6 +115,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             isActive={activeTitle === data.p1}
             labelPosition={labelPosition}
             onClick={() => handleView(data.p1)}
+            labelPosition={labelPosition}
           />
         </div>
 
@@ -101,6 +128,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             isActive={activeTitle === data.p3}
             labelPosition={labelPosition}
             onClick={() => handleView(data.p3)}
+            labelPosition={labelPosition}
           />
         </div>
 
@@ -113,6 +141,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             isActive={activeTitle === data.p2}
             labelPosition={labelPosition}
             onClick={() => handleView(data.p2)}
+            labelPosition={labelPosition}
           />
         </div>
       </div>
