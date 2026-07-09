@@ -160,9 +160,9 @@ export const useMoltAutomation = () => {
 
     const handleEntropyAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const { x, y } = customEvent.detail || { x: 0, y: 0 };
-      logSecurityEvent(`AUTONOMOUS_DEFENSE: Low entropy interaction (${x},${y}) detected.`, 'HIGH');
-      attemptAutonomousImprovement(`Entropy anomaly: ${x},${y}`);
+      const { x, y } = customEvent.detail || {};
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Spatial precision anomaly detected at [${x}, ${y}].`, 'HIGH');
+      attemptAutonomousImprovement(`Behavioral entropy anomaly at ${x},${y}`);
     };
 
     if (typeof window !== 'undefined') {
