@@ -66,7 +66,7 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="higgins" />
+            <Papers context="higgins" labelPosition="bottom" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-16">
@@ -78,7 +78,7 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="pytch" />
+            <Papers context="pytch" labelPosition="bottom" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-16">
@@ -90,7 +90,7 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="twoie" />
+            <Papers context="twoie" labelPosition="bottom" />
           </div>
         </div>
         <div className="flex flex-col items-center gap-16">
@@ -102,7 +102,7 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="zeroclaw" />
+            <Papers context="zeroclaw" labelPosition="bottom" />
           </div>
         </div>
       </div>

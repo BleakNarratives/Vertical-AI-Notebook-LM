@@ -10,6 +10,10 @@
 **Learning:** Applying a perspective transform (like `rotateX(20deg)`) to a container tilts all children. To make interactive props appear "upright" on a 3D surface without breaking Tailwind 4's independent transform utilities (like `hover:scale`), use the `style` attribute to apply a counter-rotation (e.g., `rotateX(-20deg)`).
 **Action:** Use `style={{ transform: 'rotateX(-20deg)' }}` for perspective-countering transforms to avoid clobbering Tailwind's utility-based transforms.
 
+## 2025-05-22 - [Unified Focus Feedback]
+**Learning:** In a complex 3D boardroom environment, disparate focus styles create visual clutter and confuse keyboard users. A unified `FocusIndicator` using corner brackets (targeting `-inset-3`) provides a consistent "high-tech" feel while avoiding clipping issues when parent containers are properly configured (removing `overflow-hidden` where absolute labels/indicators are used).
+**Action:** Use the `FocusIndicator` component for all interactive boardroom props and ensure parent buttons do not use `overflow-hidden`.
+
 ## 2025-05-17 - [Immersive Grid & Accessibility]
 **Learning:** Reinforcing 3D perspective with a digital grid requires a fade-out mask (`mask-image`) to prevent visual noise at the "horizon" and maintain focus on interactive elements. Additionally, immersive UI labels should not sacrifice legibility; `text-xs` (12px) should be the minimum target even for "atmospheric" text.
 **Action:** Always apply linear-gradient masks to background grids and prefer `text-xs` over smaller custom sizes for accessibility.
@@ -26,6 +30,10 @@
 **Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
 
-## 2025-05-21 - [Tailwind Group Scoping & FocusIndicators]
-**Learning:** Generic `group-*` utility classes (e.g., `group-hover:opacity-100`) require the immediate interactive parent to use the standard `group` class. Named Tailwind groups (e.g., `group/laptop`) on the parent will block these generic selectors from triggering. To avoid global atmospheric hover/focus collisions in a complex 3D environment, outer wrappers should use named groups (e.g., `group/perspective`), while individual interactive props must retain the generic `group` class for internal indicators.
-**Action:** Always use the standard `group` class on interactive components that contain sub-elements like `FocusIndicator`. Reserve named groups for container-level atmospheric effects.
+## 2025-05-21 - [Unified Focus Mechanics for 3D Props]
+**Learning:** In complex 3D boardroom layouts where interactive props (like Paper stacks) have multiple sub-elements or absolute labels, using `group-focus-visible` can cause visual flickering or state loss if focus moves between internal parts. `group-focus-within` provides a more stable experience, ensuring focus indicators and labels remain active during nested interactions.
+**Action:** Use `group-focus-within` for visual indicators on complex multi-element props to ensure stability during deep navigation.
+
+## 2025-05-22 - [Synchronized Environmental Feedback]
+**Learning:** In an immersive UI with multiple disconnected interactive props, users can lose the sense of "system connectivity." Bridging these elements with a central feedback hub (like the Laptop terminal) using custom events provides a powerful micro-UX win that reinforces the narrative without complex state management.
+**Action:** Use a "Central Hub" pattern for environmental feedback; dispatch timestamped events from peripheral props to update a global log or terminal for a cohesive "connected" feel.
