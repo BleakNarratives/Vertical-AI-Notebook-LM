@@ -7,7 +7,7 @@ import React, { useCallback, useRef } from 'react';
  * Provides defensive utilities and security event logging.
  */
 export const useSentinel = () => {
-  const lastInteractionRef = useRef<number>(0);
+  const lastInteractionRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
