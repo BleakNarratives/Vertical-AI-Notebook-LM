@@ -9,6 +9,7 @@ interface PaperProps {
   rotation?: string;
   translateY?: string;
   isActive?: boolean;
+  labelPosition?: 'top' | 'bottom';
   onClick?: () => void;
   labelPosition?: 'top' | 'bottom';
 }
@@ -74,6 +75,13 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> 
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition = 'top' }) => {
   const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
   const data = CONTEXT_DATA[context];
 
   const handleView = (title: string) => {
@@ -88,7 +96,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="h-4 flex items-center justify-center" aria-live="polite">
+      <div className={`h-4 flex items-center justify-center ${labelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
         {activeTitle && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
             Viewing {activeTitle}...
@@ -103,6 +111,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             title={data.p1}
             rotation="-2deg"
             isActive={activeTitle === data.p1}
+            labelPosition={labelPosition}
             onClick={() => handleView(data.p1)}
             labelPosition={labelPosition}
           />
@@ -115,6 +124,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             title={data.p3}
             rotation="4deg"
             isActive={activeTitle === data.p3}
+            labelPosition={labelPosition}
             onClick={() => handleView(data.p3)}
             labelPosition={labelPosition}
           />
@@ -127,6 +137,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             title={data.p2}
             rotation="1deg"
             isActive={activeTitle === data.p2}
+            labelPosition={labelPosition}
             onClick={() => handleView(data.p2)}
             labelPosition={labelPosition}
           />
