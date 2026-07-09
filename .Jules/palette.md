@@ -29,3 +29,7 @@
 ## 2025-05-21 - [Unified Focus Mechanics for 3D Props]
 **Learning:** In complex 3D boardroom layouts where interactive props (like Paper stacks) have multiple sub-elements or absolute labels, using `group-focus-visible` can cause visual flickering or state loss if focus moves between internal parts. `group-focus-within` provides a more stable experience, ensuring focus indicators and labels remain active during nested interactions.
 **Action:** Use `group-focus-within` for visual indicators on complex multi-element props to ensure stability during deep navigation.
+
+## 2025-05-22 - [Synchronized Environmental Feedback]
+**Learning:** In an immersive UI with multiple disconnected interactive props, users can lose the sense of "system connectivity." Bridging these elements with a central feedback hub (like the Laptop terminal) using custom events provides a powerful micro-UX win that reinforces the narrative without complex state management.
+**Action:** Use a "Central Hub" pattern for environmental feedback; dispatch timestamped events from peripheral props to update a global log or terminal for a cohesive "connected" feel.
