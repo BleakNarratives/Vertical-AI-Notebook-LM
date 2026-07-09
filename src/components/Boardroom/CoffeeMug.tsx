@@ -22,7 +22,7 @@ export const CoffeeMug: React.FC = () => {
     const randomMessage = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     setStatus(randomMessage);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
-      detail: { source: 'COFFEE_MUG', action: 'SNAPSHOT', payload: randomMessage, timestamp: new Date().toLocaleTimeString() }
+      detail: { source: 'COFFEE_MUG', action: 'SNAPSHOT', payload: randomMessage }
     }));
 
     timeoutRef.current = setTimeout(() => {
