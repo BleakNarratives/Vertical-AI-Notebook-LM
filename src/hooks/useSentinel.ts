@@ -332,6 +332,7 @@ export const useSentinel = () => {
   }, [logSecurityEvent]);
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
+    if (typeof window === 'undefined') return true;
     if (!e) return true;
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
@@ -339,12 +340,25 @@ export const useSentinel = () => {
     // 1. Trust Verification
     if (nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
-          detail: { type: e.type, timestamp: new Date().toISOString() }
-        }));
-      }
+      window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
+        detail: { type: e.type, timestamp: new Date().toISOString() }
+      }));
       return false;
+    }
+
+    // Second check: velocity profiling (automation speed)
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const delta = now - lastInteractionRef.current;
+      lastInteractionRef.current = now;
+
+      if (delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: now }
+        }));
+        return false;
+      }
     }
 
     // 2. Velocity Profiling (Behavioral Analysis)
