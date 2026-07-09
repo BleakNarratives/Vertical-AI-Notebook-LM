@@ -313,6 +313,18 @@
  * - Sentinel should be trained to ignore these internal entropy pulses while remaining vigilant for external anomalies.
  * - Add "Visual Entropy": subtle, flickering pixels in the boardroom that correlate with the system's current entropy level.
  *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Implement "Velocity Visualizer": a subtle, flickering bar in the `Laptop` terminal that shows the calculated ms between the last two clicks.
+ * - Add "Temporal Jitter": if velocity alerts are frequent, apply a slight, randomized delay (10-50ms) to all UI state updates to disrupt automated sync.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Enhance `verifyInteraction` to analyze mouse movement paths. Log `MEDIUM` alerts for perfectly linear paths (indicative of basic scripts).
+ * - Implement "Entropy Verification": occasionally require a non-standard interaction (e.g., "click and hold for 0.5s") to unlock a sensitive persona like Zeroclaw.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand `storeShadowLog` to capture a "Forensic Snapshot" of the DOM state at the time of a `CRITICAL` violation.
+ * - Molt should attempt to "de-obfuscate" forensic payloads recorded in `sentinel_shadow_logs` and display them in the `SecurityOverlay` during reconstruction.
+ *
  * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
  * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
  * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
