@@ -27,7 +27,6 @@ const Paper: React.FC<PaperProps> = ({
     <button
       type="button"
       aria-label={label}
-      title={title}
       onClick={onClick}
       style={{
         transform: `rotateX(-35deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
@@ -83,6 +82,9 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     };
   }, []);
   const data = CONTEXT_DATA[context];
+
+  // Default labelPosition based on context if not provided
+  const resolvedLabelPosition = labelPosition || (context === 'user' ? 'top' : 'bottom');
 
   const handleView = (title: string) => {
     setActiveTitle(title);
