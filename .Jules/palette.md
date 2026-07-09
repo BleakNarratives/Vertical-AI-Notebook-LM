@@ -17,7 +17,15 @@
 **Learning:** Reinforcing 3D perspective with a digital grid requires a fade-out mask (`mask-image`) to prevent visual noise at the "horizon" and maintain focus on interactive elements. Additionally, immersive UI labels should not sacrifice legibility; `text-xs` (12px) should be the minimum target even for "atmospheric" text.
 **Action:** Always apply linear-gradient masks to background grids and prefer `text-xs` over smaller custom sizes for accessibility.
 
-## 2025-05-18 - [Unifying Immersive Interaction States]
+## 2025-05-18 - [Standardizing Interactive Boundary Space]
+**Learning:** Interactive boardroom components must not use `overflow-hidden` on their root elements if they utilize absolute-positioned focus indicators (like corner brackets at `-inset-3`) or atmospheric labels. These elements require the "bleeding" space outside the component's strict bounding box to remain visible.
+**Action:** Remove `overflow-hidden` from interactive prop containers and instead apply it to internal content wrappers to preserve atmospheric UI elements.
+
+## 2025-05-19 - [Vertical Spacing for Atmospheric Labels]
+**Learning:** Introducing persistent absolute-positioned labels (e.g., at `-top-8` or `-bottom-8`) significantly increases the effective height of components. Standard layout gaps (like `gap-8`) are insufficient and lead to label collisions. Standardizing on `gap-16` and `mb-20` provides the necessary clearance for these immersive identifiers.
+**Action:** Use `gap-16` or higher for stacks containing absolute atmospheric labels to prevent vertical overlap and maintain legibility.
+
+## 2025-05-20 - [Unifying Immersive Interaction States]
 **Learning:** In immersive 3D UIs, users expect consistent tactile feedback regardless of input method. Relying solely on `hover` for delightful animations (scaling, glitch effects, label visibility) excludes keyboard users and creates a disjointed experience. Unifying `hover` and `focus-visible` ensures the "magic" of the environment is accessible to everyone.
 **Action:** Always pair `hover:` with `focus-visible:` for all delightful transitions, scaling, and state-revealing effects. Wrap ephemeral status messages in fixed-height containers to prevent layout shifts during interaction cycles.
 

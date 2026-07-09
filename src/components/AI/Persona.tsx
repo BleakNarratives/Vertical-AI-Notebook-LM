@@ -57,10 +57,13 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       </div>
 
       <div className="text-center">
-        <p className="text-xs font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors tracking-widest">{role}</p>
+        <p className="text-xs font-mono text-white/40 group-hover:text-white/80 group-focus-visible:text-white/80 uppercase transition-colors">{role}</p>
       </div>
-
-      <FocusIndicator color="red" />
+      {/* Persistent Atmospheric Name Label */}
+      <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap">
+        {name}
+      </span>
+      <FocusIndicator color="neon-red" />
     </button>
   );
 };

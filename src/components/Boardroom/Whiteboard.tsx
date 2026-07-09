@@ -72,11 +72,6 @@ export const Whiteboard: React.FC = () => {
         <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
           Whiteboard
         </span>
-        <FocusIndicator theme="amber" />
-        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
-          Whiteboard
-        </span>
-
         <FocusIndicator color="neon-amber" />
       </button>
     </div>
