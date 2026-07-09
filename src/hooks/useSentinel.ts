@@ -366,6 +366,7 @@ export const useSentinel = () => {
 
         if (violations >= 3) {
           logSecurityEvent(`CRITICAL: Sustained velocity anomaly detected (${violations}x). Blocking interaction.`, 'CRITICAL');
+          lastInteractionRef.current[e.type] = now;
           return false;
         }
 
