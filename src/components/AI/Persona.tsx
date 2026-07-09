@@ -26,7 +26,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
 
       {/* Persistent Name Label */}
       <div className="absolute -top-8 left-1/2 -translate-x-1/2">
-        <h3 className="text-[10px] font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap">{name}</h3>
+        <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap">{name}</h3>
       </div>
 
       <div className={`
