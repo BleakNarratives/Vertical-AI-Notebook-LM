@@ -15,7 +15,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) onClick(e);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
-      detail: { source: name, action: 'CONSULT', timestamp: new Date().toLocaleTimeString() }
+      detail: { source: name, action: 'CONSULT' }
     }));
   };
 
