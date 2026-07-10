@@ -155,9 +155,46 @@ export const useMoltAutomation = () => {
 
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const velocity = customEvent.detail?.velocity || 0;
-      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
-      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+      const delta = customEvent.detail?.delta || 0;
+
+      console.log(`[🛡️ SENTINEL] Velocity alert received. Delta: ${delta}ms`);
+
+      // Implement adaptive throttling: increase threshold on frequent violations
+      const storageKey = 'sentinel_velocity_violations';
+      const stored = secureGet(storageKey);
+      let violations = 0;
+      try {
+        if (stored) violations = parseInt(stored, 10);
+      } catch { violations = 0; }
+
+      violations += 1;
+      secureStore(storageKey, violations.toString());
+
+      if (violations >= 5) {
+        // Increase threshold by 25ms increments, capped at 250ms
+        const thresholdKey = 'sentinel_velocity_threshold';
+        const currentThresholdStr = secureGet(thresholdKey);
+        let currentThreshold = 50;
+        if (currentThresholdStr) {
+          try {
+            currentThreshold = parseInt(currentThresholdStr, 10);
+          } catch { currentThreshold = 50; }
+        }
+
+        const newThreshold = Math.min(currentThreshold + 25, 250);
+        secureStore(thresholdKey, newThreshold.toString());
+        secureStore(storageKey, '0'); // Reset violation counter after adjustment
+
+        logSecurityEvent(`ADAPTIVE_THROTTLING: Velocity threshold increased to ${newThreshold}ms due to repeated violations.`, 'HIGH');
+        attemptAutonomousImprovement('Velocity anomaly detected. Increasing interaction threshold.');
+      }
+    };
+
+    const handleEntropyAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { x, y } = customEvent.detail || {};
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Low entropy interaction at (${x}, ${y})`, 'HIGH');
+      attemptAutonomousImprovement('Low behavioral entropy detected.');
     };
 
     if (typeof window !== 'undefined') {
@@ -168,6 +205,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
+      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);

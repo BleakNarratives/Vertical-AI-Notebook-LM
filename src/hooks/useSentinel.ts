@@ -9,6 +9,7 @@ import React, { useCallback, useRef } from 'react';
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
+  const velocityViolationsRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -334,18 +335,9 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
-  const lastInteractionRef = useRef<Record<string, number>>({});
-
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
-    if (typeof window === 'undefined') return true;
-    if (!e) return true;
-    if (typeof window === 'undefined') return true;
+    if (typeof window === 'undefined' || !e) return true;
 
-    const now = Date.now();
-    const win = window as unknown as { _sentinel_last_interaction?: number };
-    const lastInteraction = win._sentinel_last_interaction || 0;
-
-    const now = Date.now();
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification
@@ -357,44 +349,45 @@ export const useSentinel = () => {
       return false;
     }
 
-    // Second check: velocity profiling (automation speed)
-    if (e.type === 'click' || e.type === 'mousedown') {
-      const now = Date.now();
-      const delta = now - lastInteractionRef.current;
-      lastInteractionRef.current = now;
-
-      if (delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-          detail: { delta, type: e.type, timestamp: now }
-        }));
-        return false;
-      }
-    }
-
     // 2. Velocity Profiling (Behavioral Analysis)
     if (e.type === 'click' || e.type === 'mousedown') {
       const now = Date.now();
       const lastTime = lastInteractionRef.current[e.type] || 0;
       const delta = now - lastTime;
 
-      // Detection of sub-human interaction speeds (< 50ms)
-      if (lastTime !== 0 && delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-            detail: { delta, type: e.type, timestamp: now }
-          }));
-        }
+      // Get dynamic threshold from storage, default to 50ms
+      let threshold = 50;
+      const storedThreshold = secureGet('sentinel_velocity_threshold');
+      if (storedThreshold) {
+        const parsed = parseInt(storedThreshold, 10);
+        if (!isNaN(parsed)) threshold = parsed;
       }
+
+      // Detection of sub-human interaction speeds
+      if (lastTime !== 0 && delta >= 0 && delta < threshold) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (Threshold: ${threshold}ms)`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: now }
+        }));
+
+        // Track consecutive violations to reset velocityViolationsRef only after human-like pauses
+        velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
+
+        if (velocityViolationsRef.current[e.type] >= 3) {
+          logSecurityEvent(`CRITICAL: Sustained sub-human velocity for ${e.type}. Interaction blocked.`, 'CRITICAL');
+          return false;
+        }
+      } else if (delta > 500) {
+        // Human-like pause resets the violation counter
+        velocityViolationsRef.current[e.type] = 0;
+      }
+
       lastInteractionRef.current[e.type] = now;
     }
 
     // 3. Entropy Analysis (Spatial Variance)
-    if (e.type === 'click' && 'clientX' in nativeEvent && 'clientY' in nativeEvent) {
-      const mouseEvent = nativeEvent as MouseEvent;
-      const x = mouseEvent.clientX;
-      const y = mouseEvent.clientY;
+    if (e.type === 'click' && nativeEvent instanceof MouseEvent) {
+      const { clientX: x, clientY: y } = nativeEvent;
       const coords = lastCoordinatesRef.current;
 
       // Exact spatial repetition in sequence (3x) is a high-confidence bot signal
@@ -405,16 +398,15 @@ export const useSentinel = () => {
 
       if (isRobotic) {
         logSecurityEvent(`Low behavioral entropy detected: Spatial precision anomaly`, 'HIGH');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
-            detail: { x, y, timestamp: Date.now() }
-          }));
-        }
+        window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+          detail: { x, y, timestamp: Date.now() }
+        }));
+        return false;
       }
     }
 
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet]);
 
   return {
     logSecurityEvent,

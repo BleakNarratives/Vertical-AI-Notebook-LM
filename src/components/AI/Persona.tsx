@@ -51,6 +51,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
         </div>
         <div className="absolute top-1/4 left-1/3 w-0.5 h-6 bg-neon-amber/40 rotate-45" />
         <div className="absolute top-1/2 left-2/3 w-0.5 h-8 bg-neon-red/40 -rotate-12" />
+      </div>
       <div className="text-center mt-2">
         <p className="text-xs font-mono text-white/40 uppercase transition-colors">{role}</p>
         <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em] mt-1">{name}</h3>

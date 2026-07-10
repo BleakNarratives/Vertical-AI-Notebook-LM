@@ -370,15 +370,20 @@
  * - If the velocity falls below 50ms, trigger a `sentinel-velocity-alert` and initiate localized UI throttling.
  * - Log `HIGH` severity events for every sub-human interaction velocity detected.
  *
- * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION - [PARTIAL]
  * - Develop a heuristic model for human-like interaction patterns, including acceleration and jitter.
  * - Compare incoming events against this model and flag "perfect" or "linear" interactions as highly suspicious.
- * - Update `verifyInteraction` to utilize these heuristics for a more robust interaction trust score.
+ * - Update `verifyInteraction` to utilize these heuristics for a more robust interaction trust score. [DONE: Adaptive Throttling implemented]
  *
  * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
  * - Expand the `Shadow Logs` to include the raw event payload and state metadata for every blocked interaction.
  * - Implement an autonomous Molt cycle that attempts to reconstruct the "shadow sequence" from these logs.
  * - Use the reconstruction to automatically update the `maliciousPatterns` regex suite in `useSentinel`.
+ *
+ * CYCLE 57: ADAPTIVE VELOCITY DECAY & JITTER RESISTANCE
+ * - Implement a decay function for the `sentinel_velocity_threshold`: the threshold should gradually return to 50ms (by 5ms every 30s of human-like interaction).
+ * - Enhance the velocity detection to identify "Jitter Resistance": if interactions have a randomized jitter that is too small (e.g. < 5ms variance), flag it as an advanced bot.
+ * - Log `MEDIUM` alerts for "Threshold Recovery" when the velocity threshold decreases.
  */
 
 export const MOLT_CONFIG = {
