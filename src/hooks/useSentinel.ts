@@ -332,6 +332,7 @@ export const useSentinel = () => {
       const win = window as unknown as { _sentinel_last_interaction: number };
       const lastInteraction = win._sentinel_last_interaction || 0;
       const velocity = now - lastInteraction;
+      win._sentinel_last_interaction = now;
 
       if (lastInteraction > 0 && velocity < VELOCITY_THRESHOLD) {
         logSecurityEvent(`Sub-human interaction velocity detected: ${velocity}ms`, 'HIGH');
@@ -340,7 +341,6 @@ export const useSentinel = () => {
         }));
         return false;
       }
-      win._sentinel_last_interaction = now;
     }
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
