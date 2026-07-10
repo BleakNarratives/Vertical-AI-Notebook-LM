@@ -5,6 +5,15 @@ import { FocusIndicator } from './FocusIndicator';
 
 const MESSAGES = ['SYSTEM_SNAPSHOT_SAVED', 'CACHE_PURGED', 'STATE_LOADED', 'LOGS_ARCHIVED', 'MEMORY_SYNCHRONIZED', 'SESSION_RECONSTRUCTED'];
 
+const STATUS_MESSAGES = [
+  'SYSTEM_SNAPSHOT_SAVED',
+  'CACHE_PURGED',
+  'STATE_LOADED',
+  'LOGS_ARCHIVED',
+  'MEMORY_SYNCHRONIZED',
+  'SESSION_RECONSTRUCTED',
+];
+
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
