@@ -50,14 +50,12 @@ export const useMoltAutomation = () => {
   }, [checkBlacklist, secureGet, secureRemove]);
 
   const triggerLockdown = useCallback(() => {
-    if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
-    // Log as MEDIUM to avoid triggering a new high-severity alert loop
-    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [isLockdown, logSecurityEvent, secureStore]);
+  }, [logSecurityEvent, secureStore]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -156,8 +154,8 @@ export const useMoltAutomation = () => {
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
       const velocity = customEvent.detail?.velocity || 0;
-      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
-      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Sub-human velocity detected (${velocity}ms). Possible automation.`, 'HIGH');
+      attemptAutonomousImprovement(`Velocity violation: ${velocity}ms`);
     };
 
     if (typeof window !== 'undefined') {
@@ -176,7 +174,6 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
         window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
-        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);

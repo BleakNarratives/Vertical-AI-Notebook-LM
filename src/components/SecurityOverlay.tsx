@@ -26,9 +26,13 @@ export const SecurityOverlay: React.FC = () => {
   if (!alert) return null;
 
   return (
-    <div data-sentinel="security-overlay" className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
+    <div data-sentinel="security-overlay" className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none overflow-hidden">
+      {/* Voodoo Glitch Layer */}
+      <div className="absolute inset-0 bg-neon-red/10 animate-glitch mix-blend-overlay opacity-30" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none" />
+
       <div className="absolute inset-0 bg-neon-red/20 animate-pulse" />
-      <div className="relative p-6 border-2 border-neon-red bg-obsidian shadow-[0_0_30px_rgba(255,0,0,0.4)] max-w-sm w-full font-mono animate-in zoom-in duration-300">
+      <div className="relative p-6 border-2 border-neon-red bg-obsidian shadow-[0_0_30px_rgba(255,0,0,0.4)] max-w-sm w-full font-mono animate-in zoom-in duration-300 animate-glitch">
         <div className="flex items-center gap-3 mb-3 border-b border-neon-red/30 pb-2">
           <div className="w-8 h-8 bg-neon-red text-obsidian flex items-center justify-center font-bold">!</div>
           <h2 className="text-neon-red text-sm font-bold uppercase tracking-tighter">BREACH DETECTED</h2>
