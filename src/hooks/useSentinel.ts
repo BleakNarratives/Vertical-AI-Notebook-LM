@@ -174,7 +174,7 @@ export const useSentinel = () => {
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection operators
-      /\{\{.*\}\}/          // Template injection
+      /\{\{[\s\S]*\}\}/          // Template injection
     ];
 
     for (const pattern of maliciousPatterns) {
