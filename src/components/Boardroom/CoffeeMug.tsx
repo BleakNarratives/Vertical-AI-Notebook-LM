@@ -47,7 +47,8 @@ export const CoffeeMug: React.FC = () => {
         </div>
 
         {/* Mug Body */}
-        <div className={`absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm transition-shadow duration-500 ${isActive ? 'shadow-[0_0_15px_rgba(255,191,0,0.5)]' : ''}`}>
+        <div className={`absolute inset-0 bg-grey-dark border-x border-b border-grey-medium rounded-b-sm transition-shadow duration-500 ${isActive ? 'shadow-[0_0_15px_theme(colors.neon-amber/50%)]' : ''}`}>
+
            <div className="absolute top-0 left-0 w-full h-2 bg-obsidian border-b border-grey-medium" />
         </div>
 
