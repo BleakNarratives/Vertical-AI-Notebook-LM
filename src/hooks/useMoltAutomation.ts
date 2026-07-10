@@ -50,12 +50,14 @@ export const useMoltAutomation = () => {
   }, [checkBlacklist, secureGet, secureRemove]);
 
   const triggerLockdown = useCallback(() => {
+    if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
-    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    // Log as MEDIUM to avoid triggering a new high-severity alert loop
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [logSecurityEvent, secureStore]);
+  }, [isLockdown, logSecurityEvent, secureStore]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -151,6 +153,13 @@ export const useMoltAutomation = () => {
       attemptAutonomousImprovement(`Untrusted interaction: ${type}`);
     };
 
+    const handleVelocityAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const velocity = customEvent.detail?.velocity || 0;
+      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
+      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -158,6 +167,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-blacklist', handleBlacklist);
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
+      window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -165,6 +175,8 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
         window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
+        window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
+        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
