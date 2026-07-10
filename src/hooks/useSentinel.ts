@@ -337,15 +337,15 @@ export const useSentinel = () => {
       const now = Date.now();
       const lastInteraction = (window as unknown as { _sentinel_last_interaction?: number })._sentinel_last_interaction || 0;
       const velocity = now - lastInteraction;
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
 
       if (lastInteraction !== 0 && velocity < 50) {
-        logSecurityEvent(`High velocity interaction detected (${velocity}ms)`, 'HIGH');
+        logSecurityEvent('High velocity interaction detected (' + velocity + 'ms)', 'HIGH');
         window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
           detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
         }));
         return false;
       }
-      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
     }
 
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
