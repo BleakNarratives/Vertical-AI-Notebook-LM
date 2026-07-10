@@ -1,12 +1,15 @@
 'use client';
 
-import { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
  */
 export const useSentinel = () => {
+  const lastInteractionRef = useRef<Record<string, number>>({});
+  const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
+
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
     console.warn(`[🛡️ SENTINEL][${severity}][${timestamp}] ${event}`);
@@ -77,6 +80,16 @@ export const useSentinel = () => {
     return localVal;
   }, [generateSignature, logSecurityEvent]);
 
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
+    }
+  }, [logSecurityEvent]);
+
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
     // Advanced defense against XSS and injection
@@ -91,12 +104,26 @@ export const useSentinel = () => {
       .replace(/=/g, '&#x3D;');
   }, []);
 
+  const recursiveDecode = useCallback((input: string): string => {
+    const decode = (str: string, d: number): string => {
+      if (d > 3) return str; // Prevent infinite recursion/DoS
+      try {
+        const decoded = decodeURIComponent(str);
+        if (decoded === str) return decoded;
+        return decode(decoded, d + 1);
+      } catch {
+        return str;
+      }
+    };
+    return decode(input, 0);
+  }, []);
+
   const storeShadowLog = useCallback((input: string) => {
     if (typeof window === 'undefined') return;
     const key = 'sentinel_shadow_logs';
     // Unicode-safe Base64 encoding to prevent crashes on non-ASCII/emoji inputs
     const encoded = btoa(encodeURIComponent(input).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
-    const stored = localStorage.getItem(key);
+    const stored = secureGet(key);
     let logs: string[] = [];
     try {
       if (stored) {
@@ -108,37 +135,66 @@ export const useSentinel = () => {
     logs.push(encoded);
     if (logs.length > 20) logs.shift(); // Keep last 20
 
-    localStorage.setItem(key, JSON.stringify(logs));
+    secureStore(key, JSON.stringify(logs));
     window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, []);
+  }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
-    // Basic allowlist check
-    const allowlist = /^[a-zA-Z0-9\s._\-!?()\[\]*|\/><]+$/;
-    if (!allowlist.test(input)) {
-      logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
+    // DoS Mitigation: Enforce strict length limits
+    if (input.length > 1000) {
+      logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
+      storeShadowLog("DOS_LENGTH_REJECTION: " + input.substring(0, 50) + "...");
       return false;
     }
 
-    // Depth check: Block path traversal and LFI patterns
+    // Input Normalization: Recursive decode to prevent multi-stage obfuscation
+    const normalized = recursiveDecode(input);
+
+    if (normalized !== input) {
+      logSecurityEvent(`Input normalization detected bypass attempt`, 'MEDIUM');
+    }
+
+    // Basic allowlist check (using normalized input)
+    const allowlist = /^[a-zA-Z0-9\s._\-!?()[\]*|\/><=:$]+$/;
+    if (!allowlist.test(normalized)) {
+      logSecurityEvent(`Input rejected: Invalid characters`, 'HIGH');
+      storeShadowLog("INVALID_CHAR_REJECTION: " + (normalized.length > 15 ? normalized.substring(0, 15) + "..." : normalized));
+      return false;
+    }
+
+    // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
     const maliciousPatterns = [
-      /\.\.\//,         // Path traversal
-      /etc\/passwd/,    // LFI target
-      /cmd\.exe/,       // RCE attempt
-      /<script/i,       // XSS attempt
-      /javascript:/i,   // Protocol injection
-      /union\s+select/i // SQL injection
+      /\.\.\//,             // Path traversal
+      /\b__proto__\b/,      // Prototype pollution
+      /\bconstructor\b/,    // Prototype pollution
+      /\{\{[\s\S]*?\}\}/,         // Template injection
+      /etc\/passwd/,        // LFI target
+      /cmd\.exe/,           // RCE attempt
+      /<script/i,           // XSS attempt
+      /javascript:/i,       // Protocol injection
+      /\bvbscript:/i,       // VBScript injection
+      /onerror\s*=/i,       // XSS Event handler
+      /onload\s*=/i,        // XSS Event handler
+      /\beval\s*\(/i,       // Dangerous evaluation
+      /\balert\s*\(/i,      // XSS proof-of-concept
+      /\bexpression\s*\(/i, // IE legacy XSS
+      /data:/i,             // Data URI scheme
+      /union\s+select/i,    // SQL injection
+      /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
+      /__proto__/i,        // Prototype pollution
+      /constructor\.prototype/i // Prototype pollution
     ];
 
     for (const pattern of maliciousPatterns) {
-      if (pattern.test(input)) {
-        logSecurityEvent(`CRITICAL: Malicious pattern detected: ${input.substring(0, 15)}...`, 'CRITICAL');
+      if (pattern.test(normalized)) {
+        logSecurityEvent(`CRITICAL: Malicious pattern detected: ${normalized.substring(0, 15)}...`, 'CRITICAL');
+        storeShadowLog("MALICIOUS_PATTERN_REJECTION: " + (normalized.length > 15 ? normalized.substring(0, 15) + "..." : normalized));
         return false;
       }
     }
 
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, recursiveDecode, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
     if (!token || token.length < 32) {
@@ -169,9 +225,15 @@ export const useSentinel = () => {
       { label: '[ K8S_CONFIG ]', secret: 'CONTEXT: production-cluster-01' }
     ];
 
+    const getRandomIndex = (max: number) => {
+      const array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      return array[0] % max;
+    };
+
     const config = {
-      posIndex: positions[Math.floor(Math.random() * positions.length)],
-      payload: payloads[Math.floor(Math.random() * payloads.length)],
+      posIndex: positions[getRandomIndex(positions.length)],
+      payload: payloads[getRandomIndex(payloads.length)],
       timestamp: Date.now()
     };
 
@@ -205,14 +267,11 @@ export const useSentinel = () => {
       if (Date.now() < expiry) {
         return true;
       } else {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('sentinel_blacklist');
-          sessionStorage.removeItem('sentinel_blacklist');
-        }
+        secureRemove('sentinel_blacklist');
       }
     }
     return false;
-  }, [secureGet]);
+  }, [secureGet, secureRemove]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -222,7 +281,7 @@ export const useSentinel = () => {
     let data = { count: 0, startTime: now };
 
     try {
-      const stored = localStorage.getItem(storageKey);
+      const stored = secureGet(storageKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && typeof parsed === 'object') {
@@ -230,29 +289,140 @@ export const useSentinel = () => {
         }
       }
     } catch {
-      try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
+      // ignore
     }
 
     if (now - data.startTime > windowMs) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: 1, startTime: now }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: 1, startTime: now }));
       return true;
     }
 
     if (data.count < limit) {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
-      } catch {
-        logSecurityEvent('Rate Limit persistence failed: storage restricted', 'MEDIUM');
-      }
+      secureStore(storageKey, JSON.stringify({ count: data.count + 1, startTime: data.startTime }));
       return true;
     }
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
+  }, [logSecurityEvent, secureGet, secureStore]);
+
+  const monitorIntegrity = useCallback(() => {
+    if (typeof window === 'undefined' || typeof MutationObserver === 'undefined') return () => {};
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.removedNodes.forEach((node) => {
+            if (node instanceof HTMLElement && (node.hasAttribute('data-sentinel') || node.querySelector('[data-sentinel]'))) {
+              if (!document.contains(node)) {
+                logSecurityEvent(`CRITICAL: Protected UI element removed: ${node.getAttribute('data-sentinel') || 'composite'}`, 'CRITICAL');
+                window.dispatchEvent(new CustomEvent('sentinel-integrity-violation', { detail: { type: 'removal', element: node.getAttribute('data-sentinel') } }));
+              }
+            }
+          });
+        } else if (mutation.type === 'attributes') {
+          const target = mutation.target as HTMLElement;
+          if (target.hasAttribute('data-sentinel')) {
+            const style = window.getComputedStyle(target);
+            if (style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) < 0.1) {
+              logSecurityEvent(`CRITICAL: Protected UI element hidden: ${target.getAttribute('data-sentinel')}`, 'CRITICAL');
+              window.dispatchEvent(new CustomEvent('sentinel-integrity-violation', { detail: { type: 'visibility', element: target.getAttribute('data-sentinel') } }));
+            }
+          }
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class', 'hidden']
+    });
+
+    return () => observer.disconnect();
+  }, [logSecurityEvent]);
+
+  const lastInteractionRef = useRef<Record<string, number>>({});
+
+  const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
+    if (typeof window === 'undefined') return true;
+    if (!e) return true;
+    if (typeof window === 'undefined') return true;
+
+    const now = Date.now();
+    const win = window as unknown as { _sentinel_last_interaction?: number };
+    const lastInteraction = win._sentinel_last_interaction || 0;
+
+    const now = Date.now();
+    const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+
+    // 1. Trust Verification
+    if (nativeEvent && nativeEvent.isTrusted === false) {
+      logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
+      window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
+        detail: { type: e.type, timestamp: new Date().toISOString() }
+      }));
+      return false;
+    }
+
+    // Second check: velocity profiling (automation speed)
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const delta = now - lastInteractionRef.current;
+      lastInteractionRef.current = now;
+
+      if (delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: now }
+        }));
+        return false;
+      }
+    }
+
+    // 2. Velocity Profiling (Behavioral Analysis)
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const now = Date.now();
+      const lastTime = lastInteractionRef.current[e.type] || 0;
+      const delta = now - lastTime;
+
+      // Detection of sub-human interaction speeds (< 50ms)
+      if (lastTime !== 0 && delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: now }
+          }));
+        }
+      }
+      lastInteractionRef.current[e.type] = now;
+    }
+
+    // 3. Entropy Analysis (Spatial Variance)
+    if (e.type === 'click' && 'clientX' in nativeEvent && 'clientY' in nativeEvent) {
+      const mouseEvent = nativeEvent as MouseEvent;
+      const x = mouseEvent.clientX;
+      const y = mouseEvent.clientY;
+      const coords = lastCoordinatesRef.current;
+
+      // Exact spatial repetition in sequence (3x) is a high-confidence bot signal
+      coords.push({ x, y });
+      if (coords.length > 5) coords.shift();
+
+      const isRobotic = coords.length >= 3 && coords.slice(-3).every(c => c.x === x && c.y === y);
+
+      if (isRobotic) {
+        logSecurityEvent(`Low behavioral entropy detected: Spatial precision anomaly`, 'HIGH');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+            detail: { x, y, timestamp: Date.now() }
+          }));
+        }
+      }
+    }
+
+    return true;
   }, [logSecurityEvent]);
 
   return {
@@ -268,6 +438,9 @@ export const useSentinel = () => {
     triggerBlacklist,
     checkBlacklist,
     secureStore,
-    secureGet
+    secureGet,
+    secureRemove,
+    monitorIntegrity,
+    verifyInteraction
   };
 };

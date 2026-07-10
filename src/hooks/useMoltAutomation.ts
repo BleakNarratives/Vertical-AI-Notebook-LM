@@ -18,7 +18,7 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet, secureRemove } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
@@ -38,10 +38,7 @@ export const useMoltAutomation = () => {
           const remaining = lockdownExpiry - Date.now();
           setTimeout(() => setIsLockdown(false), remaining);
         } else {
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('sentinel_lockdown');
-            sessionStorage.removeItem('sentinel_lockdown');
-          }
+          secureRemove('sentinel_lockdown');
         }
       }
 
@@ -50,15 +47,17 @@ export const useMoltAutomation = () => {
     };
 
     checkSecurityStates();
-  }, [checkBlacklist, secureGet]);
+  }, [checkBlacklist, secureGet, secureRemove]);
 
   const triggerLockdown = useCallback(() => {
+    if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
-    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'CRITICAL');
+    // Log as MEDIUM to avoid triggering a new high-severity alert loop
+    logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [logSecurityEvent, secureStore]);
+  }, [isLockdown, logSecurityEvent, secureStore]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -118,7 +117,7 @@ export const useMoltAutomation = () => {
 
       // Track decoy breaches for blacklisting
       const key = 'sentinel_decoy_breaches';
-      const stored = localStorage.getItem(key);
+      const stored = secureGet(key);
       let breaches = 0;
       if (stored) {
         const parsed = parseInt(stored, 10);
@@ -126,12 +125,12 @@ export const useMoltAutomation = () => {
       }
 
       breaches += 1;
-      localStorage.setItem(key, breaches.toString());
+      secureStore(key, breaches.toString());
 
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
-        localStorage.setItem(key, '0');
+        secureStore(key, '0');
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
@@ -141,16 +140,43 @@ export const useMoltAutomation = () => {
       setIsBlacklisted(true);
     };
 
+    const handleIntegrityViolation = () => {
+      // Soft response to integrity violation to avoid reload loops while maintaining security
+      attemptAutonomousImprovement('Integrity violation detected. Reconstructing environment.');
+      // After a short delay, if still violated, could reload, but for now we let Molt handle it
+    };
+
+    const handleUntrustedInteraction = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const type = customEvent.detail?.type || 'unknown';
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Untrusted ${type} interaction detected.`, 'HIGH');
+      attemptAutonomousImprovement(`Untrusted interaction: ${type}`);
+    };
+
+    const handleVelocityAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const velocity = customEvent.detail?.velocity || 0;
+      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
+      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+    };
+
     if (typeof window !== 'undefined') {
       window.addEventListener('security-alert', handleSecurityAlert);
       window.addEventListener('sentinel-shadow-recorded', handleShadowRecorded);
       window.addEventListener('sentinel-decoy-breach', handleDecoyBreach);
       window.addEventListener('sentinel-blacklist', handleBlacklist);
+      window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
+      window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
+      window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
         window.removeEventListener('sentinel-decoy-breach', handleDecoyBreach);
         window.removeEventListener('sentinel-blacklist', handleBlacklist);
+        window.removeEventListener('sentinel-integrity-violation', handleIntegrityViolation);
+        window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
+        window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
+        window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);

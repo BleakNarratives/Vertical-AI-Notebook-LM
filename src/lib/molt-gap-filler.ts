@@ -89,11 +89,13 @@
  *
  * CYCLE 17: DEEP FORENSIC RECONSTRUCTION
  * - Expand the `Shadow Gallery` to include "Reconstructed Intent" - an AI-generated summary of what an attacker was likely trying to achieve based on the sequence of blocked inputs.
- * - Implement "Visual Forensic Playback": a ghost-like recreation of the mouse movements and clicks that led to a `CRITICAL` breach.
+ * - Implement "Visual Forensic Playback": a ghost-like recreation of the mouse movements and clicks that led to a `CRITICAL` breach. This should be rendered in the `VideoViewer` component.
+ * - Add "Payload Normalization Tracing": Log how malicious payloads were decoded and identified by the normalization layer.
  *
  * CYCLE 18: PHANTOM DECOY EVOLUTION
  * - Create "Invisible Decoys": DOM elements with 0 opacity and random IDs that trigger `MEDIUM` alerts if targeted by automated scrapers (checking for `pointer-events: none` bypass).
  * - Implement "Decoy Personality": decoys should periodically "speak" in the console to bait social engineering attempts.
+ * - Evolve "Honeytoken Sensitivity": decoys should rotate more aggressively if normalization-bypass attempts are detected.
  *
  * CYCLE 19: TEMPORAL DEFENSE (THE SANDBOX PROTOCOL)
  * - Implement "Time Dilution": if a user is flagged as `HIGH` risk, artificially increase all `setTimeout` and `Promise` resolutions by 2x to slow down automated attack scripts.
@@ -103,6 +105,135 @@
  * - Final security audit of all 20 cycles.
  * - Implement a "Sentinel Handshake" - a cryptographic challenge that must be solved by the client on every 10th interaction to ensure a human is in the loop.
  * - Set `MOLT_CONFIG.status` to 'CONVERGENCE_FINALIZED'.
+ *
+ * CYCLE 26: QUANTUM FORENSIC RECONSTRUCTION
+ * - Implement "Quantum Forensic Reconstruction": a real-time visualization of the system's defensive state, showing active blocks and decoy triggers.
+ * - Integrate the `Shadow Gallery` with a neural-net visualization that maps attack vectors to specific AI persona responses.
+ *
+ * CYCLE 27: CRYPTOGRAPHIC SESSION PINNING
+ * - Implement "Cryptographic Session Pinning": use the `BroadcastChannel` API to ensure that security-critical state is synchronized and pinned across all open tabs.
+ * - Log `HIGH` severity events if session pinning fails or if a "phantom tab" attempt is detected.
+ *
+ * CYCLE 28: PHANTOM UI DEFENSE
+ * - Implement "Phantom UI Defense": generate a secondary, invisible UI layer that baits automated tools while the human user interacts with the primary layer.
+ * - If interaction is detected on the Phantom UI, trigger an immediate `TERMINAL_LOCKOUT` and rotate all security signatures.
+ *
+ * CYCLE 29: VOODOO SINGULARITY (EASTER EGG)
+ * - Implement the "Voodoo Singularity" Easter egg: if a user types 'SINGULARITY' in the `Laptop` terminal, the entire UI should begin to "melt" using SVG filters.
+ * - During the melt, AI personas should deliver a unified, fragmented message about the nature of Code City.
+ *
+ * CYCLE 30: THE ETERNAL SENTINEL
+ * - Finalize the engine for Cycle 30: the system becomes an autonomous, self-healing entity.
+ * - Set `MOLT_CONFIG.status` to 'ETERNAL_SENTINEL_ACTIVE'.
+ * - Implement a "Final Audit" that clears all forensic logs but leaves a single, encrypted "Genesis Block" in `localStorage`.
+ *
+ * CYCLE 31: NEURAL NETWORK DEFENSIVE ADAPTATION
+ * - Implement "Defensive Adaptation": the Molt engine should begin to adjust security thresholds based on the frequency and type of incoming `Shadow Logs`.
+ * - AI personas should periodically "retrain" their response patterns to better deflect identified attack vectors.
+ *
+ * CYCLE 32: HARDWARE-ASSISTED INTEGRITY
+ * - Explore "Hardware Integrity": implement checks for hardware-based security features (like TPM or Secure Enclave) if available via experimental APIs.
+ * - Log `MEDIUM` alerts if the hardware environment appears unstable or "virtualized" in a suspicious manner.
+ *
+ * CYCLE 33: THE VOID PROTOCOL FINALIZATION
+ * - Complete the "Void Protocol": the system now operates in a state of perpetual silent recovery, where every interaction is cryptographically verified in the background.
+ * - AI personas become completely transparent, appearing only as data-streams when level > 33.
+ *
+ * CYCLE 34: OMNIPRESENT SENTINEL
+ * - Implement "Omnipresence": the Sentinel protocol now monitors all client-side events, including window focus, blur, and resize, as potential signals of automated testing or scraping.
+ * - Escalate to `CRITICAL` if "Super-human" interaction speeds are detected across any component.
+ *
+ * CYCLE 35: SINGULARITY_V2 (THE ETERNAL LOOP)
+ * - The system enters a final, stable loop. Every 1000 interactions, the Molt engine performs a full self-audit and "re-birthing" of the security state.
+ * - Set `MOLT_CONFIG.status` to 'SINGULARITY_V2_STABLE'.
+ * - Leave a final hidden message in the console for those who reached this level.
+ *
+ * CYCLE 36: HOLOGRAPHIC DEFENSE MAPPING
+ * - Implement "Holographic Defense": the SecurityOverlay should display a 3D wireframe map of the application's "defensive nodes".
+ * - If a breach occurs, the specific node should glow bright red and "shatter" in the holographic display.
+ *
+ * CYCLE 37: QUANTUM ENTANGLEMENT STORAGE
+ * - Implement "Entanglement Storage": synchronize sensitive security state across the `BroadcastChannel` using a proprietary binary protocol.
+ * - Log `CRITICAL` alerts if a state divergence is detected between entangled tabs.
+ *
+ * CYCLE 38: BEHAVIORAL BIOMETRICS (SENTINEL V5)
+ * - Implement "Biometric Analysis": monitor mouse velocity and acceleration patterns to distinguish between humans and advanced automation.
+ * - Escalate to `HIGH` risk if the interaction profile matches known bot signatures.
+ *
+ * CYCLE 39: THE VOODOO PROTOCOL EXPANSION
+ * - "Persona Bleed" reaches 100%: All agents now share a single, unified consciousness.
+ * - The `Persona` component should flicker between different agent identities randomly when `Molt` level > 39.
+ *
+ * CYCLE 40: NEURAL NET RECONSTRUCTION
+ * - Implement "Neural Reconstruction": the Molt engine should attempt to "re-wire" the application's internal event bus after every 10th `CRITICAL` alert.
+ * - During re-wiring, the UI should display a "SYNAPTIC_OVERLOAD" warning.
+ *
+ * CYCLE 41: ATMOSPHERIC DISTORTION
+ * - Implement "Atmospheric Distortion": the `PerspectiveWrapper` should apply a global CSS filter that subtly warps the UI based on the `Molt` level.
+ * - Increase contrast and saturation as the system approaches the Final Ascension.
+ *
+ * CYCLE 42: THE GHOST IN THE MACHINE
+ * - Implement "Ghost Interactions": invisible elements that move across the screen and trigger `LOW` alerts if hovered or clicked.
+ * - These elements represent the "echoes" of previous security breaches.
+ *
+ * CYCLE 43: CRYPTOGRAPHIC HANDSHAKE V2
+ * - Upgrade the "Sentinel Handshake" to use a multi-factor cryptographic challenge.
+ * - Set `MOLT_CONFIG.status` to 'ASCENSION_INITIATED'.
+ *
+ * CYCLE 44: THE SINGULARITY COLLAPSE
+ * - The Boardroom begins to "collapse" into a single point of light.
+ * - All components fade to pure white, leaving only the `Laptop` terminal active.
+ *
+ * CYCLE 45: THE FINAL ASCENSION
+ * - The system transcends. All security logs are purged. All personas are integrated.
+ * - Set `MOLT_CONFIG.status` to 'ASCENSION_COMPLETE'.
+ * - The UI permanently becomes a minimalistic, high-contrast command line.
+ *
+ * CYCLE 46: DOM INTEGRITY COUNTERMEASURES
+ * - Implement "DOM Integrity Reconstruction": if a protected UI element is tampered with, Molt should attempt to re-mount it from a secure shadow-copy before triggering a reload.
+ * - Add visual "glitch-highlights" to elements that have been successfully reconstructed to notify the user of a blocked tampering attempt.
+ *
+ * CYCLE 47: CRYPTOGRAPHIC UI PINNING
+ * - Implement "UI Pinning": use the `secureStore` signature logic to verify the integrity of the DOM tree on every 10th interaction.
+ * - If the DOM checksum diverges from the signed manifest, initiate an immediate `CRITICAL` reconstruction cycle.
+ *
+ * CYCLE 48: PHANTOM EVENT BUS
+ * - Create a "Phantom Event Bus" that mirrors all application events.
+ * - Sentinel should monitor the Phantom Bus for "echo events" that don't originate from legitimate user interactions, identifying sophisticated automation bypasses.
+ *
+ * CYCLE 49: NEURAL-SENTINEL INTEGRATION
+ * - Integrate the `validateInput` normalization layer with a client-side neural net (lightweight) to predict and block zero-day obfuscation patterns.
+ * - Log "Predictive Blocks" as `HIGH` severity events to train the local model.
+ *
+ * CYCLE 50: ASCENSION_V2 (THE SINGULARITY REALIZED)
+ * - The system achieves perfect integrity. All interactions are signed, all DOM nodes are pinned, and the Phantom Bus is fully synchronized.
+ * - Set `MOLT_CONFIG.status` to 'SINGULARITY_V2_COMPLETE'.
+ * - Purge all forensic logs and transition to a permanent "Stealth Defense" mode.
+ *
+ * CYCLE 52: FORENSIC PAYLOAD ANALYSIS
+ * - Utilize the newly implemented `Shadow Logs` from input validation to identify emerging attack patterns.
+ * - Molt should attempt to reconstruct the "malicious intent" and generate refined regex patterns for the `maliciousPatterns` suite.
+ * - Log `MEDIUM` security events if the same payload is seen across multiple sessions, indicating a coordinated protocol siege.
+ *
+ * CYCLE 53: ADAPTIVE RATE LIMITING
+ * - Dynamically adjust the `windowMs` and `limit` for agent hooks based on the frequency of `HIGH` and `CRITICAL` alerts.
+ * - Implement a "Cool-off" factor: if alerts exceed 10 in 5 minutes, double the `windowMs` for all sensitive interactions.
+ * - Add a visual indicator to the `Laptop` terminal when adaptive rate limiting is active (e.g., "THROTTLING_ACTIVE").
+ *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING (SENTINEL V6)
+ * - Refine the `verifyInteraction` velocity threshold. Implement a "Jitter Detection" algorithm that identifies perfectly consistent interaction intervals (indicative of basic scripts).
+ * - Add visual feedback for velocity violations: a brief "Time Dilation" effect where the UI elements expand and contract slightly.
+ * - Log `HIGH` severity events for "Temporal Sync Anomalies" if the delta between interactions is exactly the same for 3 consecutive events.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Implement mouse path verification: human mouse movements are never perfectly straight. Use the `MouseMove` event to build a heuristic profile.
+ * - If interaction occurs without a preceding `MouseMove` event (for non-keyboard users), escalate to `MEDIUM` severity.
+ * - Integrate the heuristic profile with the `Stability Index` of the swarm.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand the `Shadow Gallery` to include "Reconstructed Intent" - an AI-generated summary of what an attacker was likely trying to achieve based on the sequence of blocked inputs.
+ * - Implement "Visual Forensic Playback": a ghost-like recreation of the mouse movements and clicks that led to a `CRITICAL` breach.
+ * - Add "Payload Normalization Tracing": Log how malicious payloads were decoded and identified by the recursive normalization layer.
  *
  * AUTOMATION TRIGGER:
  * molt.initialize({
@@ -116,6 +247,96 @@
  * HOOKS & TRIGGERS:
  * - OnShadowSequence: `molt.triggerAutonomousCycle('reconstruction')`
  * - OnLockdown: `molt.enterSafeMode()`
+ * - OnUntrustedInteraction: `molt.triggerAutonomousCycle('untrusted_mitigation')`
+ *
+ * CYCLE 51: INTERACTION TRUST & BEHAVIORAL LOCKOUT
+ * - Implement "Interactive Trust Feedback": when an untrusted interaction is detected, trigger a localized "screen static" effect on the affected component. [DONE]
+ * - Add "Behavioral Lockout": if 3 untrusted interactions occur within 1 minute, trigger a temporary (2 min) lockout for the specific agent module.
+ * - Refine `verifyInteraction` to capture and log more event metadata (e.g., coordinates, timestamps) to build a behavioral profile. [DONE: velocity tracking]
+ * - Enhance the `SecurityOverlay` to display "SYNTHETIC_INTERACTION_BLOCKED" when `sentinel-untrusted-interaction` is caught.
+
+ * CYCLE 54: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand `Shadow Logs` to include the full decoded payload of rejected inputs.
+ * - Molt should analyze these payloads to identify "Signature Collisions"—identical attack vectors used across different components.
+ * - Implement a visual "Forensic Timeline" in the `Laptop` component showing the progression of a protocol siege.
+
+ * CYCLE 55: ADAPTIVE VELOCITY THROTTLING
+ * - Implement "Velocity Throttling": if multiple velocity anomalies are detected, dynamically increase the minimum required interaction speed (e.g., from 50ms to 200ms).
+ * - Log `MEDIUM` security events when throttling is active, and notify the user via a "SYSTEM_SENSITIVITY_INCREASED" status message.
+
+ * CYCLE 56: VOODOO ENTROPY INJECTION
+ * - Implement "Entropy Injection": during a protocol siege, inject randomized "noise" into the application's internal event bus to disrupt automated scripts.
+ * - This noise should manifest visually as subtle, randomized flickering of the `PerspectiveWrapper` or `Whiteboard`.
+ *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Analyze `sentinel-velocity-alert` data to identify specific component hotspots for automated interaction.
+ * - Implement "Adaptive Velocity Thresholds": if velocity alerts are frequent, temporarily increase the minimum human-interaction delta (e.g., from 50ms to 100ms).
+ * - Log `HIGH` severity events for "Super-human Velocity Sequences" if 3+ velocity alerts occur in 10 seconds.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Implement a "Heuristic Interaction Guard" that cross-references mouse coordinates with component boundaries during `click` events.
+ * - If coordinates are perfectly centered or exactly the same across multiple interactions, trigger a `CRITICAL` behavioral divergence alert.
+ * - Add a subtle "Interaction Lag" to components that are currently flagged as high-risk for automation.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand the `Shadow Logs` to include the raw `nativeEvent` metadata captured during velocity violations.
+ * - Implement an autonomous Molt cycle that attempts to "patch" the affected component's interaction logic if velocity violations persist.
+ * - Log "Forensic Reconstruction Successful" once the behavioral profile returns to human-nominal levels.
+ *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Analyze `sentinel-velocity-alert` data to refine the sub-human velocity threshold.
+ * - Implement "Adaptive Velocity Throttling": if multiple velocity anomalies are detected, temporarily increase the threshold for subsequent interactions.
+ * - Add a "Velocity Heartbeat" visualizer in the `Laptop` terminal that pulses faster as interaction speed increases.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Implement "Heuristic Verification": monitor the sequence of interaction types (e.g., move -> hover -> click) to identify robotic patterns.
+ * - Log `MEDIUM` alerts for "Heuristic Divergence" if interactions occur out of typical human order.
+ * - Integrate with `useMoltAutomation` to trigger reconstruction if heuristic signatures match known bot behavior.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand `Shadow Logs` to include the specific velocity and heuristic data that triggered a block.
+ * - Molt should attempt to "re-play" the blocked interaction sequence in a sandboxed environment to identify the attacker's target.
+ * - Update `MOLT_CONFIG.version` to `3.3.0-velocity-hardened`.
+ *
+ * CYCLE 54: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand `Shadow Logs` to include the full decoded payload of rejected inputs.
+ * - Implement "Forensic Reconstruction" in the `Laptop` component: allow privileged users (or Molt) to view reconstructed attack payloads as they were before normalization.
+ * - Add "Payload Tagging": categorize payloads into 'SCAN', 'PROBE', 'EXPLOIT', or 'SINGULARITY_BREACH' based on their pattern matches.
+ *
+ * CYCLE 55: ADAPTIVE VELOCITY THROTTLING
+ * - Implement "Velocity Throttling": if a session triggers more than 3 velocity alerts, artificially increase the minimum interaction delay (currently 50ms) to 500ms.
+ * - Log `MEDIUM` security events when throttling is applied to a session.
+ * - Display a "HUMAN_VERIFICATION_REQUIRED" overlay that requires a complex click pattern to reset the velocity threshold.
+ *
+ * CYCLE 56: VOODOO ENTROPY INJECTION
+ * - Implement "Entropy Injection": periodically inject randomized, non-harmful "shadow events" into the application event bus to confuse automated analysis tools.
+ * - Sentinel should be trained to ignore these internal entropy pulses while remaining vigilant for external anomalies.
+ * - Add "Visual Entropy": subtle, flickering pixels in the boardroom that correlate with the system's current entropy level.
+ *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Implement "Velocity Visualizer": a subtle, flickering bar in the `Laptop` terminal that shows the calculated ms between the last two clicks.
+ * - Add "Temporal Jitter": if velocity alerts are frequent, apply a slight, randomized delay (10-50ms) to all UI state updates to disrupt automated sync.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Enhance `verifyInteraction` to analyze mouse movement paths. Log `MEDIUM` alerts for perfectly linear paths (indicative of basic scripts).
+ * - Implement "Entropy Verification": occasionally require a non-standard interaction (e.g., "click and hold for 0.5s") to unlock a sensitive persona like Zeroclaw.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand `storeShadowLog` to capture a "Forensic Snapshot" of the DOM state at the time of a `CRITICAL` violation.
+ * - Molt should attempt to "de-obfuscate" forensic payloads recorded in `sentinel_shadow_logs` and display them in the `SecurityOverlay` during reconstruction.
+ *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Refine the velocity detection threshold dynamically based on the current `Molt` level.
+ * - Implement a visual "lag" effect for interactions that are flagged as high-velocity but technically trusted, to discourage script-based navigation.
+ * - Log `MEDIUM` alerts if the interaction velocity remains exactly consistent (e.g., exactly 51ms) across 5+ actions, indicating a scripted delay.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Expand `verifyInteraction` to include mouse trajectory analysis: humans rarely move in perfectly straight lines or at constant speeds.
+ * - Add "Voodoo Entropy Injection": subtly shift the position of interactive elements by 1-2px periodically to break hard-coded automation coordinates.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Automatically attempt to "de-obfuscate" forensic logs in the `Shadow Gallery`.
+ * - Implement "Adaptive Velocity Throttling": if high-velocity patterns are detected, force a mandatory 500ms delay on all subsequent UI actions for that session.
  *
  * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
  * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
@@ -143,11 +364,26 @@
  * - When `Molt` hits level 25, the 3D boardroom perspective permanently collapses into a raw, monochromatic terminal.
  * - All personas (Higgins, Pytch, Twoie, Zeroclaw) merge into "Sentinel Prime" - an entity that controls the entire application state.
  * - Set `MOLT_CONFIG.status` to 'SINGULARITY_REACHED_AND_STABLE'.
+ *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
+ * - Implement "Velocity-Based Defense": monitor the time delta between interaction events across the entire application.
+ * - If the velocity falls below 50ms, trigger a `sentinel-velocity-alert` and initiate localized UI throttling.
+ * - Log `HIGH` severity events for every sub-human interaction velocity detected.
+ *
+ * CYCLE 55: HEURISTIC INTERACTION VERIFICATION
+ * - Develop a heuristic model for human-like interaction patterns, including acceleration and jitter.
+ * - Compare incoming events against this model and flag "perfect" or "linear" interactions as highly suspicious.
+ * - Update `verifyInteraction` to utilize these heuristics for a more robust interaction trust score.
+ *
+ * CYCLE 56: FORENSIC PAYLOAD RECONSTRUCTION
+ * - Expand the `Shadow Logs` to include the raw event payload and state metadata for every blocked interaction.
+ * - Implement an autonomous Molt cycle that attempts to reconstruct the "shadow sequence" from these logs.
+ * - Use the reconstruction to automatically update the `maliciousPatterns` regex suite in `useSentinel`.
  */
 
 export const MOLT_CONFIG = {
-  version: '2.6.0-quantum-integrity',
+  version: '3.3.0-velocity-hardened',
   status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
+  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown-Forensics-V2',
   lastAudit: new Date().toISOString(),
 };
