@@ -138,8 +138,11 @@ export const useSentinel = () => {
 
   const validateInput = useCallback((input: string): boolean => {
     // Length limit to prevent ReDoS/DoS
+    if (typeof input !== 'string') {
+      return false;
+    }
     if (input.length > 1000) {
-      logSecurityEvent(`Input rejected: Length limit exceeded`, 'HIGH');
+      logSecurityEvent('Input rejected: Length limit exceeded', 'HIGH');
       return false;
     }
 
