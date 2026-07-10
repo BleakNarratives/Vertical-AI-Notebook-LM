@@ -82,6 +82,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     };
   }, []);
   const data = CONTEXT_DATA[context];
+  const labelPosition = context === 'user' ? 'top' : 'bottom';
 
   // Default labelPosition based on context if not provided
   const resolvedLabelPosition = labelPosition || (context === 'user' ? 'top' : 'bottom');
