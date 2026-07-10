@@ -33,7 +33,7 @@
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
 
-## 2026-06-08 - [Behavioral Velocity Profiling & Hardened Input Defense]
-**Vulnerability:** Automation scripts and macros can bypass basic "isTrusted" checks by simulating events with perfect precision or sub-human speeds. Additionally, lack of input length limits poses a DoS/ReDoS risk.
-**Learning:** Client-side security must look beyond "what" was sent to "how" it was sent. By profiling interaction velocity (timing between events), we can distinguish between erratic human jitter and deterministic script execution. Furthermore, strict length capping is a primary defense against resource-exhaustion attacks on the normalization layer.
-**Prevention:** Implement interaction velocity tracking with a sub-human threshold (e.g., < 50ms) to trigger autonomous forensic cycles. Enforce strict 1000-char limits on all validated inputs and expand malicious pattern suites to include Prototype Pollution and advanced NoSQL operators.
+## 2026-06-08 - [Behavioral Velocity Profiling & Heuristic Interaction Trust]
+**Vulnerability:** Client-side triggers were susceptible to sub-human interaction speeds, allowing automated scripts to bypass standard rate limits and flood the system with events.
+**Learning:** Pure rate limiting (e.g., 5 requests per 30s) is easily gamed by bots that operate at the millisecond scale. Security logic must analyze the *velocity* of interactions, not just the count. Using `window` as a persistent session-wide timestamp store allows for cross-hook velocity verification without expensive context providers.
+**Prevention:** Implement a velocity threshold (e.g., 50ms) for critical UI interactions. Integrate velocity alerts with autonomous system responses (Molt) to force system hardening when sub-human behavior is detected.
