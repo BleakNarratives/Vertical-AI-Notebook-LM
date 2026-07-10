@@ -16,13 +16,13 @@ export const FocusIndicator: React.FC<FocusIndicatorProps> = ({ color = 'neon-am
   return (
     <div className="absolute -inset-3 pointer-events-none opacity-0 group-focus-visible:opacity-100 transition-opacity duration-200">
       {/* Top Left */}
-      <div className={`absolute top-0 left-0 w-1.5 h-1.5 border-t border-l ${colorClass}`} />
+      <div className={`absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 ${colorClass}`} />
       {/* Top Right */}
-      <div className={`absolute top-0 right-0 w-1.5 h-1.5 border-t border-r ${colorClass}`} />
+      <div className={`absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 ${colorClass}`} />
       {/* Bottom Left */}
-      <div className={`absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l ${colorClass}`} />
+      <div className={`absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 ${colorClass}`} />
       {/* Bottom Right */}
-      <div className={`absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r ${colorClass}`} />
+      <div className={`absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 ${colorClass}`} />
     </div>
   );
 };
