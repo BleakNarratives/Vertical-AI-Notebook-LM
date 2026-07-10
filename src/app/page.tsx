@@ -39,7 +39,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className={`flex flex-col items-center justify-between h-full gap-8 p-8 py-16 transition-all duration-75 ${isGlitching || isBlacklisted ? 'animate-pulse bg-neon-red/30' : ''}`}>
+    <div className={`flex flex-col items-center justify-between h-full gap-4 p-4 py-8 transition-all duration-75 ${isGlitching || isBlacklisted ? 'animate-pulse bg-neon-red/30' : ''}`}>
       {isGlitching && (
         <div className="fixed inset-0 z-[200] pointer-events-none bg-white/5 mix-blend-overlay animate-glitch" />
       )}
@@ -56,8 +56,8 @@ export default function Home() {
         </div>
       )}
       {/* Top of the table - Personas */}
-      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mb-12">
-        <div className="flex flex-col items-center gap-2">
+      <div className="relative w-full flex justify-center gap-4 md:gap-8 scale-75 md:scale-90 pointer-events-auto mt-20 mb-20">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Mrs. Higgins"
             role="Gateway"
@@ -66,10 +66,11 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="higgins" />
+            <Papers context="higgins" labelPosition="bottom" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-12">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Pytch"
             role="Architect"
@@ -78,10 +79,10 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="pytch" />
+            <Papers context="pytch" labelPosition="bottom" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Twoie"
             role="Execution"
@@ -90,10 +91,10 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="twoie" />
+            <Papers context="twoie" labelPosition="bottom" />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-16">
           <Persona
             name="Zeroclaw"
             role="Distributed"
@@ -102,13 +103,13 @@ export default function Home() {
             disabled={isLockdown || isBlacklisted}
           />
           <div className="pointer-events-auto">
-            <Papers context="zeroclaw" />
+            <Papers context="zeroclaw" labelPosition="bottom" />
           </div>
         </div>
       </div>
 
-      <div className="space-y-4 text-center z-10 flex-1 flex flex-col justify-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white uppercase">
+      <div className="space-y-2 text-center z-10 flex-1 flex flex-col justify-center">
+        <h1 className="text-2xl md:text-4xl font-bold tracking-tighter text-white uppercase">
           Vertical AI <br/>
           <span className="text-neon-red">Notebook LM</span>
         </h1>
