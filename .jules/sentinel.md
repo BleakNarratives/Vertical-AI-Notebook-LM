@@ -33,7 +33,7 @@
 **Learning:** In a heavily client-side app like Code City, "UI Redressing" or element removal is a significant vector. Pure CSS/JS defenses can be bypassed if the element itself is detached from the DOM. A `MutationObserver` provides a robust "Integrity Heartbeat" for the UI layer.
 **Prevention:** Use a `MutationObserver` to track the state of elements tagged with `data-sentinel`. Instead of aggressive reload loops which degrade UX, dispatch custom integrity events to trigger autonomous system reconstruction (Molt).
 
-## 2026-06-08 - [Behavioral Velocity Profiling & Automated UI Defense]
-**Vulnerability:** Even with `isTrusted` checks, advanced automation can simulate "trusted" events or spam interactions at sub-human speeds, overwhelming system logic or rate limits.
-**Learning:** Pure event-based security is insufficient against sophisticated bots that mimic user input. Behavioral profiling—specifically monitoring the velocity and entropy of interactions—provides an additional layer of verification. Humans have a physiological limit to interaction speed; exceeding this is a high-confidence signal of automation.
-**Prevention:** Implement a velocity threshold for all critical UI interactions (e.g., 50ms). Use cross-hook state to track interaction timestamps and trigger autonomous system hardening (Molt) when sub-human speeds are detected.
+## 2026-06-08 - [Behavioral Velocity Profiling & Heuristic Interaction Trust]
+**Vulnerability:** Client-side triggers were susceptible to sub-human interaction speeds, allowing automated scripts to bypass standard rate limits and flood the system with events.
+**Learning:** Pure rate limiting (e.g., 5 requests per 30s) is easily gamed by bots that operate at the millisecond scale. Security logic must analyze the *velocity* of interactions, not just the count. Using `window` as a persistent session-wide timestamp store allows for cross-hook velocity verification without expensive context providers.
+**Prevention:** Implement a velocity threshold (e.g., 50ms) for critical UI interactions. Integrate velocity alerts with autonomous system responses (Molt) to force system hardening when sub-human behavior is detected.
