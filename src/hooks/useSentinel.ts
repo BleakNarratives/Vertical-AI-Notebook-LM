@@ -140,6 +140,13 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // DoS Mitigation: Enforce strict length limits
+    if (input.length > 1000) {
+      logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
+      storeShadowLog("DOS_LENGTH_REJECTION: " + input.substring(0, 50) + "...");
+      return false;
+    }
+
     // Input Normalization: Recursive decode to prevent multi-stage obfuscation
     const normalized = recursiveDecode(input);
 
@@ -173,7 +180,9 @@ export const useSentinel = () => {
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
       /union\s+select/i,    // SQL injection
-      /\$(where|regex|ne)/i // NoSQL injection
+      /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
+      /__proto__/i,        // Prototype pollution
+      /constructor\.prototype/i // Prototype pollution
     ];
 
     for (const pattern of maliciousPatterns) {
