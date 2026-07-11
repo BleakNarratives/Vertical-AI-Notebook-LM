@@ -343,22 +343,15 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
-  const lastInteractionRef = useRef<Record<string, number>>({});
-
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (typeof window === 'undefined') return true;
     if (!e) return true;
-    if (typeof window === 'undefined') return true;
 
     const now = Date.now();
-    const win = window as unknown as { _sentinel_last_interaction?: number };
-    const lastInteraction = win._sentinel_last_interaction || 0;
-
-    const now = Date.now();
-    const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
+    const nativeEvent = 'nativeEvent' in e ? (e as React.UIEvent).nativeEvent : e;
 
     // 1. Trust Verification
-    if (nativeEvent && nativeEvent.isTrusted === false) {
+    if (nativeEvent && 'isTrusted' in nativeEvent && nativeEvent.isTrusted === false) {
       logSecurityEvent(`Untrusted interaction detected from ${e.type} event`, 'HIGH');
       window.dispatchEvent(new CustomEvent('sentinel-untrusted-interaction', {
         detail: { type: e.type, timestamp: new Date().toISOString() }
@@ -366,35 +359,18 @@ export const useSentinel = () => {
       return false;
     }
 
-    // Second check: velocity profiling (automation speed)
-    if (e.type === 'click' || e.type === 'mousedown') {
-      const now = Date.now();
-      const delta = now - lastInteractionRef.current;
-      lastInteractionRef.current = now;
-
-      if (delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-          detail: { delta, type: e.type, timestamp: now }
-        }));
-        return false;
-      }
-    }
-
     // 2. Velocity Profiling (Behavioral Analysis)
     if (e.type === 'click' || e.type === 'mousedown') {
-      const now = Date.now();
       const lastTime = lastInteractionRef.current[e.type] || 0;
       const delta = now - lastTime;
 
       // Detection of sub-human interaction speeds (< 50ms)
       if (lastTime !== 0 && delta >= 0 && delta < 50) {
         logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-            detail: { delta, type: e.type, timestamp: now }
-          }));
-        }
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: now }
+        }));
+        return false;
       }
       lastInteractionRef.current[e.type] = now;
     }
@@ -414,11 +390,10 @@ export const useSentinel = () => {
 
       if (isRobotic) {
         logSecurityEvent(`Low behavioral entropy detected: Spatial precision anomaly`, 'HIGH');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
-            detail: { x, y, timestamp: Date.now() }
-          }));
-        }
+        window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+          detail: { x, y, timestamp: Date.now() }
+        }));
+        return false;
       }
     }
 

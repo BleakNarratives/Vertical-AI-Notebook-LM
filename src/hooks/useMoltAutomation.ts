@@ -155,9 +155,14 @@ export const useMoltAutomation = () => {
 
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const velocity = customEvent.detail?.velocity || 0;
-      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
-      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+      const detail = customEvent.detail || {};
+      attemptAutonomousImprovement(`Velocity anomaly detected: ${detail.type} (${detail.delta}ms)`);
+    };
+
+    const handleEntropyAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const detail = customEvent.detail || {};
+      attemptAutonomousImprovement(`Entropy anomaly detected at [${detail.x}, ${detail.y}]`);
     };
 
     if (typeof window !== 'undefined') {
@@ -168,6 +173,7 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
+      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
