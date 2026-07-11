@@ -8,6 +8,8 @@ import React, { useCallback, useRef } from 'react';
  */
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
+  const lastDeltaRef = useRef<Record<string, number>>({});
+  const jitterViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
@@ -343,16 +345,8 @@ export const useSentinel = () => {
     return () => observer.disconnect();
   }, [logSecurityEvent]);
 
-  const lastInteractionRef = useRef<Record<string, number>>({});
-
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
-    if (typeof window === 'undefined') return true;
-    if (!e) return true;
-    if (typeof window === 'undefined') return true;
-
-    const now = Date.now();
-    const win = window as unknown as { _sentinel_last_interaction?: number };
-    const lastInteraction = win._sentinel_last_interaction || 0;
+    if (typeof window === 'undefined' || !e) return true;
 
     const now = Date.now();
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
@@ -366,37 +360,38 @@ export const useSentinel = () => {
       return false;
     }
 
-    // Second check: velocity profiling (automation speed)
+    // 2. Temporal Analysis (Velocity & Jitter)
     if (e.type === 'click' || e.type === 'mousedown') {
-      const now = Date.now();
-      const delta = now - lastInteractionRef.current;
-      lastInteractionRef.current = now;
-
-      if (delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-          detail: { delta, type: e.type, timestamp: now }
-        }));
-        return false;
-      }
-    }
-
-    // 2. Velocity Profiling (Behavioral Analysis)
-    if (e.type === 'click' || e.type === 'mousedown') {
-      const now = Date.now();
       const lastTime = lastInteractionRef.current[e.type] || 0;
       const delta = now - lastTime;
+      lastInteractionRef.current[e.type] = now;
 
-      // Detection of sub-human interaction speeds (< 50ms)
-      if (lastTime !== 0 && delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        if (typeof window !== 'undefined') {
+      if (lastTime !== 0) {
+        // Jitter Detection: Perfect temporal consistency is highly suspicious
+        const lastDelta = lastDeltaRef.current[e.type] || 0;
+        const jitter = Math.abs(delta - lastDelta);
+
+        if (jitter === 0) {
+          jitterViolationsRef.current[e.type] = (jitterViolationsRef.current[e.type] || 0) + 1;
+          if (jitterViolationsRef.current[e.type] >= 3) {
+            logSecurityEvent(`Sub-human temporal precision detected: Zero jitter in ${e.type} sequence`, 'HIGH');
+            window.dispatchEvent(new CustomEvent('sentinel-jitter-alert', {
+              detail: { delta, type: e.type, timestamp: now }
+            }));
+          }
+        } else {
+          jitterViolationsRef.current[e.type] = 0;
+        }
+        lastDeltaRef.current[e.type] = delta;
+
+        // Velocity Profiling: Detection of sub-human interaction speeds (< 50ms)
+        if (delta >= 0 && delta < 50) {
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
           window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
             detail: { delta, type: e.type, timestamp: now }
           }));
         }
       }
-      lastInteractionRef.current[e.type] = now;
     }
 
     // 3. Entropy Analysis (Spatial Variance)

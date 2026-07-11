@@ -155,9 +155,23 @@ export const useMoltAutomation = () => {
 
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const velocity = customEvent.detail?.velocity || 0;
-      // TODO: Implement localized UI throttling or other velocity-specific mitigations here.
-      // High-severity logging and autonomous improvement are already handled via the 'security-alert' event.
+      const delta = customEvent.detail?.delta || 0;
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Velocity violation (${delta}ms). Initiating temporal stabilization.`, 'HIGH');
+      attemptAutonomousImprovement(`Velocity anomaly: ${delta}ms`);
+    };
+
+    const handleEntropyAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { x, y } = customEvent.detail || {};
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Low entropy interaction at (${x}, ${y}).`, 'HIGH');
+      attemptAutonomousImprovement('Low behavioral entropy detected.');
+    };
+
+    const handleJitterAlert = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { type, delta } = customEvent.detail || {};
+      logSecurityEvent(`AUTONOMOUS_DEFENSE: Zero jitter detected in ${type} sequence (${delta}ms).`, 'HIGH');
+      attemptAutonomousImprovement(`Temporal precision anomaly: ${type}`);
     };
 
     if (typeof window !== 'undefined') {
@@ -168,6 +182,8 @@ export const useMoltAutomation = () => {
       window.addEventListener('sentinel-integrity-violation', handleIntegrityViolation);
       window.addEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
       window.addEventListener('sentinel-velocity-alert', handleVelocityAlert);
+      window.addEventListener('sentinel-entropy-alert', handleEntropyAlert);
+      window.addEventListener('sentinel-jitter-alert', handleJitterAlert);
       return () => {
         window.removeEventListener('security-alert', handleSecurityAlert);
         window.removeEventListener('sentinel-shadow-recorded', handleShadowRecorded);
@@ -177,6 +193,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-untrusted-interaction', handleUntrustedInteraction);
         window.removeEventListener('sentinel-velocity-alert', handleVelocityAlert);
         window.removeEventListener('sentinel-entropy-alert', handleEntropyAlert);
+        window.removeEventListener('sentinel-jitter-alert', handleJitterAlert);
       };
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);

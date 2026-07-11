@@ -1,7 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
+
+interface BoardroomEvent extends CustomEvent {
+  detail: {
+    source: string;
+    action: string;
+    payload?: string;
+    timestamp: string;
+  };
+}
 
 export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -44,7 +53,7 @@ export const Laptop: React.FC = () => {
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
       >
-        <FocusIndicator color="red" />
+        <FocusIndicator color="neon-red" />
         {/* Laptop Screen (Open) */}
         <div className="absolute top-0 left-4 right-4 h-24 bg-obsidian border border-grey-medium rounded-t-sm overflow-hidden flex flex-col pointer-events-none">
           <div className="h-1.5 bg-grey-dark border-b border-grey-medium flex items-center px-1 gap-0.5">
@@ -58,7 +67,7 @@ export const Laptop: React.FC = () => {
             {logs.length > 0 ? (
               <div className="mt-1 space-y-0.5">
                 {logs.map((log, i) => (
-                  <div key={log} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
+                  <div key={`${log}-${i}`} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
                 ))}
               </div>
             ) : (
@@ -75,11 +84,9 @@ export const Laptop: React.FC = () => {
         </div>
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover/laptop:opacity-100 group-focus-visible/laptop:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           Terminal / IDEal / 4ward
         </span>
-
-        <FocusIndicator color="neon-red" group="laptop" />
       </button>
     </div>
   );
