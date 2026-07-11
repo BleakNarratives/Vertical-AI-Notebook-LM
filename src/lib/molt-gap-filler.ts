@@ -283,6 +283,12 @@
  * - Implement "Entropy Injection": during a protocol siege, inject randomized "noise" into the application's internal event bus to disrupt automated scripts.
  * - This noise should manifest visually as subtle, randomized flickering of the `PerspectiveWrapper` or `Whiteboard`.
  *
+ * CYCLE 57: ADAPTIVE VELOCITY DECAY & JITTER REFINEMENT
+ * - Refine the `sentinel-jitter-alert` logic to include a "Jitter Heatmap" in the `Laptop` component.
+ * - Implement an adaptive decay function for the velocity threshold: if no violations occur for 10 minutes, slowly return the threshold to the default 50ms.
+ * - Add visual 'temporal distortion' (chromatic aberration) to components currently under jitter investigation.
+ * - Log `MEDIUM` security events for "Temporal Convergence" when a session's jitter returns to human-like levels.
+ *
  * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
  * - Analyze `sentinel-velocity-alert` data to identify specific component hotspots for automated interaction.
  * - Implement "Adaptive Velocity Thresholds": if velocity alerts are frequent, temporarily increase the minimum human-interaction delta (e.g., from 50ms to 100ms).

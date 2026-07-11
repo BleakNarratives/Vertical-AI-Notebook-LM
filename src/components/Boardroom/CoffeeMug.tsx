@@ -5,15 +5,6 @@ import { FocusIndicator } from './FocusIndicator';
 
 const MESSAGES = ['SYSTEM_SNAPSHOT_SAVED', 'CACHE_PURGED', 'STATE_LOADED', 'LOGS_ARCHIVED', 'MEMORY_SYNCHRONIZED', 'SESSION_RECONSTRUCTED'];
 
-const STATUS_MESSAGES = [
-  'SYSTEM_SNAPSHOT_SAVED',
-  'CACHE_PURGED',
-  'STATE_LOADED',
-  'LOGS_ARCHIVED',
-  'MEMORY_SYNCHRONIZED',
-  'SESSION_RECONSTRUCTED',
-];
-
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,7 +39,7 @@ export const CoffeeMug: React.FC = () => {
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
       >
-        <FocusIndicator color="amber" />
+        <FocusIndicator color="neon-amber" />
         {/* Steam animation */}
         <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover/mug:opacity-100 group-focus-visible/mug:opacity-100'}`}>
           <div className={`w-0.5 h-4 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
@@ -62,8 +53,7 @@ export const CoffeeMug: React.FC = () => {
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity">
-        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 whitespace-nowrap transition-opacity z-50">
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity z-50">
           SAVE / LOAD / SETTINGS
         </span>
       </button>

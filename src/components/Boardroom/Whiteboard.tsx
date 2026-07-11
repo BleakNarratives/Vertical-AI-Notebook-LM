@@ -35,10 +35,10 @@ export const Whiteboard: React.FC = () => {
         style={{ transform: 'rotateX(-35deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu cursor-none"
       >
-        <FocusIndicator color="amber" />
+        <FocusIndicator color="neon-amber" />
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           {/* Simulated Marker Tip (Delight) */}
-          <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover/whiteboard:opacity-100 group-focus-visible/whiteboard:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
+          <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
                style={{ left: 'var(--x, 50%)', top: 'var(--y, 50%)', transform: 'translate(-50%, -50%)' }} />
           <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none stroke-neon-red" viewBox="0 0 100 150" fill="none">
             <path d="M50,30 Q80,30 80,60 Q80,90 50,90 Q20,90 20,60 Q20,30 50,30 Z" strokeWidth="0.5" />
@@ -49,10 +49,9 @@ export const Whiteboard: React.FC = () => {
              <div className="mt-auto flex justify-between items-end"><div className="text-[8px] font-mono text-neon-amber/40">v2.6.0</div></div>
           </div>
         </div>
-        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity uppercase whitespace-nowrap">
+        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
           Whiteboard
         </span>
-        <FocusIndicator color="neon-amber" />
       </button>
     </div>
   );

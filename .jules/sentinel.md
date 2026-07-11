@@ -37,3 +37,8 @@
 **Vulnerability:** Client-side triggers were susceptible to sub-human interaction speeds, allowing automated scripts to bypass standard rate limits and flood the system with events.
 **Learning:** Pure rate limiting (e.g., 5 requests per 30s) is easily gamed by bots that operate at the millisecond scale. Security logic must analyze the *velocity* of interactions, not just the count. Using `window` as a persistent session-wide timestamp store allows for cross-hook velocity verification without expensive context providers.
 **Prevention:** Implement a velocity threshold (e.g., 50ms) for critical UI interactions. Integrate velocity alerts with autonomous system responses (Molt) to force system hardening when sub-human behavior is detected.
+
+## 2026-06-09 - [Temporal Precision Detection & Logic Hardening]
+**Vulnerability:** Deterministic interaction intervals and duplicate logic in security hooks allowed for predictable automation bypasses and caused build instabilities.
+**Learning:** Bots often use fixed delays (e.g., exactly 100ms) which pass velocity checks but lack the "jitter" of human timing. Furthermore, redundant state management in high-frequency hooks (`useSentinel`) can lead to race conditions and inconsistent security enforcement.
+**Prevention:** Implement "Jitter Detection" to flag perfectly consistent temporal sequences (Zero Jitter). Consolidate interaction tracking into a single, robust flow and ensure all behavioral alerts (Entropy, Velocity, Jitter) are integrated into the autonomous defense layer (Molt).
