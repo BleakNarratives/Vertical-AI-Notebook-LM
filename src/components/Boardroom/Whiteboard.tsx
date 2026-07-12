@@ -40,9 +40,13 @@ export const Whiteboard: React.FC = () => {
           {/* Simulated Marker Tip (Delight) */}
           <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
                style={{ left: 'var(--x, 50%)', top: 'var(--y, 50%)', transform: 'translate(-50%, -50%)' }} />
-          <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none stroke-neon-red" viewBox="0 0 100 150" fill="none">
+          <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none stroke-neon-red" viewBox="0 0 100 150" fill="none">
             <path d="M50,30 Q80,30 80,60 Q80,90 50,90 Q20,90 20,60 Q20,30 50,30 Z" strokeWidth="0.5" />
             <path d="M50,90 L50,120 M40,110 L60,110" strokeWidth="0.5" />
+            {/* Added strategy illustrations */}
+            <path d="M20,40 L40,40 M20,50 L35,50 M20,60 L45,60" strokeWidth="0.3" opacity="0.5" />
+            <path d="M70,100 L90,120 M90,100 L70,120" strokeWidth="0.3" opacity="0.5" strokeDasharray="1 1" />
+            <circle cx="75" cy="45" r="5" strokeWidth="0.3" opacity="0.4" />
           </svg>
           <div className="w-full h-full border-l border-b border-neon-amber/20 flex flex-col gap-2 opacity-40">
              <div className="h-0.5 w-3/4 bg-neon-amber/40" /><div className="h-0.5 w-1/2 bg-neon-amber/40" />

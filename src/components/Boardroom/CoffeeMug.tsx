@@ -41,7 +41,7 @@ export const CoffeeMug: React.FC = () => {
       >
         <FocusIndicator color="neon-amber" />
         {/* Steam animation */}
-        <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover/mug:opacity-100 group-focus-visible/mug:opacity-100'}`}>
+        <div className={`absolute -top-6 left-4 flex gap-1.5 transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100'}`}>
           <div className={`w-0.5 h-4 animate-[bounce_2s_infinite] [animation-delay:75ms] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
           <div className={`w-0.5 h-6 animate-[bounce_1.5s_infinite] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-grey-medium/40'}`} />
           <div className={`w-0.5 h-3 animate-[bounce_2.5s_infinite] [animation-delay:150ms] blur-[1px] transition-colors duration-500 ${isActive ? 'bg-neon-amber' : 'bg-grey-medium/40'}`} />
