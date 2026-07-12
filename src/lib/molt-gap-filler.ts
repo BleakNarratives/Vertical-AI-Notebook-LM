@@ -400,6 +400,36 @@
  * - Expand the `Shadow Logs` to include the raw event payload and state metadata for every blocked interaction.
  * - Implement an autonomous Molt cycle that attempts to reconstruct the "shadow sequence" from these logs.
  * - Use the reconstruction to automatically update the `maliciousPatterns` regex suite in `useSentinel`.
+ *
+ * CYCLE 57: ADAPTIVE VELOCITY DECAY
+ * - Implement a decay function for the adaptive velocity threshold stored in `localStorage`.
+ * - If no velocity violations are detected for 5 minutes, slowly decrease the threshold (min 50ms).
+ * - Add visual feedback (e.g., cooling effect on the CoffeeMug) when the threshold decays.
+ *
+ * CYCLE 58: BEHAVIORAL ENTROPY REFINEMENT
+ * - Expand `verifyInteraction` to track the path length and acceleration of mouse movements.
+ * - Log `HIGH` severity events for perfectly linear or constant-acceleration paths.
+ * - Update the `SecurityOverlay` to display "HEURISTIC_DIVERGENCE_DETECTED" when behavioral entropy is low.
+ *
+ * CYCLE 59: AUTOMATED HEURISTIC TUNING
+ * - Implement an autonomous Molt cycle that adjusts the entropy and jitter sensitivity based on false-positive rates.
+ * - Use `localStorage` to store the tuned heuristic parameters.
+ *
+ * CYCLE 60: ENTROPY-BASED JITTER
+ * - Inject randomized "jitter" into the response time of sensitive UI actions to disrupt automated timing analysis.
+ * - The amount of jitter should be proportional to the current session's risk score.
+ *
+ * CYCLE 61: FORENSIC PLAYBACK ENHANCEMENT
+ * - Update the `VideoViewer` to support "Forensic Playback" of blocked interaction sequences.
+ * - Display the captured event metadata (coordinates, delta, jitter) as a HUD overlay during playback.
+ *
+ * CYCLE 62: DECOY ROTATION REFINEMENT
+ * - Automatically adjust the frequency of decoy rotation based on the frequency of `sentinel-decoy-breach` events.
+ * - Implement "Contextual Decoys" that match the current agent's role (e.g., fake gate logs for Higgins).
+ *
+ * CYCLE 63: SYSTEM-WIDE INTEGRITY HEARTBEAT
+ * - Implement a periodic (every 60s) integrity check of all `localStorage` security keys.
+ * - If tampering is detected, trigger an immediate `CRITICAL` alert and rotate all security signatures.
  */
 
 export const MOLT_CONFIG = {
