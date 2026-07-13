@@ -159,7 +159,7 @@ export const useMoltAutomation = () => {
       logSecurityEvent(`AUTONOMOUS_DEFENSE: Velocity violation (${delta}ms). Initiating temporal stabilization.`, 'HIGH');
 
       if (violations >= 5) {
-        const currentThreshold = parseInt(secureGet('sentinel_velocity_threshold') || '50', 10);
+        const currentThreshold = parseInt(secureGet('sentinel_velocity_threshold') || '50', 10) || 50;
         const newThreshold = Math.min(currentThreshold + 25, 250);
         secureStore('sentinel_velocity_threshold', newThreshold.toString());
         logSecurityEvent(`BEHAVIORAL_ADAPTATION: Increasing velocity threshold to ${newThreshold}ms`, 'MEDIUM');
