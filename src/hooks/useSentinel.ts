@@ -389,7 +389,7 @@ export const useSentinel = () => {
         // Velocity Profiling: Detection of sub-human interaction speeds (default < 50ms)
         // Adaptive threshold read from secureStore
         const thresholdStored = secureGet('sentinel_velocity_threshold');
-        const threshold = thresholdStored ? parseInt(thresholdStored, 10) : 50;
+        const threshold = parseInt(thresholdStored || '50', 10) || 50;
 
         if (delta >= 0 && delta < threshold) {
           velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
