@@ -91,7 +91,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-16">
       <div className={`h-4 flex items-center justify-center ${resolvedLabelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
         {activeTitle && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
@@ -99,7 +99,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
           </div>
         )}
       </div>
-      <div className="group/papers relative flex items-end justify-center w-24 h-24">
+      <div className="group relative flex items-end justify-center w-24 h-24">
         {/* Paper 1: Bottom Left */}
         <div className="absolute bottom-0 left-0 transition-all duration-300 group-hover:-translate-x-8 group-focus-within:-translate-x-8 group-hover:-rotate-12 group-focus-within:-rotate-12">
           <Paper

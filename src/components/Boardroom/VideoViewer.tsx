@@ -44,6 +44,13 @@ export const VideoViewer: React.FC = () => {
             <span className={`text-[8px] font-mono uppercase ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>REC</span>
           </div>
           <div className={`absolute text-[10px] font-mono tracking-widest animate-pulse ${isActive ? 'text-neon-amber' : 'text-neon-red/60'}`}>{isActive ? 'FEED_LIVE' : 'SIGNAL_WAITING...'}</div>
+
+          {/* Remote Guest Silhouette (Atmospheric Shadow) */}
+          {isActive && (
+            <div className="absolute bottom-0 w-24 h-24 bg-gradient-to-t from-black/80 to-transparent opacity-40 blur-md pointer-events-none translate-y-4">
+              <div className="w-12 h-12 bg-black rounded-full mx-auto" />
+            </div>
+          )}
         </div>
         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-grey-medium" />
         <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
