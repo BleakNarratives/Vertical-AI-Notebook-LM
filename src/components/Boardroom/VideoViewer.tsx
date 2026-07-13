@@ -32,6 +32,13 @@ export const VideoViewer: React.FC = () => {
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[size:100%_2px,3px_100%] pointer-events-none" />
           <div className={`w-full h-full animate-pulse transition-colors duration-500 ${isActive ? 'bg-gradient-to-t from-neon-amber/20 to-transparent' : 'bg-gradient-to-t from-neon-red/5 to-transparent'}`} />
+
+          {/* Remote Guest Silhouette (Atmospheric Delight) */}
+          <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-20 transition-all ${isActive ? 'duration-1000 delay-300 opacity-40 translate-y-2' : 'duration-300 opacity-0 translate-y-10'}`}>
+            <div className="w-full h-full bg-black rounded-t-[40%] blur-sm" />
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-black rounded-full blur-sm" />
+          </div>
+
           <div className="absolute top-2 right-2 flex items-center gap-1 opacity-60">
             <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isActive ? 'bg-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.8)]' : 'bg-neon-red'}`} />
             <span className={`text-[8px] font-mono uppercase ${isActive ? 'text-neon-amber' : 'text-neon-red'}`}>REC</span>
