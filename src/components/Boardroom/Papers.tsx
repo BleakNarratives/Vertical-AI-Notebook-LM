@@ -34,7 +34,7 @@ const Paper: React.FC<PaperProps> = ({
     >
       <FocusIndicator color="neon-amber" />
       {/* Paper Content Simulation */}
-      <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover/paper:opacity-40 group-focus-visible/paper:opacity-40 transition-opacity">
+      <div className="absolute inset-2 flex flex-col gap-1 opacity-20 group-hover:opacity-40 group-focus-within:opacity-40 transition-opacity">
         <div className="h-0.5 w-full bg-grey-medium" />
         <div className="h-0.5 w-3/4 bg-grey-medium" />
         <div className="h-0.5 w-full bg-grey-medium" />
