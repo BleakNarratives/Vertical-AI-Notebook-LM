@@ -105,7 +105,8 @@ export const useSentinel = () => {
       .replace(/\//g, '&#x2F;')
       .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
-      .replace(/=/g, '&#x3D;');
+      .replace(/=/g, '&#x3D;')
+      .replace(/\\/g, '&#92;');
   }, []);
 
   const recursiveDecode = useCallback((input: string): string => {
@@ -365,10 +366,15 @@ export const useSentinel = () => {
     // 2. Temporal Analysis (Velocity & Jitter)
     if (e.type === 'click' || e.type === 'mousedown') {
       const lastTime = lastInteractionRef.current[e.type] || 0;
-      const delta = now - lastTime;
       lastInteractionRef.current[e.type] = now;
 
       if (lastTime !== 0) {
+        const delta = now - lastTime;
+
+        // Reset consecutive violations if there's a human-like pause (> 500ms)
+        if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
+        }
         // Jitter Detection: Perfect temporal consistency is highly suspicious
         const lastDelta = lastDeltaRef.current[e.type] || 0;
         const jitter = Math.abs(delta - lastDelta);
