@@ -400,6 +400,21 @@
  * - Expand the `Shadow Logs` to include the raw event payload and state metadata for every blocked interaction.
  * - Implement an autonomous Molt cycle that attempts to reconstruct the "shadow sequence" from these logs.
  * - Use the reconstruction to automatically update the `maliciousPatterns` regex suite in `useSentinel`.
+ *
+ * CYCLE 58: BEHAVIORAL ENTROPY REFINEMENT
+ * - Analyze `sentinel-entropy-alert` data to identify specific component hotspots for automated interaction.
+ * - Implement "Adaptive Entropy Thresholds": if entropy alerts are frequent, temporarily increase the required spatial variance for subsequent interactions.
+ * - Log `HIGH` severity events for "Sub-human Entropy Sequences" if 3+ entropy alerts occur in 10 seconds.
+ *
+ * CYCLE 59: AUTONOMOUS HEURISTIC TUNING
+ * - Implement a "Heuristic Tuning" cycle where Molt analyzes the ratio of human vs. sub-human interactions.
+ * - Automatically adjust the `sentinel_velocity_threshold` baseline (default 50ms) if the false-positive rate is high.
+ * - Log "Heuristic Re-calibration" as a `MEDIUM` security event.
+ *
+ * CYCLE 60: ENTROPY-BASED JITTER EXPANSION
+ * - Expand jitter detection to include spatial jitter (variance in click coordinates for identical actions).
+ * - Implement "Spatial Jitter Alerts" and integrate them into the autonomous defense layer.
+ * - Set `MOLT_CONFIG.status` to 'SENTINEL_V5_STABLE'.
  */
 
 export const MOLT_CONFIG = {

@@ -198,15 +198,25 @@ export const useMoltAutomation = () => {
     }
   }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
 
-  // Integrity Heartbeat: Verify storage consistency every 30s
+  // Integrity Heartbeat: Verify storage consistency and decay adaptive thresholds every 30s
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const interval = setInterval(() => {
       secureGet('sentinel_blacklist');
       secureGet('sentinel_lockdown');
+
+      // Adaptive Velocity Threshold Decay
+      const thresholdStored = secureGet('sentinel_velocity_threshold');
+      if (thresholdStored) {
+        const threshold = parseInt(thresholdStored, 10);
+        if (threshold > 50) {
+          const newThreshold = Math.max(threshold - 5, 50);
+          secureStore('sentinel_velocity_threshold', newThreshold.toString());
+        }
+      }
     }, 30000);
     return () => clearInterval(interval);
-  }, [secureGet]);
+  }, [secureGet, secureStore]);
 
   return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
 };
