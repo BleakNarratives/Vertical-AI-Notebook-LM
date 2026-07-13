@@ -155,8 +155,16 @@ export const useMoltAutomation = () => {
 
     const handleVelocityAlert = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const delta = customEvent.detail?.delta || 0;
+      const { delta, violations } = customEvent.detail || {};
       logSecurityEvent(`AUTONOMOUS_DEFENSE: Velocity violation (${delta}ms). Initiating temporal stabilization.`, 'HIGH');
+
+      if (violations >= 5) {
+        const currentThreshold = parseInt(secureGet('sentinel_velocity_threshold') || '50', 10) || 50;
+        const newThreshold = Math.min(currentThreshold + 25, 250);
+        secureStore('sentinel_velocity_threshold', newThreshold.toString());
+        logSecurityEvent(`BEHAVIORAL_ADAPTATION: Increasing velocity threshold to ${newThreshold}ms`, 'MEDIUM');
+      }
+
       attemptAutonomousImprovement(`Velocity anomaly: ${delta}ms`);
     };
 
@@ -205,18 +213,18 @@ export const useMoltAutomation = () => {
       secureGet('sentinel_blacklist');
       secureGet('sentinel_lockdown');
 
-      // Adaptive Velocity Threshold Decay
-      const thresholdStored = secureGet('sentinel_velocity_threshold');
-      if (thresholdStored) {
-        const threshold = parseInt(thresholdStored, 10);
-        if (threshold > 50) {
-          const newThreshold = Math.max(threshold - 5, 50);
-          secureStore('sentinel_velocity_threshold', newThreshold.toString());
+      // Adaptive Threshold Decay: Slowly return to nominal 50ms if no violations
+      const currentThreshold = parseInt(secureGet('sentinel_velocity_threshold') || '50', 10);
+      if (currentThreshold > 50) {
+        const newThreshold = Math.max(currentThreshold - 5, 50);
+        secureStore('sentinel_velocity_threshold', newThreshold.toString());
+        if (newThreshold === 50) {
+          logSecurityEvent('BEHAVIORAL_RECOVERY: Velocity threshold returned to nominal levels.', 'LOW');
         }
       }
     }, 30000);
     return () => clearInterval(interval);
-  }, [secureGet, secureStore]);
+  }, [secureGet, secureStore, logSecurityEvent]);
 
   return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
 };

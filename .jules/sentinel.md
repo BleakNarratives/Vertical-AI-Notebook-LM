@@ -43,7 +43,7 @@
 **Learning:** Bots often use fixed delays (e.g., exactly 100ms) which pass velocity checks but lack the "jitter" of human timing. Furthermore, redundant state management in high-frequency hooks (`useSentinel`) can lead to race conditions and inconsistent security enforcement.
 **Prevention:** Implement "Jitter Detection" to flag perfectly consistent temporal sequences (Zero Jitter). Consolidate interaction tracking into a single, robust flow and ensure all behavioral alerts (Entropy, Velocity, Jitter) are integrated into the autonomous defense layer (Molt).
 
-## 2026-06-10 - [Adaptive Velocity Throttling & Sustained Violation Blocking]
-**Vulnerability:** Static velocity thresholds can be gamed by bots with jitter, and human-like bursts of speed could trigger false positives if not handled sessionally.
-**Learning:** Security must be adaptive. By incrementing thresholds based on persistent violation counts while blocking only sustained consecutive sub-human interactions, we create a system that hardens under attack but stays transparent to humans.
-**Prevention:** Implement session-based consecutive violation tracking and persistent threshold adaptation. Use a decay function (heartbeat) to return the system to baseline once the threat subsides.
+## 2026-06-10 - [Adaptive Behavioral Defense & Input Sanitization Expansion]
+**Vulnerability:** Static security thresholds and incomplete character sanitization allowed for refined bypasses and script-based flooding.
+**Learning:** A fixed velocity threshold (e.g., 50ms) is a static target for advanced bots. Security layers must adapt to the observed interaction profile of a session. Furthermore, backslashes (`\`) are often overlooked in client-side sanitization but can be used for string escaping bypasses in some contexts.
+**Prevention:** Implement "Adaptive Velocity Throttling" where the threshold increases dynamically in response to repeated violations. Expand sanitization to include backslashes and integrate behavioral adaptation triggers with the autonomous Molt engine.

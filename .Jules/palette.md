@@ -1,3 +1,7 @@
+## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
+**Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
+**Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.
+
 ## 2026-06-10 - [Standardized Boardroom Focus Indicators]
 **Learning:** Generic `group-*` utility classes in Tailwind v4 require the immediate interactive parent to have the standard `group` class. Named groups (e.g., `group/laptop`) block these generic selectors for their children. Additionally, absolute-positioned decorative elements like the `FocusIndicator` (`-inset-3`) will be clipped if the parent uses `overflow-hidden`.
 

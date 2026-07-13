@@ -103,6 +103,7 @@ export const useSentinel = () => {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;')
       .replace(/\//g, '&#x2F;')
+      .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
       .replace(/=/g, '&#x3D;')
       .replace(/\\/g, '&#92;');
@@ -391,42 +392,19 @@ export const useSentinel = () => {
         }
         lastDeltaRef.current[e.type] = delta;
 
-        // Velocity Profiling: Detection of sub-human interaction speeds (Adaptive threshold)
+        // Velocity Profiling: Detection of sub-human interaction speeds (default < 50ms)
+        // Adaptive threshold read from secureStore
         const thresholdStored = secureGet('sentinel_velocity_threshold');
-        const threshold = thresholdStored ? parseInt(thresholdStored, 10) : 50;
+        const threshold = parseInt(thresholdStored || '50', 10) || 50;
 
         if (delta >= 0 && delta < threshold) {
           velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
-
-          // Increment persistent violation counter
-          const violationsStored = secureGet('sentinel_velocity_violations');
-          const totalViolations = (violationsStored ? parseInt(violationsStored, 10) : 0) + 1;
-          secureStore('sentinel_velocity_violations', totalViolations.toString());
-
-          // Adapt threshold: Increment by 25ms every 5 violations (max 250ms)
-          if (totalViolations % 5 === 0) {
-            const newThreshold = Math.min(threshold + 25, 250);
-            secureStore('sentinel_velocity_threshold', newThreshold.toString());
-            logSecurityEvent(`Adaptive defense: Velocity threshold increased to ${newThreshold}ms`, 'MEDIUM');
-          }
-
-          if (velocityViolationsRef.current[e.type] >= 3) {
-            logSecurityEvent(`CRITICAL: Sustained sub-human velocity blocked for ${e.type} (${delta}ms)`, 'CRITICAL');
-            window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-              detail: { delta, type: e.type, timestamp: now, violations: velocityViolationsRef.current[e.type] }
-            }));
-            return false; // BLOCK INTERACTION
-          }
-
-          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (threshold: ${threshold}ms)`, 'HIGH');
           window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-            detail: { delta, type: e.type, timestamp: now }
+            detail: { delta, type: e.type, timestamp: now, violations: velocityViolationsRef.current[e.type] }
           }));
-        } else {
-          // Reset consecutive violations on human-like speed (but within the pause logic above)
-          // Actually, if it's > threshold, we should probably reset or at least not increment.
-          // But the memory says reset only after human-like pauses (> 500ms).
-          // So I will stick to that.
+        } else if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
         }
       }
     }
@@ -455,7 +433,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent, secureGet, secureStore]);
+  }, [logSecurityEvent, secureGet]);
 
   return {
     logSecurityEvent,
