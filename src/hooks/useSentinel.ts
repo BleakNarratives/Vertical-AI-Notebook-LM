@@ -10,6 +10,7 @@ export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
   const lastDeltaRef = useRef<Record<string, number>>({});
   const jitterViolationsRef = useRef<Record<string, number>>({});
+  const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
@@ -102,6 +103,7 @@ export const useSentinel = () => {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;')
       .replace(/\//g, '&#x2F;')
+      .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
       .replace(/=/g, '&#x3D;');
   }, []);
@@ -384,12 +386,19 @@ export const useSentinel = () => {
         }
         lastDeltaRef.current[e.type] = delta;
 
-        // Velocity Profiling: Detection of sub-human interaction speeds (< 50ms)
-        if (delta >= 0 && delta < 50) {
-          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        // Velocity Profiling: Detection of sub-human interaction speeds (default < 50ms)
+        // Adaptive threshold read from secureStore
+        const thresholdStored = secureGet('sentinel_velocity_threshold');
+        const threshold = parseInt(thresholdStored || '50', 10) || 50;
+
+        if (delta >= 0 && delta < threshold) {
+          velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (threshold: ${threshold}ms)`, 'HIGH');
           window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-            detail: { delta, type: e.type, timestamp: now }
+            detail: { delta, type: e.type, timestamp: now, violations: velocityViolationsRef.current[e.type] }
           }));
+        } else if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
         }
       }
     }
@@ -418,7 +427,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet]);
 
   return {
     logSecurityEvent,
