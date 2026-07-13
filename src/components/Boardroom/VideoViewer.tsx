@@ -34,9 +34,9 @@ export const VideoViewer: React.FC = () => {
           <div className={`w-full h-full animate-pulse transition-colors duration-500 ${isActive ? 'bg-gradient-to-t from-neon-amber/20 to-transparent' : 'bg-gradient-to-t from-neon-red/5 to-transparent'}`} />
 
           {/* Remote Guest Silhouette (Atmospheric Delight) */}
-          <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-20 transition-all duration-1000 delay-300 ${isActive ? 'opacity-40 translate-y-2' : 'opacity-0 translate-y-10'}`}>
-             <div className="w-full h-full bg-black rounded-t-[40%] blur-sm" />
-             <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-black rounded-full blur-sm" />
+          <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-20 transition-all ${isActive ? 'duration-1000 delay-300 opacity-40 translate-y-2' : 'duration-300 opacity-0 translate-y-10'}`}>
+            <div className="w-full h-full bg-black rounded-t-[40%] blur-sm" />
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-black rounded-full blur-sm" />
           </div>
 
           <div className="absolute top-2 right-2 flex items-center gap-1 opacity-60">
