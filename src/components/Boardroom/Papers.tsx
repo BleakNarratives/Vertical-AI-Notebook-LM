@@ -91,7 +91,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
   };
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <div className="flex flex-col items-center gap-16">
       <div className={`h-4 flex items-center justify-center ${resolvedLabelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
         {activeTitle && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
