@@ -105,8 +105,7 @@ export const useSentinel = () => {
       .replace(/\//g, '&#x2F;')
       .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
-      .replace(/=/g, '&#x3D;')
-      .replace(/\\/g, '&#92;');
+      .replace(/=/g, '&#x3D;');
   }, []);
 
   const recursiveDecode = useCallback((input: string): string => {
@@ -146,7 +145,7 @@ export const useSentinel = () => {
 
   const validateInput = useCallback((input: string): boolean => {
     // DoS Mitigation: Enforce strict length limits
-    if (input.length > 1000) {
+    if (input.length > 500) {
       logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
       storeShadowLog("DOS_LENGTH_REJECTION: " + input.substring(0, 50) + "...");
       return false;
@@ -277,6 +276,22 @@ export const useSentinel = () => {
     }
     return false;
   }, [secureGet, secureRemove]);
+
+  const verifyStorageIntegrity = useCallback(() => {
+    if (typeof window === 'undefined') return true;
+    const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
+    let isIntegral = true;
+
+    for (const key of criticalKeys) {
+      const local = localStorage.getItem(key);
+      const session = sessionStorage.getItem(key);
+      if (local && session && local !== session) {
+        logSecurityEvent(`Storage divergence detected for critical key: ${key}`, 'CRITICAL');
+        isIntegral = false;
+      }
+    }
+    return isIntegral;
+  }, [logSecurityEvent]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -447,6 +462,7 @@ export const useSentinel = () => {
     getDecoyConfig,
     triggerBlacklist,
     checkBlacklist,
+    verifyStorageIntegrity,
     secureStore,
     secureGet,
     secureRemove,

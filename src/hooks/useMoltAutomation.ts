@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { useMolt } from './useMolt';
 import { useSentinel } from './useSentinel';
 
@@ -22,6 +22,7 @@ export const useMoltAutomation = () => {
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
+  const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
   const MAX_AUTONOMOUS_CYCLES = 5;
 
   // Check for security states on mount
@@ -49,11 +50,48 @@ export const useMoltAutomation = () => {
     checkSecurityStates();
   }, [checkBlacklist, secureGet, secureRemove]);
 
+  // BroadcastChannel initialization and cleanup
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (!broadcastChannelRef.current) {
+      broadcastChannelRef.current = new BroadcastChannel('sentinel-state-link');
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      const { type, payload } = event.data;
+      if (type === 'LOCKDOWN_SYNC') {
+        const expiry = parseInt(payload, 10);
+        if (Date.now() < expiry) {
+          setIsLockdown(true);
+          setTimeout(() => setIsLockdown(false), expiry - Date.now());
+        }
+      } else if (type === 'BLACKLIST_SYNC') {
+        setIsBlacklisted(true);
+      }
+    };
+
+    broadcastChannelRef.current.addEventListener('message', handleMessage);
+
+    return () => {
+      if (broadcastChannelRef.current) {
+        broadcastChannelRef.current.removeEventListener('message', handleMessage);
+        broadcastChannelRef.current.close();
+        broadcastChannelRef.current = null;
+      }
+    };
+  }, []);
+
   const triggerLockdown = useCallback(() => {
     if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
+
+    if (broadcastChannelRef.current) {
+      broadcastChannelRef.current.postMessage({ type: 'LOCKDOWN_SYNC', payload: expiry.toString() });
+    }
+
     // Log as MEDIUM to avoid triggering a new high-severity alert loop
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
@@ -131,6 +169,9 @@ export const useMoltAutomation = () => {
         triggerBlacklist();
         setIsBlacklisted(true);
         secureStore(key, '0');
+        if (broadcastChannelRef.current) {
+          broadcastChannelRef.current.postMessage({ type: 'BLACKLIST_SYNC' });
+        }
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
@@ -138,6 +179,9 @@ export const useMoltAutomation = () => {
 
     const handleBlacklist = () => {
       setIsBlacklisted(true);
+      if (broadcastChannelRef.current) {
+        broadcastChannelRef.current.postMessage({ type: 'BLACKLIST_SYNC' });
+      }
     };
 
     const handleIntegrityViolation = () => {
