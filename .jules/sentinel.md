@@ -47,3 +47,8 @@
 **Vulnerability:** Static security thresholds and incomplete character sanitization allowed for refined bypasses and script-based flooding.
 **Learning:** A fixed velocity threshold (e.g., 50ms) is a static target for advanced bots. Security layers must adapt to the observed interaction profile of a session. Furthermore, backslashes (`\`) are often overlooked in client-side sanitization but can be used for string escaping bypasses in some contexts.
 **Prevention:** Implement "Adaptive Velocity Throttling" where the threshold increases dynamically in response to repeated violations. Expand sanitization to include backslashes and integrate behavioral adaptation triggers with the autonomous Molt engine.
+
+## 2026-06-11 - [Cross-Tab State Synchronization & Broadcast Loop Mitigation]
+**Vulnerability:** Client-side defensive states (such as lockouts or blacklists) were isolated to individual browser tabs, enabling attackers to easily bypass security measures simply by opening a new tab.
+**Learning:** Client-side state synchronization is critical for enforcing continuous session policies. Using `BroadcastChannel` provides a highly efficient, real-time message bus to propagate state. However, broadcasting high-severity alerts can lead to recursive propagation loops if a tab re-broadcasts received events.
+**Prevention:** Implement a standard `BroadcastChannel` synchronization channel (e.g., `'sentinel-state-link'`) and attach an internal `_isBroadcast` flag to event details. Tab event listeners must inspect and discard already-broadcasted messages to decouple communication loops.

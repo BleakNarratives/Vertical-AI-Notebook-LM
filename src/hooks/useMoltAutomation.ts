@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { useMolt } from './useMolt';
 import { useSentinel } from './useSentinel';
 
@@ -9,6 +9,7 @@ interface SecurityAlertEvent extends CustomEvent {
     event: string;
     severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
     timestamp: string;
+    _isBroadcast?: boolean;
   };
 }
 
@@ -23,6 +24,38 @@ export const useMoltAutomation = () => {
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const MAX_AUTONOMOUS_CYCLES = 5;
+  const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
+
+  // Initialize BroadcastChannel for cross-tab security synchronization
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const channel = new BroadcastChannel('sentinel-state-link');
+    broadcastChannelRef.current = channel;
+
+    const handleBroadcastMessage = (event: MessageEvent) => {
+      const { type, payload } = event.data || {};
+      if (type === 'lockdown') {
+        const lockdownExpiry = parseInt(payload, 10);
+        if (Date.now() < lockdownExpiry) {
+          setIsLockdown(true);
+        }
+      } else if (type === 'blacklist') {
+        setIsBlacklisted(true);
+      } else if (type === 'alert') {
+        window.dispatchEvent(new CustomEvent('security-alert', {
+          detail: { ...payload, _isBroadcast: true }
+        }));
+      }
+    };
+
+    channel.addEventListener('message', handleBroadcastMessage);
+
+    return () => {
+      channel.removeEventListener('message', handleBroadcastMessage);
+      channel.close();
+    };
+  }, []);
 
   // Check for security states on mount
   useEffect(() => {
@@ -56,6 +89,9 @@ export const useMoltAutomation = () => {
     setIsLockdown(true);
     // Log as MEDIUM to avoid triggering a new high-severity alert loop
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
+    if (broadcastChannelRef.current) {
+      broadcastChannelRef.current.postMessage({ type: 'lockdown', payload: expiry.toString() });
+    }
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
   }, [isLockdown, logSecurityEvent, secureStore]);
 
@@ -77,9 +113,16 @@ export const useMoltAutomation = () => {
   useEffect(() => {
     const handleSecurityAlert = (e: Event) => {
       const securityEvent = e as SecurityAlertEvent;
-      const { severity, event } = securityEvent.detail;
+      const { severity, event, _isBroadcast } = securityEvent.detail;
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
+        if (!_isBroadcast && broadcastChannelRef.current) {
+          broadcastChannelRef.current.postMessage({
+            type: 'alert',
+            payload: { event, severity, timestamp: securityEvent.detail.timestamp }
+          });
+        }
+
         // Track high-severity alerts for lockdown
         let alerts: number[] = [];
         try {
@@ -130,6 +173,9 @@ export const useMoltAutomation = () => {
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
+        if (broadcastChannelRef.current) {
+          broadcastChannelRef.current.postMessage({ type: 'blacklist' });
+        }
         secureStore(key, '0');
       }
 
@@ -138,6 +184,9 @@ export const useMoltAutomation = () => {
 
     const handleBlacklist = () => {
       setIsBlacklisted(true);
+      if (broadcastChannelRef.current) {
+        broadcastChannelRef.current.postMessage({ type: 'blacklist' });
+      }
     };
 
     const handleIntegrityViolation = () => {
