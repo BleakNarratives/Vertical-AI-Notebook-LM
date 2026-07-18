@@ -33,12 +33,13 @@ export const useMoltAutomation = () => {
     broadcastChannelRef.current = channel;
 
     const handleBroadcast = (event: MessageEvent) => {
+      if (!event.data || typeof event.data !== 'object') return;
       const { type, detail } = event.data;
 
       switch (type) {
         case 'security-alert':
-          if (detail.severity === 'HIGH' || detail.severity === 'CRITICAL') {
-            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: ${detail.event}`);
+          if (detail && (detail.severity === 'HIGH' || detail.severity === 'CRITICAL')) {
+            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: \${detail.event}`);
             window.dispatchEvent(new CustomEvent('security-alert', {
               detail: { ...detail, _isBroadcast: true }
             }));
