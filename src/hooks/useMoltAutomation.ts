@@ -25,6 +25,40 @@ export const useMoltAutomation = () => {
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
   const MAX_AUTONOMOUS_CYCLES = 5;
+  const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
+
+  // Initialize BroadcastChannel for cross-tab security synchronization
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const channel = new BroadcastChannel('sentinel-state-link');
+    broadcastChannelRef.current = channel;
+
+    const handleBroadcastMessage = (event: MessageEvent) => {
+      const { type, payload } = event.data || {};
+      if (type === 'lockdown') {
+        const lockdownExpiry = parseInt(payload, 10);
+        const remaining = lockdownExpiry - Date.now();
+        if (remaining > 0) {
+          setIsLockdown(true);
+          setTimeout(() => setIsLockdown(false), remaining);
+        }
+      } else if (type === 'blacklist') {
+        setIsBlacklisted(true);
+      } else if (type === 'alert') {
+        window.dispatchEvent(new CustomEvent('security-alert', {
+          detail: { ...payload, _isBroadcast: true }
+        }));
+      }
+    };
+
+    channel.addEventListener('message', handleBroadcastMessage);
+
+    return () => {
+      channel.removeEventListener('message', handleBroadcastMessage);
+      channel.close();
+    };
+  }, []);
 
   // Initialize BroadcastChannel for cross-tab security synchronization
   // Initialize BroadcastChannel for cross-tab security synchronization
@@ -130,6 +164,9 @@ export const useMoltAutomation = () => {
 
     // Log as MEDIUM to avoid triggering a new high-severity alert loop
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
+    if (broadcastChannelRef.current) {
+      broadcastChannelRef.current.postMessage({ type: 'lockdown', payload: expiry.toString() });
+    }
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
   }, [isLockdown, logSecurityEvent, secureStore]);
 
@@ -151,7 +188,7 @@ export const useMoltAutomation = () => {
   useEffect(() => {
     const handleSecurityAlert = (e: Event) => {
       const securityEvent = e as SecurityAlertEvent;
-      const { severity, event } = securityEvent.detail;
+      const { severity, event, _isBroadcast } = securityEvent.detail;
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
         // Broadcast high-severity alert to other tabs if not already a broadcast
