@@ -31,6 +31,8 @@ export const useSentinel = () => {
     const combined = `${key}:${value}`;
     for (let i = 0; i < combined.length; i++) {
       hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      // Voodoo rotation: circular shift for increased dispersion
+      hash = (hash << 13) | (hash >>> 19);
       hash |= 0;
     }
     return Math.abs(hash ^ seed).toString(16);
@@ -113,8 +115,7 @@ export const useSentinel = () => {
       .replace(/\//g, '&#x2F;')
       .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
-      .replace(/=/g, '&#x3D;')
-      .replace(/\\/g, '&#92;');
+      .replace(/=/g, '&#x3D;');
   }, []);
 
   const recursiveDecode = useCallback((input: string): string => {
@@ -198,6 +199,9 @@ export const useSentinel = () => {
       /\balert\s*\(/i,      // XSS proof-of-concept
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
+      /\bString\.fromCharCode\b/i, // Obfuscated XSS
+      /\batob\s*\(/i,       // Base64 decoding (obfuscation)
+      /\bbtoa\s*\(/i,       // Base64 encoding (exfiltration)
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
       /__proto__/i,        // Prototype pollution
