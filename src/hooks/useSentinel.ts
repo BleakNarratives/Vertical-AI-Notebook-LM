@@ -58,6 +58,9 @@ export const useSentinel = () => {
         const parsed = JSON.parse(raw);
         if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.v !== 'string' || typeof parsed.s !== 'string') {
           logSecurityEvent(`Storage structure tampered or corrupted for key: ${key}`, 'HIGH');
+          try {
+            storage.removeItem(key);
+          } catch {}
           return null;
         }
         const { v, s } = parsed;
