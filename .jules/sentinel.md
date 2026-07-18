@@ -37,3 +37,18 @@
 **Vulnerability:** Client-side triggers were susceptible to sub-human interaction speeds, allowing automated scripts to bypass standard rate limits and flood the system with events.
 **Learning:** Pure rate limiting (e.g., 5 requests per 30s) is easily gamed by bots that operate at the millisecond scale. Security logic must analyze the *velocity* of interactions, not just the count. Using `window` as a persistent session-wide timestamp store allows for cross-hook velocity verification without expensive context providers.
 **Prevention:** Implement a velocity threshold (e.g., 50ms) for critical UI interactions. Integrate velocity alerts with autonomous system responses (Molt) to force system hardening when sub-human behavior is detected.
+
+## 2026-06-09 - [Temporal Precision Detection & Logic Hardening]
+**Vulnerability:** Deterministic interaction intervals and duplicate logic in security hooks allowed for predictable automation bypasses and caused build instabilities.
+**Learning:** Bots often use fixed delays (e.g., exactly 100ms) which pass velocity checks but lack the "jitter" of human timing. Furthermore, redundant state management in high-frequency hooks (`useSentinel`) can lead to race conditions and inconsistent security enforcement.
+**Prevention:** Implement "Jitter Detection" to flag perfectly consistent temporal sequences (Zero Jitter). Consolidate interaction tracking into a single, robust flow and ensure all behavioral alerts (Entropy, Velocity, Jitter) are integrated into the autonomous defense layer (Molt).
+
+## 2026-06-10 - [Adaptive Behavioral Defense & Input Sanitization Expansion]
+**Vulnerability:** Static security thresholds and incomplete character sanitization allowed for refined bypasses and script-based flooding.
+**Learning:** A fixed velocity threshold (e.g., 50ms) is a static target for advanced bots. Security layers must adapt to the observed interaction profile of a session. Furthermore, backslashes (`\`) are often overlooked in client-side sanitization but can be used for string escaping bypasses in some contexts.
+**Prevention:** Implement "Adaptive Velocity Throttling" where the threshold increases dynamically in response to repeated violations. Expand sanitization to include backslashes and integrate behavioral adaptation triggers with the autonomous Molt engine.
+
+## 2026-06-11 - [Quantum Entanglement & Cross-Tab Security Synchronization]
+**Vulnerability:** Client-side security states (lockdown, blacklists) were isolated to individual tabs, allowing users to bypass restrictions by opening new sessions.
+**Learning:** Immersive "Code City" security must be omnipresent. Pure `localStorage` is shared but doesn't trigger immediate state updates in active tabs. `BroadcastChannel` provides a "Quantum Entanglement" layer, ensuring that a lockdown in one tab immediately propagates and secures all other open instances.
+**Prevention:** Always use `BroadcastChannel` to synchronize critical security-state transitions across the entire browser context. Pair this with cross-storage (Local vs Session) integrity checks to detect manual tampering of security tokens.

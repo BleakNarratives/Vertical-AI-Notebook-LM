@@ -8,6 +8,9 @@ import React, { useCallback, useRef } from 'react';
  */
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
+  const lastDeltaRef = useRef<Record<string, number>>({});
+  const jitterViolationsRef = useRef<Record<string, number>>({});
+  const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
   const velocityViolationsRef = useRef<Record<string, number>>({});
 
@@ -29,6 +32,8 @@ export const useSentinel = () => {
     const combined = `${key}:${value}`;
     for (let i = 0; i < combined.length; i++) {
       hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      // Voodoo rotation: circular shift for increased dispersion
+      hash = (hash << 13) | (hash >>> 19);
       hash |= 0;
     }
     return Math.abs(hash ^ seed).toString(16);
@@ -53,7 +58,15 @@ export const useSentinel = () => {
       const raw = storage.getItem(key);
       if (!raw) return null;
       try {
-        const { v, s } = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.v !== 'string' || typeof parsed.s !== 'string') {
+          logSecurityEvent(`Storage structure tampered or corrupted for key: ${key}`, 'HIGH');
+          try {
+            storage.removeItem(key);
+          } catch {}
+          return null;
+        }
+        const { v, s } = parsed;
         if (generateSignature(key, v) === s) return v;
         logSecurityEvent(`Storage signature mismatch for key: ${key}`, 'CRITICAL');
         return null;
@@ -101,6 +114,7 @@ export const useSentinel = () => {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;')
       .replace(/\//g, '&#x2F;')
+      .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
       .replace(/=/g, '&#x3D;');
   }, []);
@@ -141,6 +155,19 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Ensure input is a valid string type to prevent runtime type exceptions
+    if (typeof input !== 'string') {
+      logSecurityEvent(`Input rejected: Expected string, received ${typeof input}`, 'HIGH');
+      return false;
+  const validateInput = useCallback((input: string): boolean => {
+    if (typeof input !== 'string') return false;
+    // DoS Mitigation: Enforce strict length limits
+    if (input.length > 500) {
+      logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
+      storeShadowLog("DOS_LENGTH_REJECTION: " + input.substring(0, 50) + "...");
+      return false;
+    }
+
     // Input Normalization: Recursive decode to prevent multi-stage obfuscation
     const normalized = recursiveDecode(input);
 
@@ -173,8 +200,13 @@ export const useSentinel = () => {
       /\balert\s*\(/i,      // XSS proof-of-concept
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
+      /\bString\.fromCharCode\b/i, // Obfuscated XSS
+      /\batob\s*\(/i,       // Base64 decoding (obfuscation)
+      /\bbtoa\s*\(/i,       // Base64 encoding (exfiltration)
       /union\s+select/i,    // SQL injection
-      /\$(where|regex|ne)/i // NoSQL injection
+      /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
+      /__proto__/i,        // Prototype pollution
+      /constructor\.prototype/i // Prototype pollution
     ];
 
     for (const pattern of maliciousPatterns) {
@@ -265,6 +297,22 @@ export const useSentinel = () => {
     return false;
   }, [secureGet, secureRemove]);
 
+  const verifyStorageIntegrity = useCallback(() => {
+    if (typeof window === 'undefined') return true;
+    const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
+    let isIntegral = true;
+
+    for (const key of criticalKeys) {
+      const local = localStorage.getItem(key);
+      const session = sessionStorage.getItem(key);
+      if (local && session && local !== session) {
+        logSecurityEvent(`Storage divergence detected for critical key: ${key}`, 'CRITICAL');
+        isIntegral = false;
+      }
+    }
+    return isIntegral;
+  }, [logSecurityEvent]);
+
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
 
@@ -338,6 +386,7 @@ export const useSentinel = () => {
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (typeof window === 'undefined' || !e) return true;
 
+    const now = Date.now();
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification
@@ -349,40 +398,53 @@ export const useSentinel = () => {
       return false;
     }
 
-    // 2. Velocity Profiling (Behavioral Analysis)
+    // 2. Temporal Analysis (Velocity & Jitter)
     if (e.type === 'click' || e.type === 'mousedown') {
-      const now = Date.now();
       const lastTime = lastInteractionRef.current[e.type] || 0;
-      const delta = now - lastTime;
+      lastInteractionRef.current[e.type] = now;
 
-      // Get dynamic threshold from storage, default to 50ms
-      let threshold = 50;
-      const storedThreshold = secureGet('sentinel_velocity_threshold');
-      if (storedThreshold) {
-        const parsed = parseInt(storedThreshold, 10);
-        if (!isNaN(parsed)) threshold = parsed;
-      }
+      if (lastTime !== 0) {
+        const delta = now - lastTime;
 
-      // Detection of sub-human interaction speeds
-      if (lastTime !== 0 && delta >= 0 && delta < threshold) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (Threshold: ${threshold}ms)`, 'HIGH');
-        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-          detail: { delta, type: e.type, timestamp: now }
-        }));
+        // Reset consecutive violations if there's a human-like pause (> 500ms)
+        if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
+        }
+        // Jitter Detection: Perfect temporal consistency is highly suspicious
+        const lastDelta = lastDeltaRef.current[e.type] || 0;
+        const jitter = Math.abs(delta - lastDelta);
 
-        // Track consecutive violations to reset velocityViolationsRef only after human-like pauses
-        velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
+        if (jitter === 0) {
+          jitterViolationsRef.current[e.type] = (jitterViolationsRef.current[e.type] || 0) + 1;
+          if (jitterViolationsRef.current[e.type] >= 3) {
+            logSecurityEvent(`Sub-human temporal precision detected: Zero jitter in ${e.type} sequence`, 'HIGH');
+            window.dispatchEvent(new CustomEvent('sentinel-jitter-alert', {
+              detail: { delta, type: e.type, timestamp: now }
+            }));
+          }
+        } else {
+          jitterViolationsRef.current[e.type] = 0;
+        }
+        lastDeltaRef.current[e.type] = delta;
 
-        if (velocityViolationsRef.current[e.type] >= 3) {
-          logSecurityEvent(`CRITICAL: Sustained sub-human velocity for ${e.type}. Interaction blocked.`, 'CRITICAL');
-          return false;
+        // Velocity Profiling: Detection of sub-human interaction speeds (default < 50ms)
+        // Adaptive threshold read from secureStore
+        const thresholdStored = secureGet('sentinel_velocity_threshold');
+        const threshold = parseInt(thresholdStored || '50', 10) || 50;
+
+        if (delta >= 0 && delta < threshold) {
+          velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (threshold: ${threshold}ms)`, 'HIGH');
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: now, violations: velocityViolationsRef.current[e.type] }
+          }));
+        } else if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
         }
       } else if (delta > 500) {
         // Human-like pause resets the violation counter
         velocityViolationsRef.current[e.type] = 0;
       }
-
-      lastInteractionRef.current[e.type] = now;
     }
 
     // 3. Entropy Analysis (Spatial Variance)
@@ -420,6 +482,7 @@ export const useSentinel = () => {
     getDecoyConfig,
     triggerBlacklist,
     checkBlacklist,
+    verifyStorageIntegrity,
     secureStore,
     secureGet,
     secureRemove,

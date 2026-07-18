@@ -64,10 +64,20 @@ export default function RootLayout({
 
                {/* Boardroom Props */}
                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom">
-                 <Papers context="user" labelPosition="top" />
+                 <div className="relative group/user-papers">
+                   <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-8 bg-black/40 blur-xl rounded-full -z-10" />
+                   <Papers context="user" labelPosition="top" />
+                 </div>
 
-                 <Laptop />
-                 <CoffeeMug />
+                 <div className="relative group/laptop">
+                   <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-12 bg-black/40 blur-xl rounded-full -z-10" />
+                   <Laptop />
+                 </div>
+
+                 <div className="relative group/mug">
+                   <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-16 h-6 bg-black/40 blur-xl rounded-full -z-10" />
+                   <CoffeeMug />
+                 </div>
                </div>
 
                <EasterEgg />

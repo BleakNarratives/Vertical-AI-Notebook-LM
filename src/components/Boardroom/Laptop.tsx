@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
 
-interface BoardroomEvent extends Event {
+interface BoardroomEvent extends CustomEvent {
   detail: {
     source: string;
     action: string;
@@ -67,7 +67,7 @@ export const Laptop: React.FC = () => {
             {logs.length > 0 ? (
               <div className="mt-1 space-y-0.5">
                 {logs.map((log, i) => (
-                  <div key={log} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
+                  <div key={`${log}-${i}`} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
                 ))}
               </div>
             ) : (
@@ -84,10 +84,9 @@ export const Laptop: React.FC = () => {
         </div>
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover/laptop:opacity-100 group-focus-visible/laptop:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           Terminal / IDEal / 4ward
         </span>
-
       </button>
     </div>
   );

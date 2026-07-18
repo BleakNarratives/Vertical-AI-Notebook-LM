@@ -1,3 +1,7 @@
+## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
+**Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
+**Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.
+
 ## 2026-06-10 - [Standardized Boardroom Focus Indicators]
 **Learning:** Generic `group-*` utility classes in Tailwind v4 require the immediate interactive parent to have the standard `group` class. Named groups (e.g., `group/laptop`) block these generic selectors for their children. Additionally, absolute-positioned decorative elements like the `FocusIndicator` (`-inset-3`) will be clipped if the parent uses `overflow-hidden`.
 
@@ -44,3 +48,7 @@
 ## 2025-05-22 - [Synchronized Environmental Feedback]
 **Learning:** In an immersive UI with multiple disconnected interactive props, users can lose the sense of "system connectivity." Bridging these elements with a central feedback hub (like the Laptop terminal) using custom events provides a powerful micro-UX win that reinforces the narrative without complex state management.
 **Action:** Use a "Central Hub" pattern for environmental feedback; dispatch timestamped events from peripheral props to update a global log or terminal for a cohesive "connected" feel.
+
+## 2025-05-14 - [Immersive Document Portals]
+**Learning:** In layouts utilizing heavy 3D CSS transforms (e.g., `perspective`, `rotateX`), standard relative-positioned overlays are often clipped or distorted by the parent's stacking context and perspective depth.
+**Action:** Use React Portals (`createPortal`) to render atmospheric overlays (modals, previews) to the document body, bypassing the 3D transform constraints while maintaining the immersive aesthetic.
