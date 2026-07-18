@@ -12,6 +12,7 @@ export const useSentinel = () => {
   const jitterViolationsRef = useRef<Record<string, number>>({});
   const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
+  const velocityViolationsRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -440,14 +441,15 @@ export const useSentinel = () => {
         } else if (delta > 500) {
           velocityViolationsRef.current[e.type] = 0;
         }
+      } else if (delta > 500) {
+        // Human-like pause resets the violation counter
+        velocityViolationsRef.current[e.type] = 0;
       }
     }
 
     // 3. Entropy Analysis (Spatial Variance)
-    if (e.type === 'click' && 'clientX' in nativeEvent && 'clientY' in nativeEvent) {
-      const mouseEvent = nativeEvent as MouseEvent;
-      const x = mouseEvent.clientX;
-      const y = mouseEvent.clientY;
+    if (e.type === 'click' && nativeEvent instanceof MouseEvent) {
+      const { clientX: x, clientY: y } = nativeEvent;
       const coords = lastCoordinatesRef.current;
 
       // Exact spatial repetition in sequence (3x) is a high-confidence bot signal
@@ -458,11 +460,10 @@ export const useSentinel = () => {
 
       if (isRobotic) {
         logSecurityEvent(`Low behavioral entropy detected: Spatial precision anomaly`, 'HIGH');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
-            detail: { x, y, timestamp: Date.now() }
-          }));
-        }
+        window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+          detail: { x, y, timestamp: Date.now() }
+        }));
+        return false;
       }
     }
 
