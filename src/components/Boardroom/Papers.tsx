@@ -53,6 +53,75 @@ const Paper: React.FC<PaperProps> = ({
   );
 };
 
+interface DocumentPreviewProps {
+  title: string;
+  content: string;
+  onClose: () => void;
+}
+
+const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc, true);
+    return () => window.removeEventListener('keydown', handleEsc, true);
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-obsidian/90 backdrop-blur-md transition-opacity duration-300"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="preview-title"
+    >
+      <div
+        className="relative w-full max-w-lg p-8 bg-obsidian border border-neon-amber/30 shadow-[0_0_50px_rgba(255,191,0,0.2)] transition-transform duration-500 scale-100"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber/50 to-transparent" />
+
+        <header className="flex justify-between items-start mb-8">
+          <div className="space-y-1">
+            <h2 id="preview-title" className="text-neon-amber font-mono text-lg tracking-widest uppercase">{title}</h2>
+            <div className="text-[10px] font-mono text-grey-medium uppercase tracking-tighter">Classification: Restricted / Obelisk-Internal</div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer"
+            aria-label="Close Preview"
+          >
+            [ ESC ]
+          </button>
+        </header>
+
+        <div className="space-y-4 font-mono text-xs text-grey-medium leading-relaxed">
+          {content.split('\n').map((line, i) => (
+            <p key={i} className={line.startsWith('>') ? 'text-neon-red/80' : ''}>
+              {line}
+            </p>
+          ))}
+        </div>
+
+        <div className="mt-12 flex justify-between items-end">
+          <div className="text-[8px] font-mono text-grey-medium/40">
+            SYSTEM_LINK_ACTIVE // PORTAL_RENDERED_V0.1
+          </div>
+          <div className="w-16 h-16 border border-grey-medium/20 opacity-20 relative overflow-hidden">
+             <div className="absolute top-2 left-2 right-2 h-0.5 bg-grey-medium" />
+             <div className="absolute top-4 left-2 right-4 h-0.5 bg-grey-medium" />
+             <div className="absolute bottom-2 right-2 w-4 h-4 border border-neon-red/40" />
+          </div>
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber/50 to-transparent" />
+      </div>
+    </div>,
+    document.body
+  );
+};
+
 type ContextType = 'higgins' | 'pytch' | 'twoie' | 'zeroclaw' | 'user';
 interface PapersProps {
   context?: ContextType;
@@ -109,11 +178,15 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     setActiveTitle(title);
     setActiveDoc(title);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
-      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title }
+      detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title, timestamp: new Date().toISOString() }
     }));
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setActiveTitle(null), 2000);
-  };
+    timeoutRef.current = setTimeout(() => setStatusTitle(null), 2000);
+  }, [context]);
+
+  const closePreview = useCallback(() => {
+    setPreviewTitle(null);
+  }, []);
 
   return (
     <div className="flex flex-col items-center gap-16">
@@ -145,9 +218,9 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
       )}
 
       <div className={`h-4 flex items-center justify-center ${resolvedLabelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
-        {activeTitle && (
+        {statusTitle && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
-            Viewing {activeTitle}...
+            Viewing {statusTitle}...
           </div>
         )}
       </div>
@@ -158,7 +231,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             label={`View ${data.p1}`}
             title={data.p1}
             rotation="-2deg"
-            isActive={activeTitle === data.p1}
+            isActive={statusTitle === data.p1 || previewTitle === data.p1}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p1)}
           />
@@ -170,7 +243,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             label={`View ${data.p3}`}
             title={data.p3}
             rotation="4deg"
-            isActive={activeTitle === data.p3}
+            isActive={statusTitle === data.p3 || previewTitle === data.p3}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p3)}
           />
@@ -182,12 +255,20 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             label={`View ${data.p2}`}
             title={data.p2}
             rotation="1deg"
-            isActive={activeTitle === data.p2}
+            isActive={statusTitle === data.p2 || previewTitle === data.p2}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p2)}
           />
         </div>
       </div>
+
+      {previewTitle && (
+        <DocumentPreview
+          title={previewTitle}
+          content={NARRATIVE_CONTENT[previewTitle] || 'CLASSIFIED_DATA_MISSING'}
+          onClose={closePreview}
+        />
+      )}
     </div>
   );
 };
