@@ -27,8 +27,9 @@ export const useMoltAutomation = () => {
   const MAX_AUTONOMOUS_CYCLES = 5;
 
   // Initialize BroadcastChannel for cross-tab security synchronization
+  // Initialize BroadcastChannel for cross-tab security synchronization
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || typeof BroadcastChannel === 'undefined') return;
     const channel = new BroadcastChannel('sentinel-state-link');
     broadcastChannelRef.current = channel;
 
