@@ -87,6 +87,38 @@ export const useMoltAutomation = () => {
     checkSecurityStates();
   }, [checkBlacklist, secureGet, secureRemove]);
 
+  // BroadcastChannel initialization and cleanup
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (!broadcastChannelRef.current) {
+      broadcastChannelRef.current = new BroadcastChannel('sentinel-state-link');
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      const { type, payload } = event.data;
+      if (type === 'LOCKDOWN_SYNC') {
+        const expiry = parseInt(payload, 10);
+        if (Date.now() < expiry) {
+          setIsLockdown(true);
+          setTimeout(() => setIsLockdown(false), expiry - Date.now());
+        }
+      } else if (type === 'BLACKLIST_SYNC') {
+        setIsBlacklisted(true);
+      }
+    };
+
+    broadcastChannelRef.current.addEventListener('message', handleMessage);
+
+    return () => {
+      if (broadcastChannelRef.current) {
+        broadcastChannelRef.current.removeEventListener('message', handleMessage);
+        broadcastChannelRef.current.close();
+        broadcastChannelRef.current = null;
+      }
+    };
+  }, []);
+
   const triggerLockdown = useCallback(() => {
     if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
@@ -181,6 +213,9 @@ export const useMoltAutomation = () => {
         setIsBlacklisted(true);
         broadcastChannelRef.current?.postMessage({ type: 'blacklist' });
         secureStore(key, '0');
+        if (broadcastChannelRef.current) {
+          broadcastChannelRef.current.postMessage({ type: 'BLACKLIST_SYNC' });
+        }
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
@@ -188,6 +223,9 @@ export const useMoltAutomation = () => {
 
     const handleBlacklist = () => {
       setIsBlacklisted(true);
+      if (broadcastChannelRef.current) {
+        broadcastChannelRef.current.postMessage({ type: 'BLACKLIST_SYNC' });
+      }
     };
 
     const handleIntegrityViolation = () => {
