@@ -37,8 +37,10 @@ export const useMoltAutomation = () => {
       const { type, payload } = event.data || {};
       if (type === 'lockdown') {
         const lockdownExpiry = parseInt(payload, 10);
-        if (Date.now() < lockdownExpiry) {
+        const remaining = lockdownExpiry - Date.now();
+        if (remaining > 0) {
           setIsLockdown(true);
+          setTimeout(() => setIsLockdown(false), remaining);
         }
       } else if (type === 'blacklist') {
         setIsBlacklisted(true);
