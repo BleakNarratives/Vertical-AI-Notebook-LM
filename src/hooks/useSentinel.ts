@@ -31,6 +31,8 @@ export const useSentinel = () => {
     const combined = `${key}:${value}`;
     for (let i = 0; i < combined.length; i++) {
       hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      // Voodoo rotation: circular shift for increased dispersion
+      hash = (hash << 13) | (hash >>> 19);
       hash |= 0;
     }
     return Math.abs(hash ^ seed).toString(16);
@@ -55,7 +57,15 @@ export const useSentinel = () => {
       const raw = storage.getItem(key);
       if (!raw) return null;
       try {
-        const { v, s } = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.v !== 'string' || typeof parsed.s !== 'string') {
+          logSecurityEvent(`Storage structure tampered or corrupted for key: ${key}`, 'HIGH');
+          try {
+            storage.removeItem(key);
+          } catch {}
+          return null;
+        }
+        const { v, s } = parsed;
         if (generateSignature(key, v) === s) return v;
         logSecurityEvent(`Storage signature mismatch for key: ${key}`, 'CRITICAL');
         return null;
@@ -144,6 +154,12 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Ensure input is a valid string type to prevent runtime type exceptions
+    if (typeof input !== 'string') {
+      logSecurityEvent(`Input rejected: Expected string, received ${typeof input}`, 'HIGH');
+      return false;
+    }
+
     // DoS Mitigation: Enforce strict length limits
     if (input.length > 500) {
       logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
@@ -183,6 +199,9 @@ export const useSentinel = () => {
       /\balert\s*\(/i,      // XSS proof-of-concept
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
+      /\bString\.fromCharCode\b/i, // Obfuscated XSS
+      /\batob\s*\(/i,       // Base64 decoding (obfuscation)
+      /\bbtoa\s*\(/i,       // Base64 encoding (exfiltration)
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
       /__proto__/i,        // Prototype pollution
