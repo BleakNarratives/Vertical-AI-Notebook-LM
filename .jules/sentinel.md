@@ -47,3 +47,8 @@
 **Vulnerability:** Static security thresholds and incomplete character sanitization allowed for refined bypasses and script-based flooding.
 **Learning:** A fixed velocity threshold (e.g., 50ms) is a static target for advanced bots. Security layers must adapt to the observed interaction profile of a session. Furthermore, backslashes (`\`) are often overlooked in client-side sanitization but can be used for string escaping bypasses in some contexts.
 **Prevention:** Implement "Adaptive Velocity Throttling" where the threshold increases dynamically in response to repeated violations. Expand sanitization to include backslashes and integrate behavioral adaptation triggers with the autonomous Molt engine.
+
+## 2026-06-11 - [Quantum Entanglement & Cross-Tab Security Synchronization]
+**Vulnerability:** Client-side security states (lockdown, blacklists) were isolated to individual tabs, allowing users to bypass restrictions by opening new sessions.
+**Learning:** Immersive "Code City" security must be omnipresent. Pure `localStorage` is shared but doesn't trigger immediate state updates in active tabs. `BroadcastChannel` provides a "Quantum Entanglement" layer, ensuring that a lockdown in one tab immediately propagates and secures all other open instances.
+**Prevention:** Always use `BroadcastChannel` to synchronize critical security-state transitions across the entire browser context. Pair this with cross-storage (Local vs Session) integrity checks to detect manual tampering of security tokens.

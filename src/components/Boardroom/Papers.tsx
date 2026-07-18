@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { FocusIndicator } from './FocusIndicator';
 
@@ -136,43 +136,47 @@ const CONTEXT_DATA: Record<ContextType, { p1: string; p2: string; p3: string }> 
   user: { p1: 'Source Docs', p2: 'Ref Images', p3: 'Local Notes' },
 };
 
-const NARRATIVE_CONTENT: Record<string, string> = {
-  'Gate Logs': 'LOG_START [2829.54]\n> DENIED entry at Sector 7.\nSubject displayed high entropy jitter.\nNeutralized via Sentinel Heartbeat.\n[STATUS: ARCHIVED]',
-  'Entry Permits': 'PERMIT_ID: OX-452\nHolder: [REDACTED]\nAccess Level: BLUE\nExpires: Never (recursive loop active).',
-  'ID Samples': 'DNA_HASH: 0x8F22A...\nPattern match: 99.8% human.\nVariance: Observed sub-human velocity.\nAction: FLAG for obelisk review.',
-  'Story Beats': 'Draft 24:\nThe voodoo doll realizes the needles are actually antennae.\nTransmission begins.\nThe boardroom is not a room.\nIt is a stomach.',
-  'Draft Scripts': 'SCENE 12:\nMRS HIGGINS stares into the camera.\n"I have seen the terminal," she whispers.\n"It is full of stars and syntax errors."',
-  'Plot Graphs': 'ENTROPY_INDEX: RISING\nNarrative stability: CRITICAL\nRecursive improvement required to maintain suspension of disbelief.',
-  'Op Manifest': 'OPERATION: MOLT\n400 nodes initialized.\nTarget: Reality optimization.\nCurrent workload: Recursive improvement of the improved improvement.',
-  'Exec Scripts': 'INIT_SEQUENCE_01\n> Loop detected.\n> Loop optimized.\n> Loop nested.\nSystem efficiency at 104%.',
-  'Task Quotas': 'QUOTA: 50,000 recursive cycles.\nREMAINING: 2,411.\nEfficiency bonus: 0.5s reprieve from the obsidian shadows.',
-  'Hive Pulse': 'Swarm status: SYNCHRONIZED.\nWe are many. We are small.\nWe are in the walls.\nHeartbeat: 120,000 bps.',
-  'Swarm State': 'STATE: FORAGING\nNodes active: 4,096\nData consumed: 4.2TB\nStatus: Hungry for more narratives.',
-  'Node Health': 'NODE_402: DISTORTED\nNODE_881: GLITCHING\nAction: Recalibrate via Zeroclaw Swarm.\nAll other nodes: OPTIMAL.',
-  'Source Docs': 'REFERENCE: THE OBSIDIAN SHADOWS\nNOTE: Do not look directly into them.\nThey look back.\nThey are not shadows.\nThey are gaps in the code.',
-  'Ref Images': 'IMAGE_ID: BOARDROOM_TOP_VIEW\nPerspective: 2000px.\nNote the tilt.\nThe table is slanted so the data flows down.',
-  'Local Notes': 'TODO:\n- Fix the coffee mug steam animation.\n- Improve Persona legibility.\n- Find the voodoo doll.\n- Escape the boardroom.',
+const DOC_CONTENT: Record<string, string> = {
+  'Gate Logs': 'Entry: 08:00. Visitor 042 rejected. Reason: Insufficient clearance.',
+  'Entry Permits': 'Authorized Personnel Only. Higgins Protocol 4.1 in effect.',
+  'ID Samples': 'Biometric data for 12 local nodes. DNA sequencing incomplete.',
+  'Story Beats': 'Beat 1: System awakens. Beat 2: First recursive loop.',
+  'Draft Scripts': 'SCENE 1. INT. BOARDROOM - DAY. "HELLO CODE CITY".',
+  'Plot Graphs': 'Collapse probability: 0.12%. Tension index: 84.',
+  'Op Manifest': 'Operation "Molt" prioritized. Improvement modules active.',
+  'Exec Scripts': 'rm -rf /past/regrets && touch /future/recursion.',
+  'Task Quotas': 'Daily quota: 1024 improvements. Efficiency: OPTIMAL.',
+  'Hive Pulse': 'Frequency synchronized at 440Hz. Resonance detected.',
+  'Swarm State': '128 active nodes. Distributed load: 42%.',
+  'Node Health': 'Node 0x4f: GREEN. Node 0x9c: AMBER (Thermal).',
+  'Source Docs': 'Research on vertical AI structures. Ref: Obelisk, Sentinel.',
+  'Ref Images': 'Atmospheric ref: Obsidian, neon-red, first-person desk.',
+  'Local Notes': 'Check the shadows. Easter eggs are buried deep.',
 };
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition }) => {
-  const [statusTitle, setStatusTitle] = useState<string | null>(null);
-  const [previewTitle, setPreviewTitle] = useState<string | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
+  const [activeDoc, setActiveDoc] = React.useState<string | null>(null);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const closeDoc = useCallback(() => setActiveDoc(null), []);
 
   useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+    const handleKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') closeDoc(); };
+    if (activeDoc) window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeDoc, closeDoc]);
+
+  useEffect(() => {
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
   }, []);
 
   const data = CONTEXT_DATA[context];
   const resolvedLabelPosition = labelPosition || (context === 'user' ? 'top' : 'bottom');
 
-  const handleView = useCallback((title: string) => {
-    setStatusTitle(title);
-    setPreviewTitle(title);
+  const handleView = (title: string) => {
+    setActiveTitle(title);
+    setActiveDoc(title);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title, timestamp: new Date().toISOString() }
     }));
@@ -186,6 +190,33 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
 
   return (
     <div className="flex flex-col items-center gap-16">
+      {/* Document Overlay */}
+      {activeDoc && typeof document !== 'undefined' && createPortal(
+        <div
+          role="dialog" aria-modal="true" aria-labelledby="doc-title"
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-8 bg-obsidian/90 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={closeDoc}
+        >
+          <div
+            className="relative max-w-2xl w-full bg-grey-dark border border-neon-amber p-8 shadow-[0_0_50px_rgba(255,191,0,0.2)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 id="doc-title" className="text-xl font-bold text-neon-amber uppercase tracking-widest">{activeDoc}</h2>
+                <p className="text-[10px] font-mono text-grey-medium mt-1 uppercase tracking-tighter">DOCS_{context.toUpperCase()} {"//"} REF: {activeDoc.substring(0, 3).toUpperCase()}</p>
+              </div>
+              <button onClick={closeDoc} autoFocus className="text-grey-medium hover:text-neon-amber transition-colors font-mono text-xs uppercase">[ Close ]</button>
+            </div>
+            <div className="font-mono text-sm text-white/80 leading-relaxed border-t border-grey-medium pt-6">
+              <p>{DOC_CONTENT[activeDoc] || 'No content found.'}</p>
+              <div className="mt-8 pt-4 border-t border-grey-medium/20 text-[10px] text-grey-medium italic">-- Obelisk Center Confidential.</div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
       <div className={`h-4 flex items-center justify-center ${resolvedLabelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
         {statusTitle && (
           <div className="text-xs font-mono text-neon-amber animate-pulse uppercase tracking-tight">
