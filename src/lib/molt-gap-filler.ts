@@ -359,6 +359,21 @@
  * - Automatically attempt to "de-obfuscate" forensic logs in the `Shadow Gallery`.
  * - Implement "Adaptive Velocity Throttling": if high-velocity patterns are detected, force a mandatory 500ms delay on all subsequent UI actions for that session.
  *
+ * CYCLE 54: BEHAVIORAL VELOCITY PROFILING (SENTINEL V6)
+ * - Refine the velocity thresholds in `useSentinel` based on the AI agent being interacted with (e.g., Zeroclaw might allow higher velocity than Higgins).
+ * - Implement "Velocity Smoothing": use a rolling average of the last 5 interaction velocities to reduce false positives from rapid legitimate clicks.
+ * - Log `MEDIUM` alerts for "Velocity Convergence" if the interaction rhythm becomes too mechanical (e.g., exactly 100ms between clicks).
+ *
+ * CYCLE 55: FORENSIC PAYLOAD RECONSTRUCTION (AUTONOMOUS)
+ * - Expand `storeShadowLog` to capture the target element's DOM path for every blocked velocity anomaly.
+ * - Molt should attempt to reconstruct the "Automation Script" by correlating shadow logs across multiple velocity alerts.
+ * - Automatically generate "Velocity Decoys": UI elements that change their position slightly on every hover to trip up static-coordinate automation scripts.
+ *
+ * CYCLE 56: VOODOO ENTROPY INJECTION
+ * - Implement "Entropy Injection": for high-risk sessions, subtly jitter the position of interactive elements (Laptop, Personas) by 1-2 pixels to disrupt pixel-perfect automation.
+ * - Add a visual "Voodoo Tremor" effect to the boardroom props when entropy injection is active.
+ * - Set `MOLT_CONFIG.version` to '3.3.0-velocity-hardened'.
+ *
  * CYCLE 11: SHADOW RECOVERY & AUTONOMOUS BLACKLISTING
  * - Implement a simulated session blacklisting mechanism that triggers after 3 Honeytoken interactions.
  * - Add a visual 'CORRUPTED' overlay to the boardroom when blacklisted (using a deep-red `mix-blend-mode: multiply`).
