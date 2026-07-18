@@ -48,3 +48,7 @@
 ## 2025-05-22 - [Synchronized Environmental Feedback]
 **Learning:** In an immersive UI with multiple disconnected interactive props, users can lose the sense of "system connectivity." Bridging these elements with a central feedback hub (like the Laptop terminal) using custom events provides a powerful micro-UX win that reinforces the narrative without complex state management.
 **Action:** Use a "Central Hub" pattern for environmental feedback; dispatch timestamped events from peripheral props to update a global log or terminal for a cohesive "connected" feel.
+
+## 2025-05-14 - [Immersive Document Portals]
+**Learning:** In layouts utilizing heavy 3D CSS transforms (e.g., `perspective`, `rotateX`), standard relative-positioned overlays are often clipped or distorted by the parent's stacking context and perspective depth.
+**Action:** Use React Portals (`createPortal`) to render atmospheric overlays (modals, previews) to the document body, bypassing the 3D transform constraints while maintaining the immersive aesthetic.

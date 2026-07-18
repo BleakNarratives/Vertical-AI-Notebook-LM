@@ -12,6 +12,7 @@ export const useSentinel = () => {
   const jitterViolationsRef = useRef<Record<string, number>>({});
   const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
+  const velocityViolationsRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -31,6 +32,8 @@ export const useSentinel = () => {
     const combined = `${key}:${value}`;
     for (let i = 0; i < combined.length; i++) {
       hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      // Voodoo rotation: circular shift for increased dispersion
+      hash = (hash << 13) | (hash >>> 19);
       hash |= 0;
     }
     return Math.abs(hash ^ seed).toString(16);
@@ -55,7 +58,15 @@ export const useSentinel = () => {
       const raw = storage.getItem(key);
       if (!raw) return null;
       try {
-        const { v, s } = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.v !== 'string' || typeof parsed.s !== 'string') {
+          logSecurityEvent(`Storage structure tampered or corrupted for key: ${key}`, 'HIGH');
+          try {
+            storage.removeItem(key);
+          } catch {}
+          return null;
+        }
+        const { v, s } = parsed;
         if (generateSignature(key, v) === s) return v;
         logSecurityEvent(`Storage signature mismatch for key: ${key}`, 'CRITICAL');
         return null;
@@ -105,8 +116,7 @@ export const useSentinel = () => {
       .replace(/\//g, '&#x2F;')
       .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
-      .replace(/=/g, '&#x3D;')
-      .replace(/\\/g, '&#92;');
+      .replace(/=/g, '&#x3D;');
   }, []);
 
   const recursiveDecode = useCallback((input: string): string => {
@@ -145,8 +155,14 @@ export const useSentinel = () => {
   }, [secureGet, secureStore]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Ensure input is a valid string type to prevent runtime type exceptions
+    if (typeof input !== 'string') {
+      logSecurityEvent(`Input rejected: Expected string, received ${typeof input}`, 'HIGH');
+      return false;
+  const validateInput = useCallback((input: string): boolean => {
+    if (typeof input !== 'string') return false;
     // DoS Mitigation: Enforce strict length limits
-    if (input.length > 1000) {
+    if (input.length > 500) {
       logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
       storeShadowLog("DOS_LENGTH_REJECTION: " + input.substring(0, 50) + "...");
       return false;
@@ -184,6 +200,9 @@ export const useSentinel = () => {
       /\balert\s*\(/i,      // XSS proof-of-concept
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
+      /\bString\.fromCharCode\b/i, // Obfuscated XSS
+      /\batob\s*\(/i,       // Base64 decoding (obfuscation)
+      /\bbtoa\s*\(/i,       // Base64 encoding (exfiltration)
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
       /__proto__/i,        // Prototype pollution
@@ -277,6 +296,22 @@ export const useSentinel = () => {
     }
     return false;
   }, [secureGet, secureRemove]);
+
+  const verifyStorageIntegrity = useCallback(() => {
+    if (typeof window === 'undefined') return true;
+    const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
+    let isIntegral = true;
+
+    for (const key of criticalKeys) {
+      const local = localStorage.getItem(key);
+      const session = sessionStorage.getItem(key);
+      if (local && session && local !== session) {
+        logSecurityEvent(`Storage divergence detected for critical key: ${key}`, 'CRITICAL');
+        isIntegral = false;
+      }
+    }
+    return isIntegral;
+  }, [logSecurityEvent]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -406,14 +441,15 @@ export const useSentinel = () => {
         } else if (delta > 500) {
           velocityViolationsRef.current[e.type] = 0;
         }
+      } else if (delta > 500) {
+        // Human-like pause resets the violation counter
+        velocityViolationsRef.current[e.type] = 0;
       }
     }
 
     // 3. Entropy Analysis (Spatial Variance)
-    if (e.type === 'click' && 'clientX' in nativeEvent && 'clientY' in nativeEvent) {
-      const mouseEvent = nativeEvent as MouseEvent;
-      const x = mouseEvent.clientX;
-      const y = mouseEvent.clientY;
+    if (e.type === 'click' && nativeEvent instanceof MouseEvent) {
+      const { clientX: x, clientY: y } = nativeEvent;
       const coords = lastCoordinatesRef.current;
 
       // Exact spatial repetition in sequence (3x) is a high-confidence bot signal
@@ -424,11 +460,10 @@ export const useSentinel = () => {
 
       if (isRobotic) {
         logSecurityEvent(`Low behavioral entropy detected: Spatial precision anomaly`, 'HIGH');
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
-            detail: { x, y, timestamp: Date.now() }
-          }));
-        }
+        window.dispatchEvent(new CustomEvent('sentinel-entropy-alert', {
+          detail: { x, y, timestamp: Date.now() }
+        }));
+        return false;
       }
     }
 
@@ -447,6 +482,7 @@ export const useSentinel = () => {
     getDecoyConfig,
     triggerBlacklist,
     checkBlacklist,
+    verifyStorageIntegrity,
     secureStore,
     secureGet,
     secureRemove,
