@@ -124,6 +124,8 @@ export const useMoltAutomation = () => {
         // Broadcast high-severity alert to other tabs if not already a broadcast
         if (!securityEvent.detail._isBroadcast) {
           broadcastChannelRef.current?.postMessage({ type: 'security-alert', detail: securityEvent.detail });
+        } else {
+          return;
         }
 
         // Track high-severity alerts for lockdown
