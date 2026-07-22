@@ -24,75 +24,57 @@ export const useMoltAutomation = () => {
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
+  const lockdownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const MAX_AUTONOMOUS_CYCLES = 5;
-  const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
 
-  // Initialize BroadcastChannel for cross-tab security synchronization
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const channel = new BroadcastChannel('sentinel-state-link');
-    broadcastChannelRef.current = channel;
-
-    const handleBroadcastMessage = (event: MessageEvent) => {
-      const { type, payload } = event.data || {};
-      if (type === 'lockdown') {
-        const lockdownExpiry = parseInt(payload, 10);
-        const remaining = lockdownExpiry - Date.now();
-        if (remaining > 0) {
-          setIsLockdown(true);
-          setTimeout(() => setIsLockdown(false), remaining);
-        }
-      } else if (type === 'blacklist') {
-        setIsBlacklisted(true);
-      } else if (type === 'alert') {
-        window.dispatchEvent(new CustomEvent('security-alert', {
-          detail: { ...payload, _isBroadcast: true }
-        }));
-      }
-    };
-
-    channel.addEventListener('message', handleBroadcastMessage);
-
-    return () => {
-      channel.removeEventListener('message', handleBroadcastMessage);
-      channel.close();
-    };
-  }, []);
-
-  // Initialize BroadcastChannel for cross-tab security synchronization
-  // Initialize BroadcastChannel for cross-tab security synchronization
+  // Initialize BroadcastChannel for cross-tab security synchronization and message handling
   useEffect(() => {
     if (typeof window === 'undefined' || typeof BroadcastChannel === 'undefined') return;
+
     const channel = new BroadcastChannel('sentinel-state-link');
     broadcastChannelRef.current = channel;
 
-    const handleBroadcast = (event: MessageEvent) => {
+    const handleMessage = (event: MessageEvent) => {
       if (!event.data || typeof event.data !== 'object') return;
-      const { type, detail } = event.data;
+      const { type, payload, detail } = event.data;
 
       switch (type) {
         case 'security-alert':
           if (detail && (detail.severity === 'HIGH' || detail.severity === 'CRITICAL')) {
-            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: \${detail.event}`);
+            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: ${detail.event}`);
             window.dispatchEvent(new CustomEvent('security-alert', {
               detail: { ...detail, _isBroadcast: true }
             }));
           }
           break;
         case 'lockdown':
+        case 'LOCKDOWN_SYNC': {
           setIsLockdown(true);
+          const expiryStr = payload || (detail && detail.expiry);
+          if (expiryStr) {
+            const expiry = parseInt(expiryStr, 10);
+            const remaining = expiry - Date.now();
+            if (remaining > 0) {
+              if (lockdownTimerRef.current) clearTimeout(lockdownTimerRef.current);
+              lockdownTimerRef.current = setTimeout(() => setIsLockdown(false), remaining);
+            }
+          }
           break;
+        }
         case 'blacklist':
+        case 'BLACKLIST_SYNC':
           setIsBlacklisted(true);
           break;
       }
     };
 
-    channel.addEventListener('message', handleBroadcast);
+    channel.addEventListener('message', handleMessage);
+
     return () => {
-      channel.removeEventListener('message', handleBroadcast);
+      channel.removeEventListener('message', handleMessage);
       channel.close();
+      broadcastChannelRef.current = null;
+      if (lockdownTimerRef.current) clearTimeout(lockdownTimerRef.current);
     };
   }, []);
 
@@ -108,7 +90,8 @@ export const useMoltAutomation = () => {
         if (Date.now() < lockdownExpiry) {
           setIsLockdown(true);
           const remaining = lockdownExpiry - Date.now();
-          setTimeout(() => setIsLockdown(false), remaining);
+          if (lockdownTimerRef.current) clearTimeout(lockdownTimerRef.current);
+          lockdownTimerRef.current = setTimeout(() => setIsLockdown(false), remaining);
         } else {
           secureRemove('sentinel_lockdown');
         }
@@ -121,53 +104,22 @@ export const useMoltAutomation = () => {
     checkSecurityStates();
   }, [checkBlacklist, secureGet, secureRemove]);
 
-  // BroadcastChannel initialization and cleanup
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    if (!broadcastChannelRef.current) {
-      broadcastChannelRef.current = new BroadcastChannel('sentinel-state-link');
-    }
-
-    const handleMessage = (event: MessageEvent) => {
-      const { type, payload } = event.data;
-      if (type === 'LOCKDOWN_SYNC') {
-        const expiry = parseInt(payload, 10);
-        if (Date.now() < expiry) {
-          setIsLockdown(true);
-          setTimeout(() => setIsLockdown(false), expiry - Date.now());
-        }
-      } else if (type === 'BLACKLIST_SYNC') {
-        setIsBlacklisted(true);
-      }
-    };
-
-    broadcastChannelRef.current.addEventListener('message', handleMessage);
-
-    return () => {
-      if (broadcastChannelRef.current) {
-        broadcastChannelRef.current.removeEventListener('message', handleMessage);
-        broadcastChannelRef.current.close();
-        broadcastChannelRef.current = null;
-      }
-    };
-  }, []);
-
   const triggerLockdown = useCallback(() => {
     if (isLockdown) return;
     const expiry = Date.now() + (5 * 60 * 1000); // 5 minutes
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
 
-    // Broadcast lockdown to other tabs
-    broadcastChannelRef.current?.postMessage({ type: 'lockdown' });
-
     // Log as MEDIUM to avoid triggering a new high-severity alert loop
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
+
+    // Broadcast lockdown to other tabs
     if (broadcastChannelRef.current) {
       broadcastChannelRef.current.postMessage({ type: 'lockdown', payload: expiry.toString() });
     }
-    setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
+
+    if (lockdownTimerRef.current) clearTimeout(lockdownTimerRef.current);
+    lockdownTimerRef.current = setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
   }, [isLockdown, logSecurityEvent, secureStore]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
@@ -192,7 +144,7 @@ export const useMoltAutomation = () => {
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
         // Broadcast high-severity alert to other tabs if not already a broadcast
-        if (!securityEvent.detail._isBroadcast) {
+        if (!_isBroadcast) {
           broadcastChannelRef.current?.postMessage({ type: 'security-alert', detail: securityEvent.detail });
         } else {
           return;

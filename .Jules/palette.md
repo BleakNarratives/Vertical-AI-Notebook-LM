@@ -1,3 +1,7 @@
+## 2026-07-22 - [Keyboard Shortcuts for Immersive 3D Environments]
+**Learning:** In a highly immersive, spatially positioned 3D boardroom environment, keyboard shortcuts provide a massive usability boost and an essential accessibility bridge for power users. Centralized keydown listeners bounded with `INPUT`/`TEXTAREA` checks allow instant programmatic triggers without causing focus shifts, keeping the experience smooth and interactive.
+**Action:** Implement global keyboard shortcuts (with matching brackets in hover labels and ARIA descriptions) for all primary interactive props in the 3D boardroom workspace.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.

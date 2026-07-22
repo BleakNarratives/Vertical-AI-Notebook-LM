@@ -12,7 +12,6 @@ export const useSentinel = () => {
   const jitterViolationsRef = useRef<Record<string, number>>({});
   const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
-  const velocityViolationsRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -159,8 +158,7 @@ export const useSentinel = () => {
     if (typeof input !== 'string') {
       logSecurityEvent(`Input rejected: Expected string, received ${typeof input}`, 'HIGH');
       return false;
-  const validateInput = useCallback((input: string): boolean => {
-    if (typeof input !== 'string') return false;
+    }
     // DoS Mitigation: Enforce strict length limits
     if (input.length > 500) {
       logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
@@ -441,8 +439,7 @@ export const useSentinel = () => {
         } else if (delta > 500) {
           velocityViolationsRef.current[e.type] = 0;
         }
-      } else if (delta > 500) {
-        // Human-like pause resets the violation counter
+      } else {
         velocityViolationsRef.current[e.type] = 0;
       }
     }

@@ -1,18 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
 
 export const VideoViewer: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
 
-  const handleAction = () => {
+  const handleAction = useCallback(() => {
     setStatus('FEED_SYNCHRONIZED');
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: 'MONITOR', action: 'FEED_SYNC' }
     }));
     setTimeout(() => setStatus(null), 2000);
-  };
+  }, []);
+
+  useEffect(() => {
+    const handleGlobalKey = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return;
+      if (e.key === 'v' || e.key === 'V') {
+        e.preventDefault();
+        handleAction();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKey);
+
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKey);
+    };
+  }, [handleAction]);
 
   const isActive = status === 'FEED_SYNCHRONIZED';
 
@@ -24,7 +39,7 @@ export const VideoViewer: React.FC = () => {
       <button
         type="button"
         onClick={handleAction}
-        aria-label="Remote Feed / Video Monitor"
+        aria-label="Remote Feed / Video Monitor [Shortcut: V]"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className={`group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu`}
       >
@@ -54,7 +69,7 @@ export const VideoViewer: React.FC = () => {
         </div>
         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1 bg-grey-medium" />
         <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
-          Monitor
+          Monitor [V]
         </span>
       </button>
     </div>
