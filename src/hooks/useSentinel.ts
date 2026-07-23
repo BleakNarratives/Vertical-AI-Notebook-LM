@@ -2,6 +2,9 @@
 
 import React, { useCallback, useRef } from 'react';
 
+// Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
+let memoryBlacklist: number | null = null;
+
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
