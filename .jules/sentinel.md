@@ -52,3 +52,8 @@
 **Vulnerability:** Client-side security states (lockdown, blacklists) were isolated to individual tabs, allowing users to bypass restrictions by opening new sessions.
 **Learning:** Immersive "Code City" security must be omnipresent. Pure `localStorage` is shared but doesn't trigger immediate state updates in active tabs. `BroadcastChannel` provides a "Quantum Entanglement" layer, ensuring that a lockdown in one tab immediately propagates and secures all other open instances.
 **Prevention:** Always use `BroadcastChannel` to synchronize critical security-state transitions across the entire browser context. Pair this with cross-storage (Local vs Session) integrity checks to detect manual tampering of security tokens.
+
+## 2026-06-12 - [Prototype Pollution Mitigation & Deserialization Defense]
+**Vulnerability:** Storage keys and dynamic configs parsed via standard `JSON.parse` were vulnerable to client-side prototype pollution.
+**Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
+**Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.

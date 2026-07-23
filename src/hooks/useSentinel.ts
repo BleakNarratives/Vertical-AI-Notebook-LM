@@ -15,7 +15,6 @@ export const useSentinel = () => {
   const jitterViolationsRef = useRef<Record<string, number>>({});
   const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
-  const velocityViolationsRef = useRef<Record<string, number>>({});
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
     const timestamp = new Date().toISOString();
@@ -42,6 +41,21 @@ export const useSentinel = () => {
     return Math.abs(hash ^ seed).toString(16);
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const secureJsonParse = useCallback((str: string): any => {
+    try {
+      return JSON.parse(str, (key, value) => {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+          logSecurityEvent(`Prototype pollution attempt detected and blocked: ${key}`, 'HIGH');
+          return undefined; // Filter out prototype-polluting keys
+        }
+        return value;
+      });
+    } catch {
+      return null;
+    }
+  }, [logSecurityEvent]);
+
   const secureStore = useCallback((key: string, value: string) => {
     if (typeof window === 'undefined') return;
     const signature = generateSignature(key, value);
@@ -61,7 +75,7 @@ export const useSentinel = () => {
       const raw = storage.getItem(key);
       if (!raw) return null;
       try {
-        const parsed = JSON.parse(raw);
+        const parsed = secureJsonParse(raw);
         if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.v !== 'string' || typeof parsed.s !== 'string') {
           logSecurityEvent(`Storage structure tampered or corrupted for key: ${key}`, 'HIGH');
           try {
@@ -95,7 +109,7 @@ export const useSentinel = () => {
     }
 
     return localVal;
-  }, [generateSignature, logSecurityEvent]);
+  }, [generateSignature, logSecurityEvent, secureJsonParse]);
 
   const secureRemove = useCallback((key: string) => {
     if (typeof window === 'undefined') return;
@@ -145,7 +159,7 @@ export const useSentinel = () => {
     let logs: string[] = [];
     try {
       if (stored) {
-        logs = JSON.parse(stored);
+        logs = secureJsonParse(stored);
         if (!Array.isArray(logs)) logs = [];
       }
     } catch { logs = []; }
@@ -155,15 +169,14 @@ export const useSentinel = () => {
 
     secureStore(key, JSON.stringify(logs));
     window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, [secureGet, secureStore]);
+  }, [secureGet, secureStore, secureJsonParse]);
 
   const validateInput = useCallback((input: string): boolean => {
     // Ensure input is a valid string type to prevent runtime type exceptions
     if (typeof input !== 'string') {
       logSecurityEvent(`Input rejected: Expected string, received ${typeof input}`, 'HIGH');
       return false;
-  const validateInput = useCallback((input: string): boolean => {
-    if (typeof input !== 'string') return false;
+    }
     // DoS Mitigation: Enforce strict length limits
     if (input.length > 500) {
       logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
@@ -273,11 +286,11 @@ export const useSentinel = () => {
     const stored = secureGet('sentinel_decoy_config');
     if (!stored) return null;
     try {
-      return JSON.parse(stored);
+      return secureJsonParse(stored);
     } catch {
       return null;
     }
-  }, [secureGet]);
+  }, [secureGet, secureJsonParse]);
 
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -326,7 +339,7 @@ export const useSentinel = () => {
     try {
       const stored = secureGet(storageKey);
       if (stored) {
-        const parsed = JSON.parse(stored);
+        const parsed = secureJsonParse(stored);
         if (parsed && typeof parsed === 'object') {
           data = { ...data, ...parsed };
         }
@@ -347,7 +360,7 @@ export const useSentinel = () => {
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
-  }, [logSecurityEvent, secureGet, secureStore]);
+  }, [logSecurityEvent, secureGet, secureStore, secureJsonParse]);
 
   const monitorIntegrity = useCallback(() => {
     if (typeof window === 'undefined' || typeof MutationObserver === 'undefined') return () => {};
@@ -444,7 +457,7 @@ export const useSentinel = () => {
         } else if (delta > 500) {
           velocityViolationsRef.current[e.type] = 0;
         }
-      } else if (delta > 500) {
+      } else {
         // Human-like pause resets the violation counter
         velocityViolationsRef.current[e.type] = 0;
       }
@@ -478,6 +491,7 @@ export const useSentinel = () => {
     sanitizeInput,
     validateInput,
     validateRequest,
+    secureJsonParse,
     checkRateLimit,
     storeShadowLog,
     triggerHoneytoken,

@@ -155,7 +155,7 @@ const DOC_CONTENT: Record<string, string> = {
 };
 
 export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition }) => {
-  const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
+  const [statusTitle, setStatusTitle] = React.useState<string | null>(null);
   const [activeDoc, setActiveDoc] = React.useState<string | null>(null);
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -174,8 +174,8 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
   const data = CONTEXT_DATA[context];
   const resolvedLabelPosition = labelPosition || (context === 'user' ? 'top' : 'bottom');
 
-  const handleView = (title: string) => {
-    setActiveTitle(title);
+  const handleView = useCallback((title: string) => {
+    setStatusTitle(title);
     setActiveDoc(title);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: `DOCS_${context.toUpperCase()}`, action: 'VIEW', payload: title, timestamp: new Date().toISOString() }
@@ -184,37 +184,15 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
     timeoutRef.current = setTimeout(() => setStatusTitle(null), 2000);
   }, [context]);
 
-  const closePreview = useCallback(() => {
-    setPreviewTitle(null);
-  }, []);
-
   return (
     <div className="flex flex-col items-center gap-16">
       {/* Document Overlay */}
-      {activeDoc && typeof document !== 'undefined' && createPortal(
-        <div
-          role="dialog" aria-modal="true" aria-labelledby="doc-title"
-          className="fixed inset-0 z-[1000] flex items-center justify-center p-8 bg-obsidian/90 backdrop-blur-sm animate-in fade-in duration-300"
-          onClick={closeDoc}
-        >
-          <div
-            className="relative max-w-2xl w-full bg-grey-dark border border-neon-amber p-8 shadow-[0_0_50px_rgba(255,191,0,0.2)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h2 id="doc-title" className="text-xl font-bold text-neon-amber uppercase tracking-widest">{activeDoc}</h2>
-                <p className="text-[10px] font-mono text-grey-medium mt-1 uppercase tracking-tighter">DOCS_{context.toUpperCase()} {"//"} REF: {activeDoc.substring(0, 3).toUpperCase()}</p>
-              </div>
-              <button onClick={closeDoc} autoFocus className="text-grey-medium hover:text-neon-amber transition-colors font-mono text-xs uppercase">[ Close ]</button>
-            </div>
-            <div className="font-mono text-sm text-white/80 leading-relaxed border-t border-grey-medium pt-6">
-              <p>{DOC_CONTENT[activeDoc] || 'No content found.'}</p>
-              <div className="mt-8 pt-4 border-t border-grey-medium/20 text-[10px] text-grey-medium italic">-- Obelisk Center Confidential.</div>
-            </div>
-          </div>
-        </div>,
-        document.body
+      {activeDoc && (
+        <DocumentPreview
+          title={activeDoc}
+          content={DOC_CONTENT[activeDoc] || 'No content found.'}
+          onClose={closeDoc}
+        />
       )}
 
       <div className={`h-4 flex items-center justify-center ${resolvedLabelPosition === 'bottom' ? 'order-last' : ''}`} aria-live="polite">
@@ -231,7 +209,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             label={`View ${data.p1}`}
             title={data.p1}
             rotation="-2deg"
-            isActive={statusTitle === data.p1 || previewTitle === data.p1}
+            isActive={statusTitle === data.p1 || activeDoc === data.p1}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p1)}
           />
@@ -243,7 +221,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             label={`View ${data.p3}`}
             title={data.p3}
             rotation="4deg"
-            isActive={statusTitle === data.p3 || previewTitle === data.p3}
+            isActive={statusTitle === data.p3 || activeDoc === data.p3}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p3)}
           />
@@ -255,20 +233,12 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             label={`View ${data.p2}`}
             title={data.p2}
             rotation="1deg"
-            isActive={statusTitle === data.p2 || previewTitle === data.p2}
+            isActive={statusTitle === data.p2 || activeDoc === data.p2}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p2)}
           />
         </div>
       </div>
-
-      {previewTitle && (
-        <DocumentPreview
-          title={previewTitle}
-          content={NARRATIVE_CONTENT[previewTitle] || 'CLASSIFIED_DATA_MISSING'}
-          onClose={closePreview}
-        />
-      )}
     </div>
   );
 };

@@ -19,13 +19,12 @@ interface SecurityAlertEvent extends CustomEvent {
  */
 export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
-  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet, secureRemove } = useSentinel();
+  const { logSecurityEvent, rotateDecoys, checkBlacklist, triggerBlacklist, secureStore, secureGet, secureRemove, secureJsonParse } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
   const MAX_AUTONOMOUS_CYCLES = 5;
-  const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
 
   // Initialize BroadcastChannel for cross-tab security synchronization
   useEffect(() => {
@@ -192,7 +191,7 @@ export const useMoltAutomation = () => {
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
         // Broadcast high-severity alert to other tabs if not already a broadcast
-        if (!securityEvent.detail._isBroadcast) {
+        if (!_isBroadcast) {
           broadcastChannelRef.current?.postMessage({ type: 'security-alert', detail: securityEvent.detail });
         } else {
           return;
@@ -203,7 +202,7 @@ export const useMoltAutomation = () => {
         try {
           const stored = secureGet('sentinel_alert_history');
           if (stored) {
-            alerts = JSON.parse(stored);
+            alerts = secureJsonParse(stored);
             if (!Array.isArray(alerts)) alerts = [];
           }
         } catch { alerts = []; }
@@ -329,7 +328,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-jitter-alert', handleJitterAlert);
       };
     }
-  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore, secureJsonParse]);
 
   // Integrity Heartbeat: Verify storage consistency and decay adaptive thresholds every 30s
   useEffect(() => {
