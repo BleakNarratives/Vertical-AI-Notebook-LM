@@ -46,9 +46,8 @@ export default function RootLayout({
           <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent opacity-60 pointer-events-none" />
 
           {/* Central Obelisk container - with Boardroom Perspective */}
-          <div className="w-full max-w-5xl min-h-[85vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
-             <PerspectiveWrapper>
-               <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
+          <PerspectiveWrapper>
+             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-red to-transparent opacity-30" />
 
                {/* Perspective Background Elements - Simulated Table Surface */}
                <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom,transparent_0%,rgba(10,10,10,0.8)_100%)]" />
