@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { triggerAgent } from '@/lib/agents';
 import { useSentinel } from './useSentinel';
 
 export const usePytch = () => {
   const [isConstructing, setIsConstructing] = useState(false);
-  const { logSecurityEvent, checkRateLimit } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, verifyInteraction } = useSentinel();
 
-  const wakePytch = useCallback(async () => {
+  const wakePytch = useCallback(async (e?: React.UIEvent) => {
+    if (!verifyInteraction(e)) return;
     if (!checkRateLimit('wakePytch', 3, 60000)) return;
 
     setIsConstructing(true);
@@ -21,7 +22,7 @@ export const usePytch = () => {
 
     console.log('Pytch: The narrative has been solidified. Reality is now compliant.');
     setIsConstructing(false);
-  }, [logSecurityEvent, checkRateLimit]);
+  }, [logSecurityEvent, checkRateLimit, verifyInteraction]);
 
   return { wakePytch, isConstructing };
 };
