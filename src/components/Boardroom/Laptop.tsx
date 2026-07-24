@@ -85,7 +85,7 @@ export const Laptop: React.FC = () => {
 
         {/* Label hidden until focus/hover */}
         <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
-          Terminal / IDEal / 4ward
+          Terminal / IDEal / 4ward [L]
         </span>
       </button>
     </div>

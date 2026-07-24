@@ -9,10 +9,12 @@ import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
 import { useMoltAutomation } from "@/hooks/useMoltAutomation";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
+  useKeyboardShortcuts();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();

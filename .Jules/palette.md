@@ -1,3 +1,7 @@
+## 2026-06-12 - [Accessible Global Keyboard Shortcuts in 3D Perspective UIs]
+**Learning:** In a heavily-styled 3D perspective viewport, keyboard shortcuts can drastically reduce keyboard-navigation latency by jumping focus and triggering clicks directly. To prevent interfering with screen reader navigation or default browser gestures, shortcuts must be bypassed when input elements are active, and target elements must receive focus immediately upon activation to satisfy screen reader/focus location standards.
+**Action:** Always bypass global keyboard listeners when `document.activeElement` is an input, textarea, or contenteditable element, and programmatically `.focus()` on the activated element to keep screen reader position synchronized.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.
