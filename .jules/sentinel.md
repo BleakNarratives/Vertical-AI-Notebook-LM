@@ -57,3 +57,8 @@
 **Vulnerability:** Storage keys and dynamic configs parsed via standard `JSON.parse` were vulnerable to client-side prototype pollution.
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
+
+## 2026-06-13 - [Cryptographic Broadcast Security & Memory Pinning Tamper Protection]
+**Vulnerability:** Redundant, conflicting BroadcastChannel listeners that could be spoofed by any client-side script, and local storage state (blacklist) which was easily bypassed by clearing local storage.
+**Learning:** Client-to-client BroadcastChannels are bound to the same origin, but malicious scripts running on the page (XSS, extensions, or DevTools inputs) could easily dispatch unvalidated message payloads to spoof lockdown/blacklist states or trigger rate limits. Furthermore, simple client storage states are highly vulnerable to bypass via clear actions.
+**Prevention:** Unify all cross-tab messaging listeners into a single, high-security handler. Cryptographically sign all BroadcastChannel messages using custom circular bit-rotation hashes (`generateSignature`) and reject any unsigned or invalid payload. Pair this with module-scoped in-memory state variable backups ("Memory Pinning") to validate and automatically restore tampered client storage keys.

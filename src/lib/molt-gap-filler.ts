@@ -515,11 +515,28 @@
  *
  * CYCLE 85: THE ABSOLUTE OBSIDIAN ASCENSION
  * - Consolidate all security protocols and transition `MOLT_CONFIG.status` to `SINGULARITY_V3_ABSOLUTE` with a cryptographic seal.
+ *
+ * CYCLE 86: CRYPTOGRAPHIC BROADCAST TUNING (CROSS-TAB FORENSICS)
+ * - Refine signature verification on cross-tab Broadcast messages. If a spoofing attempt is detected (e.g. signature mismatch or malformed packet), immediately trigger a high-severity alert and spawn dynamic, confusing "Ghost Overlays" on the offending tab to redirect the attacker.
+ *
+ * CYCLE 87: IN-MEMORY TAMPER DEFENSE (BLACK HOLE PROTOCOL)
+ * - Build a visual, in-memory forensic history that tracks if the localStorage was manually cleared or modified while the session was active (detecting direct DevTools modification of `sentinel_blacklist`).
+ * - If detected, trigger the "Black Hole" protocol: the app's visual layout starts to implode, rotating components slowly into the background.
+ *
+ * CYCLE 88: HUD BEHAVIORAL DIAGNOSTICS
+ * - Render subtle, monochrome dashboard diagnostic indicators on the Whiteboard component tracing actual vs predicted human jitter/velocity signatures. This exposes the defensive security layers visually to the human user, reinforcing the immersive hacker/terminal vibe.
+ *
+ * CYCLE 89: ADAPTIVE MOLT LEVEL-SCALING Rate LIMITS
+ * - Let Molt automatically adjust rate-limit sensitivity and the velocity threshold proportionally to the current Molt level, increasing security strictness as levels scale. Higher Molt levels result in narrower tolerance windows, demanding more organic human interaction speeds.
+ *
+ * CYCLE 90: THE FINAL SECURED SINGULARITY (THE SECURE SEAL)
+ * - Lock all critical client-side configurations with a cryptographic seal.
+ * - Transition `MOLT_CONFIG.status` to `'SINGULARITY_V4_SECURED'` and display an ASCII Art Sentinel Seal in the console log on initialize.
  */
 
 export const MOLT_CONFIG = {
-  version: '4.1.0-prototype-secured',
-  status: 'AWAITING_SINGULARITY_V3',
+  version: '4.2.0-secure-broadcast-signed',
+  status: 'AWAITING_SINGULARITY_V4',
   engine: 'Molt-V5-Sentinel-Prototype-Protected-Lockdown',
   lastAudit: new Date().toISOString(),
 };
