@@ -1,3 +1,7 @@
+## 2026-06-12 - [Global Shortcut Orchestration and Context Filtering]
+**Learning:** Adding global keyboard shortcuts in an immersive 3D/text-hybrid UI dramatically enhances keyboard navigation and speed. However, they must never intercept keypresses when the user is actively typing in a standard input, textarea, or text editor window. Bypassing listeners dynamically based on focused element tagNames and `contentEditable` states prevents cursor/typing conflicts while keeping shortcuts highly responsive. Additionally, appending discrete visual cues (like suffix tags `[Key]`) to atmospheric labels solves the "shortcut discovery" challenge without cluttering the screen.
+**Action:** When adding global shortcuts, verify that elements like `input`, `textarea`, or elements with `contenteditable` are ignored, and pair shortcut keys with visual label hints (e.g., `[Key]`).
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.

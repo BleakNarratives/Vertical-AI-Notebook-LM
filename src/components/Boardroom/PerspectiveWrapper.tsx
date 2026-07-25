@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 /**
  * PerspectiveWrapper - Dynamic 3D parallax tilt for the boardroom.
@@ -8,6 +9,9 @@ const motionQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-
 
 export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
+
+  // Activate global keyboard shortcuts inside the boardroom table view
+  useKeyboardShortcuts();
   const isReduced = useSyncExternalStore(
     (cb) => {
       motionQuery?.addEventListener('change', cb);
