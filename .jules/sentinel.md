@@ -57,3 +57,8 @@
 **Vulnerability:** Storage keys and dynamic configs parsed via standard `JSON.parse` were vulnerable to client-side prototype pollution.
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
+
+## 2026-07-25 - [Redundant Memory Pinning & Client-Side Anti-Tampering]
+**Vulnerability:** Client-side security states like session blacklists and lockdowns are vulnerable to manual storage modification or clearance, letting users evade active blocks.
+**Learning:** Pure localStorage or sessionStorage states are client-writable. Redundant memory pinning in private module-scope variables provides a second-level check. If storage state is cleared or altered but the in-memory pinning variable is valid, the security layer can instantly detect tampering and restore the correct block.
+**Prevention:** Use module-scoped variables to redundantly store highly critical state variables (like blacklist durations). Upon storage reads, perform validation checks and synchronize/repair the storage keys automatically if any tampering or clearing is detected.
