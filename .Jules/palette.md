@@ -1,3 +1,7 @@
+## 2026-07-26 - [Unified Global Keyboard Shortcuts with Visual Suffixes]
+**Learning:** Adding keyboard shortcuts to 3D perspective dashboard components provides a monumental UX boost, making navigation extremely efficient for keyboard-only users. Furthermore, pairing these shortcuts with explicit visual cues (like appending `[Key]` to hover/focus labels and `aria-label` elements) increases user discoverability, aligns perfectly with visual accessibility standards, and maintains seamless compatibility with screen readers.
+**Action:** When designing complex 3D-positioned dashboard components, provide keyboard alternatives with clear visual shortcuts and ARIA suffixes to keep interactions highly discoverable and fully accessible.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.

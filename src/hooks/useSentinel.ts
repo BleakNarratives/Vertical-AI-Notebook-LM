@@ -295,23 +295,36 @@ export const useSentinel = () => {
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
+    memoryBlacklist = expiry;
     secureStore('sentinel_blacklist', expiry.toString());
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
   }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    const stored = secureGet('sentinel_blacklist');
+    let stored = secureGet('sentinel_blacklist');
+
+    // Memory pinning validation/repair
+    if (!stored && memoryBlacklist && Date.now() < memoryBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist cleared in local storage but preserved in memory pinning. Repairing.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      stored = memoryBlacklist.toString();
+    }
+
     if (stored) {
       const expiry = parseInt(stored, 10);
       if (Date.now() < expiry) {
+        memoryBlacklist = expiry;
         return true;
       } else {
         secureRemove('sentinel_blacklist');
+        memoryBlacklist = null;
       }
+    } else {
+      memoryBlacklist = null;
     }
     return false;
-  }, [secureGet, secureRemove]);
+  }, [secureGet, secureStore, secureRemove, logSecurityEvent]);
 
   const verifyStorageIntegrity = useCallback(() => {
     if (typeof window === 'undefined') return true;
