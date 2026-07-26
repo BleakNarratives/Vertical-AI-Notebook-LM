@@ -295,6 +295,7 @@ export const useSentinel = () => {
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
+    memoryBlacklist = expiry;
     secureStore('sentinel_blacklist', expiry.toString());
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
@@ -305,13 +306,25 @@ export const useSentinel = () => {
     if (stored) {
       const expiry = parseInt(stored, 10);
       if (Date.now() < expiry) {
+        // Sync memory pin
+        memoryBlacklist = expiry;
         return true;
       } else {
+        memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
+      }
+    } else if (memoryBlacklist !== null) {
+      // Memory Pinning defense: Storage was cleared/tampered with, but we have a valid blacklist in memory
+      if (Date.now() < memoryBlacklist) {
+        logSecurityEvent('CRITICAL: Blacklist storage tampering detected (bypass attempt). Restoring state from Memory Pin.', 'CRITICAL');
+        secureStore('sentinel_blacklist', memoryBlacklist.toString());
+        return true;
+      } else {
+        memoryBlacklist = null;
       }
     }
     return false;
-  }, [secureGet, secureRemove]);
+  }, [secureGet, secureStore, secureRemove, logSecurityEvent]);
 
   const verifyStorageIntegrity = useCallback(() => {
     if (typeof window === 'undefined') return true;
