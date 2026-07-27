@@ -295,6 +295,7 @@ export const useSentinel = () => {
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
+    memoryBlacklist = expiry;
     secureStore('sentinel_blacklist', expiry.toString());
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
@@ -302,21 +303,47 @@ export const useSentinel = () => {
 
   const checkBlacklist = useCallback((): boolean => {
     const stored = secureGet('sentinel_blacklist');
+    let expiry: number | null = null;
+
     if (stored) {
-      const expiry = parseInt(stored, 10);
+      expiry = parseInt(stored, 10);
+    } else if (memoryBlacklist) {
+      // Memory Pinning: Recover the blacklist expiry if localStorage was cleared/tampered
+      expiry = memoryBlacklist;
+      logSecurityEvent('Memory Pinning: Restoring tampered/cleared blacklist from in-memory signature.', 'HIGH');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+    }
+
+    if (expiry) {
       if (Date.now() < expiry) {
+        memoryBlacklist = expiry;
         return true;
       } else {
+        memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
       }
     }
     return false;
-  }, [secureGet, secureRemove]);
+  }, [secureGet, secureStore, secureRemove, logSecurityEvent]);
 
   const verifyStorageIntegrity = useCallback(() => {
     if (typeof window === 'undefined') return true;
     const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
     let isIntegral = true;
+
+    // Verify storage blacklist against memory blacklist pinning
+    const storedBlacklist = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && !storedBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist removed from storage.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && memoryBlacklist && parseInt(storedBlacklist, 10) !== memoryBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist value tampered.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && !memoryBlacklist) {
+      memoryBlacklist = parseInt(storedBlacklist, 10);
+    }
 
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
@@ -327,7 +354,7 @@ export const useSentinel = () => {
       }
     }
     return isIntegral;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
