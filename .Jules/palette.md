@@ -1,3 +1,7 @@
+## 2026-07-27 - [Boardroom Keyboard Shortcuts]
+**Learning:** Incorporating global keyboard shortcuts (like `C`, `L`, `W`, `V`) for central interactive props significantly reduces barriers for users who rely on keyboard navigation. Bypassing active inputs/textareas avoids keyboard conflicts, and adding visual indicators (`[C]`, `[L]`, etc.) onto tooltips directly bridges keyboard accessibility and visual delight.
+**Action:** Always provide visual keyboard shortcut indicators on interactive props and filter active focus to prevent input conflicts.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.

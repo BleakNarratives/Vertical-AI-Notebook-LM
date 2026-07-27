@@ -34,6 +34,7 @@ export const CoffeeMug: React.FC = () => {
       </div>
       <button
         type="button"
+        id="boardroom-coffeemug"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break)"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
@@ -54,7 +55,7 @@ export const CoffeeMug: React.FC = () => {
 
         {/* Label hidden until focus/hover */}
         <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity z-50">
-          SAVE / LOAD / SETTINGS
+          SAVE / LOAD / SETTINGS [C]
         </span>
       </button>
     </div>
