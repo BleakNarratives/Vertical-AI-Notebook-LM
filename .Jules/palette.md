@@ -1,3 +1,7 @@
+## 2026-06-12 - [Accessible Global Keyboard Shortcuts]
+**Learning:** Adding global keyboard shortcuts (`C`, `L`, `W`, `V`) in a highly-interactive 3D perspective boardroom drastically improves keyboard navigation efficiency. However, simple event listeners will intercept keystrokes when users type in terminal inputs or text areas. To prevent this, keyboard handlers must actively verify if the active element is an input, textarea, or contenteditable. Additionally, triggering programmatic `click()` on target IDs ensures focus ring state synchronization across all responsive screen readers.
+**Action:** Use a dedicated `useKeyboardShortcuts` hook that filters out active-input/modifier key collisions and targets specific prop IDs (`boardroom-*`) with programmatic clicks to maintain unified visual/tactile focus feedback.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.
