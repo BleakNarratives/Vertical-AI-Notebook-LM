@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 /**
  * PerspectiveWrapper - Dynamic 3D parallax tilt for the boardroom.
@@ -7,6 +8,7 @@ import React, { useEffect, useRef, useSyncExternalStore } from 'react';
 const motionQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
 export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  useKeyboardShortcuts();
   const ref = useRef<HTMLDivElement>(null);
   const isReduced = useSyncExternalStore(
     (cb) => {

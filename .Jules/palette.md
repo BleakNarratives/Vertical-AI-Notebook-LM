@@ -1,3 +1,7 @@
+## 2026-07-29 - [Non-Intrusive Global Keyboard Shortcuts]
+**Learning:** Adding global key event listeners (e.g. keydown handlers) for atmospheric actions can accidentally override standard browser/OS keyboard actions (such as Ctrl+C or Cmd+V).
+**Action:** Always verify modifier keys (e.g., check `e.ctrlKey || e.metaKey || e.altKey`) at the top of key handlers to prevent hijacking native commands.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.
