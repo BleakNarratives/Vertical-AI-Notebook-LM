@@ -57,3 +57,8 @@
 **Vulnerability:** Storage keys and dynamic configs parsed via standard `JSON.parse` were vulnerable to client-side prototype pollution.
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
+
+## 2026-06-13 - [Quantum Integrity Pinning & Storage Tamper Recovery]
+**Vulnerability:** Client-side blocklists and session restrictions (such as blacklists and lockdowns) can be easily bypassed by attackers simply clearing their browser's local/session storage.
+**Learning:** Purely client-side security mechanisms are vulnerable to storage manipulation. By storing key security states redundantly inside a module-level variable (`memoryBlacklist`), we establish a persistent in-memory reference that survives user-initiated local storage clearance during a session, and can autonomously repair and synchronize the state.
+**Prevention:** Redundantly store critical session security flags in module-scope memory or separate communication state synchronization channels, and perform verification and self-healing when divergence or storage clearance is detected.
