@@ -9,6 +9,7 @@ import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
 import { useMoltAutomation } from "@/hooks/useMoltAutomation";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -18,6 +19,9 @@ export default function Home() {
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
   const { logSecurityEvent } = useSentinel();
   const [isGlitching, setIsGlitching] = useState(false);
+
+  // Initialize global keyboard shortcuts (C, L, W, V)
+  useKeyboardShortcuts();
 
   useEffect(() => {
     logSecurityEvent('Home module initialized', 'LOW');
