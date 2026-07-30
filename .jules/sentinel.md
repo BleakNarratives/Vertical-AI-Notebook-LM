@@ -57,3 +57,8 @@
 **Vulnerability:** Storage keys and dynamic configs parsed via standard `JSON.parse` were vulnerable to client-side prototype pollution.
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
+
+## 2026-06-13 - [Quantum Integrity Pin & Memory-Pinned Blacklist]
+**Vulnerability:** Client-side local storage can be manually modified or cleared by sophisticated bots/users to bypass blacklist blocks and lockdown restrictions.
+**Learning:** Client-side storage-backed lockdowns lack a second factor of enforcement. If the client clears localStorage, security states are completely lost. Utilizing a module-scope in-memory variable (Memory Pinning) provides an indestructible redundant check.
+**Prevention:** Always pair storage getters with a module-level variable validation check. If browser storage is cleared but the active session remains, dynamically restore security-critical states from memory pinning and fire tampering alerts.
