@@ -1,3 +1,7 @@
+## 2026-07-31 - [Keyboard Shortcut Modifier Key Safety]
+**Learning:** Adding global keyboard shortcuts (`C`, `L`, `W`, `V`) directly to window event listeners must not intercept or prevent standard browser or operating system actions (like Copy/Paste, Close Tab, or Focusing search bar). Checking for `event.ctrlKey || event.metaKey || event.altKey || event.shiftKey` is essential to prevent hijacking.
+**Action:** Always verify modifier key states before executing and preventing defaults on global keystroke shortcuts.
+
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
 **Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.

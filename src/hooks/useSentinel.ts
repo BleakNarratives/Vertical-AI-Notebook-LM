@@ -302,8 +302,14 @@ export const useSentinel = () => {
   }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    const stored = secureGet('sentinel_blacklist');
-    let expiry: number | null = null;
+    let stored = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && Date.now() < memoryBlacklist) {
+      if (!stored) {
+        logSecurityEvent('Storage tampering detected: Blacklist was removed. Restoring from Memory Pin.', 'CRITICAL');
+        secureStore('sentinel_blacklist', memoryBlacklist.toString());
+        stored = memoryBlacklist.toString();
+      }
+    }
 
     if (stored) {
       expiry = parseInt(stored, 10);
@@ -316,7 +322,7 @@ export const useSentinel = () => {
 
     if (expiry) {
       if (Date.now() < expiry) {
-        memoryBlacklist = expiry;
+        if (!memoryBlacklist) memoryBlacklist = expiry;
         return true;
       } else {
         memoryBlacklist = null;
@@ -430,6 +436,20 @@ export const useSentinel = () => {
     if (typeof window === 'undefined' || !e) return true;
 
     const now = Date.now();
+    if (typeof window !== 'undefined') {
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+
+      if (lastInteraction !== 0 && velocity < 50) {
+        logSecurityEvent('Sub-human interaction velocity detected: ' + velocity + 'ms', 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification

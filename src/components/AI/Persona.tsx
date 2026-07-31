@@ -56,7 +56,9 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
         <p className="text-xs font-mono text-white/40 uppercase transition-colors">{role}</p>
         <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em] mt-1">{name}</h3>
       </div>
-      <FocusIndicator color="neon-red" />
+
+      {/* Focus indicator */}
+      {!disabled && <FocusIndicator color="red" />}
     </button>
   );
 };
