@@ -8,6 +8,4 @@
 ✓ Ready in 557ms
 
 ○ Compiling / ...
- HEAD / 200 in 3.8s (next.js: 3.5s, application-code: 369ms)
- GET / 200 in 162ms (next.js: 6ms, application-code: 156ms)
- GET / 200 in 113ms (next.js: 5ms, application-code: 108ms)
+ GET / 200 in 5.2s (next.js: 4.6s, application-code: 665ms)

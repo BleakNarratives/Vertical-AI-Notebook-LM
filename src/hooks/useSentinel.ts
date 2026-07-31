@@ -312,7 +312,15 @@ export const useSentinel = () => {
     }
 
     if (stored) {
-      const expiry = parseInt(stored, 10);
+      expiry = parseInt(stored, 10);
+    } else if (memoryBlacklist) {
+      // Memory Pinning: Recover the blacklist expiry if localStorage was cleared/tampered
+      expiry = memoryBlacklist;
+      logSecurityEvent('Memory Pinning: Restoring tampered/cleared blacklist from in-memory signature.', 'HIGH');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+    }
+
+    if (expiry) {
       if (Date.now() < expiry) {
         if (!memoryBlacklist) memoryBlacklist = expiry;
         return true;
@@ -329,6 +337,20 @@ export const useSentinel = () => {
     const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
     let isIntegral = true;
 
+    // Verify storage blacklist against memory blacklist pinning
+    const storedBlacklist = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && !storedBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist removed from storage.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && memoryBlacklist && parseInt(storedBlacklist, 10) !== memoryBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist value tampered.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && !memoryBlacklist) {
+      memoryBlacklist = parseInt(storedBlacklist, 10);
+    }
+
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
       const session = sessionStorage.getItem(key);
@@ -338,7 +360,7 @@ export const useSentinel = () => {
       }
     }
     return isIntegral;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
