@@ -302,28 +302,19 @@ export const useSentinel = () => {
   }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    const stored = secureGet('sentinel_blacklist');
-
-    // Validate / Repair using memory blacklist
-    if (memoryBlacklist && memoryBlacklist > Date.now()) {
+    let stored = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && Date.now() < memoryBlacklist) {
       if (!stored) {
-        logSecurityEvent('Storage tampering detected: Blacklist was cleared or missing from storage. Restoring key.', 'CRITICAL');
+        logSecurityEvent('Storage tampering detected: Blacklist was removed. Restoring from Memory Pin.', 'CRITICAL');
         secureStore('sentinel_blacklist', memoryBlacklist.toString());
-      } else if (parseInt(stored, 10) !== memoryBlacklist) {
-        logSecurityEvent('Storage tampering detected: Blacklist mismatch. Restoring key from Memory Pin.', 'CRITICAL');
-        secureStore('sentinel_blacklist', memoryBlacklist.toString());
-      }
-    } else if (stored && !memoryBlacklist) {
-      const expiry = parseInt(stored, 10);
-      if (Date.now() < expiry) {
-        memoryBlacklist = expiry;
+        stored = memoryBlacklist.toString();
       }
     }
 
-    const finalStored = secureGet('sentinel_blacklist');
-    if (finalStored) {
-      const expiry = parseInt(finalStored, 10);
+    if (stored) {
+      const expiry = parseInt(stored, 10);
       if (Date.now() < expiry) {
+        if (!memoryBlacklist) memoryBlacklist = expiry;
         return true;
       } else {
         memoryBlacklist = null;
