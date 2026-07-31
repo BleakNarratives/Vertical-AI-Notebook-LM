@@ -27,7 +27,7 @@ export const VideoViewer: React.FC = () => {
         onClick={handleAction}
         aria-label="Remote Feed / Video Monitor"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className={`group/viewer group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus-visible:ring-2 outline-none transform-gpu ${isActive ? 'focus-visible:ring-neon-amber' : 'focus-visible:ring-neon-red'}`}
+        className="group/viewer group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu"
       >
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">
           {/* Scanlines */}
