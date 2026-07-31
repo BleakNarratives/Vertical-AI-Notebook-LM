@@ -84,7 +84,6 @@ export default function RootLayout({
                <SentinelIntegrity />
                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber to-transparent opacity-30" />
              </PerspectiveWrapper>
-          </div>
         </main>
 
         <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
