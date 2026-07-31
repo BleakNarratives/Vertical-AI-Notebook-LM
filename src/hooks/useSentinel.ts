@@ -344,19 +344,21 @@ export const useSentinel = () => {
     }
 
     // 2. Velocity Profiling: Detect sub-human interaction speeds
-    const now = Date.now();
-    const win = window as unknown as { _sentinel_last_interaction: number };
-    const last = win._sentinel_last_interaction || 0;
-    const delta = now - last;
+    if (e.type === 'click') {
+      const now = Date.now();
+      const win = window as unknown as { _sentinel_last_click: number };
+      const last = win._sentinel_last_click || 0;
+      const delta = now - last;
 
-    win._sentinel_last_interaction = now;
+      win._sentinel_last_click = now;
 
-    if (e.type === 'click' && last !== 0 && delta < 50) {
-      logSecurityEvent(`Velocity anomaly detected: ${delta}ms between interactions`, 'HIGH');
-      window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-        detail: { delta, type: e.type, timestamp: new Date().toISOString() }
-      }));
-      return false;
+      if (last !== 0 && delta < 50) {
+        logSecurityEvent(`Velocity anomaly detected: ${delta}ms between interactions`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
     }
 
     return true;
