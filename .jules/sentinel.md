@@ -62,3 +62,8 @@
 **Vulnerability:** Core security blocklists and lockdowns stored in client-side LocalStorage can be cleared or tampered with manually by malicious clients to bypass active bans.
 **Learning:** Pure storage-backed validation relies entirely on client-controlled files which can be deleted at any time. Pairing storage synchronization with an in-memory redundant variable ("Quantum Memory Pinning") allows the application to detect storage deletion and automatically recover the active blacklist.
 **Prevention:** Maintain a redundant, module-scoped cache of critical session identifiers and block states, verifying and auto-restoring them if a mismatch or deletion in LocalStorage/SessionStorage is detected.
+
+## 2026-06-14 - [Cryptographic Cross-Tab State-Tampering Prevention via BroadcastChannel Signing]
+**Vulnerability:** Multi-tab synchronization utilizing BroadcastChannel was completely unvalidated and lacked origin/sender validation, allowing malicious local scripts or XSS payloads to inject fake cross-tab events like spoofed security alerts or system lockdowns.
+**Learning:** While BroadcastChannel is powerful for synchronizing states (like lockout/lockdown/blacklist), it remains open to injection from any script running on the same origin. By validating only signature-matching payloads, we establish cryptographic trust.
+**Prevention:** Establish a cryptographic signature on each BroadcastChannel message using dynamic value hashing (e.g., circular bit-rotation hashes) and drop/log as `CRITICAL` any unvalidated or tampered payloads.
