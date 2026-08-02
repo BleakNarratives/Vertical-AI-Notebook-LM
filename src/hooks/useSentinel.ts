@@ -311,6 +311,7 @@ export const useSentinel = () => {
       }
     }
 
+    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {

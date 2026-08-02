@@ -86,9 +86,33 @@ export default function RootLayout({
              </PerspectiveWrapper>
         </main>
 
-        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
-          <span>[ BLEAK NARRATIVES ]</span>
-          <span className="ml-auto">TERM: 2829543670389124673</span>
+        <footer className="md:h-8 border-t border-grey-dark flex flex-col md:flex-row items-center gap-4 py-4 md:py-0 px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
+          <div className="flex items-center gap-2">
+            <span>[ BLEAK NARRATIVES ]</span>
+          </div>
+
+          {/* Immersive Keyboard Shortcuts Legend */}
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[9px] text-grey-medium/60 md:ml-12">
+            <span>SHORTCUTS:</span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-amber font-bold rounded">C</kbd>
+              <span>COFFEE BREAK / SNAPSHOT</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-red font-bold rounded">L</kbd>
+              <span>LAPTOP WORKSTATION</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-amber font-bold rounded">W</kbd>
+              <span>WHITEBOARD STRATEGY</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-red font-bold rounded">V</kbd>
+              <span>VIDEO MONITOR</span>
+            </span>
+          </div>
+
+          <span className="md:ml-auto">TERM: 2829543670389124673</span>
         </footer>
       </body>
     </html>

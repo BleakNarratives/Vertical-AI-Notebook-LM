@@ -50,8 +50,6 @@ const Paper: React.FC<PaperProps> = ({
         {title}
       </span>
 
-      {/* Focus indicator */}
-      <FocusIndicator color="amber" />
     </button>
   );
 };
@@ -63,13 +61,37 @@ interface DocumentPreviewProps {
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const onCloseRef = React.useRef(onClose);
+
+  // Keep ref up to date to avoid re-triggering the effect when onClose changes
   useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    // Auto-focus the close button on mount
+    if (closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onCloseRef.current();
+      }
     };
     window.addEventListener('keydown', handleEsc, true);
-    return () => window.removeEventListener('keydown', handleEsc, true);
-  }, [onClose]);
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc, true);
+      // Restore focus on unmount exactly once when the component unmounts
+      if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+        previouslyFocused.focus();
+      }
+    };
+  }, []); // Run exactly once on mount and unmount
 
   return createPortal(
     <div
@@ -91,8 +113,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
             <div className="text-[10px] font-mono text-grey-medium uppercase tracking-tighter">Classification: Restricted / Obelisk-Internal</div>
           </div>
           <button
+            ref={closeButtonRef}
             onClick={onClose}
-            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer"
+            className="text-neon-amber/60 hover:text-neon-amber focus-visible:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian outline-none transition-colors font-mono text-xs uppercase cursor-pointer px-1 py-0.5"
             aria-label="Close Preview"
           >
             [ ESC ]
