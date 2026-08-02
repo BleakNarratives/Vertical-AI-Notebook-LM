@@ -62,3 +62,8 @@
 **Vulnerability:** Core security blocklists and lockdowns stored in client-side LocalStorage can be cleared or tampered with manually by malicious clients to bypass active bans.
 **Learning:** Pure storage-backed validation relies entirely on client-controlled files which can be deleted at any time. Pairing storage synchronization with an in-memory redundant variable ("Quantum Memory Pinning") allows the application to detect storage deletion and automatically recover the active blacklist.
 **Prevention:** Maintain a redundant, module-scoped cache of critical session identifiers and block states, verifying and auto-restoring them if a mismatch or deletion in LocalStorage/SessionStorage is detected.
+
+## 2026-06-14 - [Molt Trigger Rate-Limiting & Global Reference Isolation]
+**Vulnerability:** Missing local scope declaration of block expiration tokens (`expiry`) in client-side validation, and lack of client-side rate limiting on recursive engine entry points (`useMolt`).
+**Learning:** When writing transient state logic inside React hooks (such as storage checkpoints), undeclared loop and conditional assignment variables can leak into parent scopes, causing unexpected state collisions or compiler errors. Additionally, allowing infinite trigger calls to resource-heavy processes (like Molt recursive improvement) creates severe client-side execution lockups and is vulnerable to automated spam sequences.
+**Prevention:** Always declare block variables (`let expiry`) to ensure scope-safety. Bind heavy/recursive operations to the sentinel rate-limiting layer (`checkRateLimit`) and escalate persistent spam violations into autonomous threat levels (`CRITICAL`).
