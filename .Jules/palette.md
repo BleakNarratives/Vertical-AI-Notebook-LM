@@ -1,3 +1,7 @@
+## 2026-08-01 - [Keyboard Shortcuts Legend and Interactive Cues]
+**Learning:** Adding keyboard shortcuts significantly speeds up navigation and deepens immersion in 3D perspective dashboard environments. However, without persistent visual discoverability, users will remain unaware of these keybinds. Providing a sleek, non-intrusive `<kbd>`-based legend in the persistent footer bridges this discovery gap, and using micro-animations/hover-color cues matching localized component color schemes elevates delight and system coherence.
+**Action:** Always include a visual keyboard shortcuts legend when global shortcuts are active, using `<kbd>` elements and localized theme colors to assist visual discovery.
+
 ## 2026-07-31 - [Keyboard Shortcut Modifier Key Safety]
 **Learning:** Adding global keyboard shortcuts (`C`, `L`, `W`, `V`) directly to window event listeners must not intercept or prevent standard browser or operating system actions (like Copy/Paste, Close Tab, or Focusing search bar). Checking for `event.ctrlKey || event.metaKey || event.altKey || event.shiftKey` is essential to prevent hijacking.
 **Action:** Always verify modifier key states before executing and preventing defaults on global keystroke shortcuts.

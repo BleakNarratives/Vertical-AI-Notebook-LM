@@ -86,8 +86,27 @@ export default function RootLayout({
              </PerspectiveWrapper>
         </main>
 
-        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
+        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest gap-8">
           <span>[ BLEAK NARRATIVES ]</span>
+          <div className="hidden md:flex items-center gap-4 text-white/50 mx-auto select-none">
+            <span className="text-[8px] text-grey-medium/60">KEYBOARD SHORTCUTS:</span>
+            <span className="flex items-center gap-1 hover:text-neon-amber transition-colors">
+              <kbd className="px-1 py-0.5 border border-grey-medium/30 rounded bg-grey-dark text-[9px] text-neon-amber">C</kbd>
+              <span>COFFEE BREAK</span>
+            </span>
+            <span className="flex items-center gap-1 hover:text-neon-red transition-colors">
+              <kbd className="px-1 py-0.5 border border-grey-medium/30 rounded bg-grey-dark text-[9px] text-neon-red">L</kbd>
+              <span>LAPTOP WORKSTATION</span>
+            </span>
+            <span className="flex items-center gap-1 hover:text-neon-amber transition-colors">
+              <kbd className="px-1 py-0.5 border border-grey-medium/30 rounded bg-grey-dark text-[9px] text-neon-amber">W</kbd>
+              <span>WHITEBOARD</span>
+            </span>
+            <span className="flex items-center gap-1 hover:text-neon-red transition-colors">
+              <kbd className="px-1 py-0.5 border border-grey-medium/30 rounded bg-grey-dark text-[9px] text-neon-red">V</kbd>
+              <span>VIDEO MONITOR</span>
+            </span>
+          </div>
           <span className="ml-auto">TERM: 2829543670389124673</span>
         </footer>
       </body>
