@@ -227,6 +227,11 @@ export const useMoltAutomation = () => {
         logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
         attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
       }
+
+      // Every 3 shadow logs, trigger a minor behavioral reinforcement
+      else if (count > 0 && count % 3 === 0) {
+        attemptAutonomousImprovement("Behavioral trigger: Shadow forensic reconstruction [" + count + "]");
+      }
     };
 
     const handleDecoyBreach = () => {
