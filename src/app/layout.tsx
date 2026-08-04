@@ -86,9 +86,16 @@ export default function RootLayout({
              </PerspectiveWrapper>
         </main>
 
-        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
-          <span>[ BLEAK NARRATIVES ]</span>
-          <span className="ml-auto">TERM: 2829543670389124673</span>
+        <footer className="min-h-8 py-2 md:h-8 border-t border-grey-dark flex flex-col md:flex-row items-center gap-2 px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
+          <div className="flex flex-wrap items-center gap-4 text-grey-medium">
+            <span>[ BLEAK NARRATIVES ]</span>
+            <span className="hidden md:inline text-grey-dark">|</span>
+            <span className="text-neon-amber/60 hover:text-neon-amber transition-colors">[C] COFFEE BREAK</span>
+            <span className="text-neon-red/60 hover:text-neon-red transition-colors">[L] LAPTOP WORKSTATION</span>
+            <span className="text-neon-amber/60 hover:text-neon-amber transition-colors">[W] WHITEBOARD</span>
+            <span className="text-neon-amber/60 hover:text-neon-amber transition-colors">[V] VIDEO MONITOR</span>
+          </div>
+          <span className="md:ml-auto">TERM: 2829543670389124673</span>
         </footer>
       </body>
     </html>

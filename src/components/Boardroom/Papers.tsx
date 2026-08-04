@@ -49,9 +49,6 @@ const Paper: React.FC<PaperProps> = ({
       <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50`}>
         {title}
       </span>
-
-      {/* Focus indicator */}
-      <FocusIndicator color="amber" />
     </button>
   );
 };
