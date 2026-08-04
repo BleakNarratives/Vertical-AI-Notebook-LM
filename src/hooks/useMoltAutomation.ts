@@ -247,6 +247,7 @@ export const useMoltAutomation = () => {
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
+        secureStore(key, '0');
         broadcastChannelRef.current?.postMessage({ type: 'blacklist' });
         secureStore(key, '0');
         if (broadcastChannelRef.current) {
