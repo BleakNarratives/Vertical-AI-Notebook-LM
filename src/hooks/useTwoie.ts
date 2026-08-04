@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { triggerAgent } from '@/lib/agents';
 import { useSentinel } from './useSentinel';
 
 export const useTwoie = () => {
   const [isExecuting, setIsExecuting] = useState(false);
-  const { logSecurityEvent, checkRateLimit, sanitizeInput, validateInput } = useSentinel();
+  const { logSecurityEvent, checkRateLimit, sanitizeInput, validateInput, verifyInteraction } = useSentinel();
 
-  const executeTask = useCallback(async (task: string) => {
+  const executeTask = useCallback(async (task: string, e?: React.UIEvent) => {
+    if (!verifyInteraction(e)) return;
     if (!checkRateLimit('executeTask', 5, 30000)) return;
     if (!validateInput(task)) return;
 
@@ -22,7 +23,7 @@ export const useTwoie = () => {
 
     console.log('Twoie: Task finalized. No witnesses.');
     setIsExecuting(false);
-  }, [logSecurityEvent, checkRateLimit, sanitizeInput, validateInput]);
+  }, [logSecurityEvent, checkRateLimit, sanitizeInput, validateInput, verifyInteraction]);
 
   return { executeTask, isExecuting };
 };
