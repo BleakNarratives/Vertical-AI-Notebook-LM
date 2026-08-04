@@ -59,7 +59,7 @@ export const Whiteboard: React.FC = () => {
         </span>
 
         {/* Focus indicator */}
-        <FocusIndicator color="amber" />
+        <FocusIndicator color="neon-amber" />
       </button>
     </div>
   );
