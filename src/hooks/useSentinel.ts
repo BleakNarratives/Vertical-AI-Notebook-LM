@@ -127,6 +127,12 @@ export const useSentinel = () => {
     sessionStorage.removeItem(key);
   }, []);
 
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+  }, []);
+
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
     // Advanced defense against XSS and injection
