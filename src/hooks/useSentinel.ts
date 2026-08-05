@@ -536,6 +536,7 @@ export const useSentinel = () => {
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
