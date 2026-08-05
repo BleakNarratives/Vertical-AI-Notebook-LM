@@ -554,6 +554,7 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction
+    verifyInteraction,
+    generateSignature
   };
 };
