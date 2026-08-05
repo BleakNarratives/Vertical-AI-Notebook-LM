@@ -295,6 +295,7 @@ export const useSentinel = () => {
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
+    memoryBlacklist = expiry;
     secureStore('sentinel_blacklist', expiry.toString());
     memoryBlacklist = expiry;
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
@@ -302,13 +303,32 @@ export const useSentinel = () => {
   }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    const stored = secureGet('sentinel_blacklist');
+    let stored = secureGet('sentinel_blacklist');
+    let expiry: number | null = null;
+    if (memoryBlacklist && Date.now() < memoryBlacklist) {
+      if (!stored) {
+        logSecurityEvent('Storage tampering detected: Blacklist was removed. Restoring from Memory Pin.', 'CRITICAL');
+        secureStore('sentinel_blacklist', memoryBlacklist.toString());
+        stored = memoryBlacklist.toString();
+      }
+    }
+
+    let expiry: number | null = null;
     if (stored) {
-      const expiry = parseInt(stored, 10);
+      expiry = parseInt(stored, 10);
+    } else if (memoryBlacklist) {
+      // Memory Pinning: Recover the blacklist expiry if localStorage was cleared/tampered
+      expiry = memoryBlacklist;
+      logSecurityEvent('Memory Pinning: Restoring tampered/cleared blacklist from in-memory signature.', 'HIGH');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+    }
+
+    if (expiry) {
       if (Date.now() < expiry) {
-        memoryBlacklist = expiry;
+        if (!memoryBlacklist) memoryBlacklist = expiry;
         return true;
       } else {
+        memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
         memoryBlacklist = null;
       }
@@ -319,12 +339,26 @@ export const useSentinel = () => {
       return true;
     }
     return false;
-  }, [secureGet, secureRemove, secureStore, logSecurityEvent]);
+  }, [secureGet, secureStore, secureRemove, logSecurityEvent]);
 
   const verifyStorageIntegrity = useCallback(() => {
     if (typeof window === 'undefined') return true;
     const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
     let isIntegral = true;
+
+    // Verify storage blacklist against memory blacklist pinning
+    const storedBlacklist = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && !storedBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist removed from storage.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && memoryBlacklist && parseInt(storedBlacklist, 10) !== memoryBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist value tampered.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && !memoryBlacklist) {
+      memoryBlacklist = parseInt(storedBlacklist, 10);
+    }
 
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
@@ -335,7 +369,7 @@ export const useSentinel = () => {
       }
     }
     return isIntegral;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -411,6 +445,20 @@ export const useSentinel = () => {
     if (typeof window === 'undefined' || !e) return true;
 
     const now = Date.now();
+    if (typeof window !== 'undefined') {
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+
+      if (lastInteraction !== 0 && velocity < 50) {
+        logSecurityEvent('Sub-human interaction velocity detected: ' + velocity + 'ms', 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification
@@ -496,6 +544,7 @@ export const useSentinel = () => {
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
@@ -512,6 +561,7 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction
+    verifyInteraction,
+    generateSignature
   };
 };
