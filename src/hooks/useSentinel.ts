@@ -328,6 +328,7 @@ export const useSentinel = () => {
       } else {
         memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
+        memoryBlacklist = null;
       }
     }
     return false;

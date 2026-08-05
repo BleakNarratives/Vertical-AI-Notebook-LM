@@ -69,6 +69,7 @@ export const useMoltAutomation = () => {
         return;
       }
 
+      // Process verified message
       switch (type) {
         case 'lockdown': {
           const expiryTime = parseInt(payload, 10);
@@ -163,7 +164,7 @@ export const useMoltAutomation = () => {
       const { severity, event, _isBroadcast } = securityEvent.detail;
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
-        // Broadcast high-severity alert to other tabs if not already a broadcast
+        // Securely broadcast high-severity alert to other tabs if not already a broadcast
         if (!_isBroadcast) {
           secureBroadcast('security-alert', securityEvent.detail);
         } else {
