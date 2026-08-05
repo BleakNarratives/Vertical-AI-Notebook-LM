@@ -49,6 +49,9 @@ const Paper: React.FC<PaperProps> = ({
       <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50`}>
         {title}
       </span>
+
+      {/* Focus indicator */}
+      <FocusIndicator color="neon-amber" />
     </button>
   );
 };
@@ -60,40 +63,13 @@ interface DocumentPreviewProps {
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
-  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
-  const previousFocusRef = React.useRef<HTMLElement | null>(null);
-  const onCloseRef = React.useRef(onClose);
-
   useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
-    // Capture previous focus
-    if (typeof document !== 'undefined') {
-      previousFocusRef.current = document.activeElement as HTMLElement;
-    }
-
-    // Shift focus to close button
-    if (closeButtonRef.current) {
-      closeButtonRef.current.focus();
-    }
-
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onCloseRef.current();
-      }
+      if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleEsc, true);
-
-    return () => {
-      window.removeEventListener('keydown', handleEsc, true);
-      // Restore previous focus on unmount
-      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
-        previousFocusRef.current.focus();
-      }
-    };
-  }, []);
+    return () => window.removeEventListener('keydown', handleEsc, true);
+  }, [onClose]);
 
   return createPortal(
     <div
@@ -115,9 +91,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
             <div className="text-[10px] font-mono text-grey-medium uppercase tracking-tighter">Classification: Restricted / Obelisk-Internal</div>
           </div>
           <button
-            ref={closeButtonRef}
             onClick={onClose}
-            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer focus-visible:ring-2 focus-visible:ring-neon-amber outline-none p-1"
+            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer"
             aria-label="Close Preview"
           >
             [ ESC ]

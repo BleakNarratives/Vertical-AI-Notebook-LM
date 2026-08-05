@@ -1,0 +1,49 @@
+name: 🛡️ Sentinel Friday Night Hardening Protocol
+
+on:
+  schedule:
+    # Run every Friday at 15:00 UTC (Before sundown)
+    - cron: '0 15 * * 5'
+  workflow_dispatch: # Enable manual execution
+
+jobs:
+  hardening:
+    name: 🛡️ Audit and Hardening
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🔍 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ⚙️ Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: 📥 Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: 🛡️ Run Sentinel Friday Audit & Rotation
+        run: node scripts/sentinel-friday-audit.mjs
+
+      - name: 💾 Commit and Push Hardening Updates
+        run: |
+          git config --global user.name "Sentinel Bot"
+          git config --global user.email "sentinel@codecity.ai"
+          git add -A
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "🛡️ Sentinel: Automated Friday Night Hardening and Decoy Rotation Protocol"
+            git push
+          else
+            echo "No hardening updates or rotations required. Already fully secured."
+          fi

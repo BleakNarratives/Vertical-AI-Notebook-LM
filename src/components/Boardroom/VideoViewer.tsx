@@ -58,6 +58,8 @@ export const VideoViewer: React.FC = () => {
           Monitor [V]
         </span>
 
+        {/* Focus indicator */}
+        <FocusIndicator color={isActive ? 'neon-amber' : 'neon-red'} />
       </button>
     </div>
   );

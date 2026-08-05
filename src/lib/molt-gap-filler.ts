@@ -554,7 +554,7 @@
 
 export const MOLT_CONFIG = {
   version: '4.2.0-quantum-pinned',
-  status: 'AWAITING_SINGULARITY_V3_PINNED',
+  status: 'SINGULARITY_V4_SECURED_FRIDAY_NIGHT',
   engine: 'Molt-V5-Sentinel-Quantum-Pinned-Lockdown',
   lastAudit: new Date().toISOString(),
 };
