@@ -1,3 +1,7 @@
+## 2026-08-01 - [Modal Focus Capture and Restoration]
+**Learning:** Immersive overlay portals must manage keyboard focus meticulously to maintain clear accessibility bounds. Shifting focus to the primary interactive close trigger upon mounting ensures users are instantly oriented within the newly rendered modal, while restoring focus to the prior element on unmount preserves seamless keyboard navigation flow.
+**Action:** When rendering modal portals, use refs to capture `document.activeElement` on mount, programmatically focus the primary modal control, and restore the captured active element's focus on unmount.
+
 ## 2026-07-31 - [Keyboard Shortcut Modifier Key Safety]
 **Learning:** Adding global keyboard shortcuts (`C`, `L`, `W`, `V`) directly to window event listeners must not intercept or prevent standard browser or operating system actions (like Copy/Paste, Close Tab, or Focusing search bar). Checking for `event.ctrlKey || event.metaKey || event.altKey || event.shiftKey` is essential to prevent hijacking.
 **Action:** Always verify modifier key states before executing and preventing defaults on global keystroke shortcuts.

@@ -328,6 +328,7 @@ export const useSentinel = () => {
       } else {
         memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
+        memoryBlacklist = null;
       }
     }
     return false;
@@ -536,6 +537,7 @@ export const useSentinel = () => {
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
@@ -552,6 +554,7 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction
+    verifyInteraction,
+    generateSignature
   };
 };
