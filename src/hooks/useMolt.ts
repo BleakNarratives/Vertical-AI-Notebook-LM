@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSentinel } from './useSentinel';
 
 export const useMolt = () => {
   const [level, setLevel] = useState(0);
   const [isImproving, setIsImproving] = useState(false);
-  const { logSecurityEvent } = useSentinel();
+  const { logSecurityEvent, verifyInteraction } = useSentinel();
 
-  const triggerMolt = useCallback(async () => {
+  const triggerMolt = useCallback(async (e?: React.UIEvent) => {
+    if (!verifyInteraction(e)) return;
     setIsImproving(true);
     logSecurityEvent(`Molt cycle ${level + 1} initiated`, 'MEDIUM');
 
@@ -20,7 +21,7 @@ export const useMolt = () => {
     setLevel(prev => prev + 1);
     setIsImproving(false);
     console.log('Molt: Improvement cycle complete. Current Level:', level + 1);
-  }, [level, logSecurityEvent]);
+  }, [level, logSecurityEvent, verifyInteraction]);
 
   return { level, isImproving, triggerMolt };
 };
