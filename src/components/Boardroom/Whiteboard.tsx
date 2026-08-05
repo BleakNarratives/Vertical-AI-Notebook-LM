@@ -28,6 +28,7 @@ export const Whiteboard: React.FC = () => {
         {status && <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase">{status}</div>}
       </div>
       <button
+        id="boardroom-whiteboard"
         type="button"
         id="boardroom-whiteboard"
         onMouseMove={handleMouseMove}

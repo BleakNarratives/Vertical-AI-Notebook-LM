@@ -24,6 +24,9 @@ export default function Home() {
   const { logSecurityEvent } = useSentinel();
   const [isGlitching, setIsGlitching] = useState(false);
 
+  // Initialize global keyboard shortcuts (C, L, W, V)
+  useKeyboardShortcuts();
+
   useEffect(() => {
     logSecurityEvent('Home module initialized', 'LOW');
   }, [logSecurityEvent]);

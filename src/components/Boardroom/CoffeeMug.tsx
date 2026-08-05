@@ -33,6 +33,7 @@ export const CoffeeMug: React.FC = () => {
         {status && <div className="text-[10px] font-mono text-neon-amber animate-pulse uppercase tracking-tighter">{status}</div>}
       </div>
       <button
+        id="boardroom-coffeemug"
         type="button"
         id="boardroom-coffeemug"
         onClick={handleAction}

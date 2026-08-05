@@ -47,6 +47,7 @@ export const Laptop: React.FC = () => {
         {status && <div className="text-[10px] font-mono text-neon-red animate-pulse uppercase">{status}</div>}
       </div>
       <button
+        id="boardroom-laptop"
         type="button"
         id="boardroom-laptop"
         onClick={handleAccess}

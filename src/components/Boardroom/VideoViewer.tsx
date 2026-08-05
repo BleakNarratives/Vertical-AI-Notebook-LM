@@ -22,6 +22,7 @@ export const VideoViewer: React.FC = () => {
         {status && <div className="text-[10px] font-mono animate-pulse uppercase text-neon-amber">{status}</div>}
       </div>
       <button
+        id="boardroom-videoviewer"
         type="button"
         id="boardroom-videoviewer"
         onClick={handleAction}
