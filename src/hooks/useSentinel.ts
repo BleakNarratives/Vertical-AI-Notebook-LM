@@ -312,6 +312,7 @@ export const useSentinel = () => {
       }
     }
 
+    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -328,6 +329,7 @@ export const useSentinel = () => {
       } else {
         memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
+        memoryBlacklist = null;
       }
     }
     return false;
@@ -536,6 +538,7 @@ export const useSentinel = () => {
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
@@ -552,6 +555,7 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction
+    verifyInteraction,
+    generateSignature
   };
 };
