@@ -302,26 +302,31 @@ export const useSentinel = () => {
   }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    const stored = secureGet('sentinel_blacklist');
-    const now = Date.now();
-
-    // Memory pinning verification to detect storage tampering
-    if (memoryBlacklist && now < memoryBlacklist) {
+    let stored = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && Date.now() < memoryBlacklist) {
       if (!stored) {
-        logSecurityEvent('Storage tampering detected: Blacklist removed from storage but exists in-memory.', 'CRITICAL');
+        logSecurityEvent('Storage tampering detected: Blacklist was removed. Restoring from Memory Pin.', 'CRITICAL');
         secureStore('sentinel_blacklist', memoryBlacklist.toString());
-        return true;
+        stored = memoryBlacklist.toString();
       }
     }
 
+    let expiry: number | null = null;
     if (stored) {
-      const expiry = parseInt(stored, 10);
-      if (now < expiry) {
-        if (!memoryBlacklist) {
-          memoryBlacklist = expiry;
-        }
+      expiry = parseInt(stored, 10);
+    } else if (memoryBlacklist) {
+      // Memory Pinning: Recover the blacklist expiry if localStorage was cleared/tampered
+      expiry = memoryBlacklist;
+      logSecurityEvent('Memory Pinning: Restoring tampered/cleared blacklist from in-memory signature.', 'HIGH');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+    }
+
+    if (expiry) {
+      if (Date.now() < expiry) {
+        if (!memoryBlacklist) memoryBlacklist = expiry;
         return true;
       } else {
+        memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
         memoryBlacklist = null;
       }
@@ -334,6 +339,20 @@ export const useSentinel = () => {
     const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
     let isIntegral = true;
 
+    // Verify storage blacklist against memory blacklist pinning
+    const storedBlacklist = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && !storedBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist removed from storage.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && memoryBlacklist && parseInt(storedBlacklist, 10) !== memoryBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist value tampered.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && !memoryBlacklist) {
+      memoryBlacklist = parseInt(storedBlacklist, 10);
+    }
+
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
       const session = sessionStorage.getItem(key);
@@ -343,7 +362,7 @@ export const useSentinel = () => {
       }
     }
     return isIntegral;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet, secureStore]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -419,6 +438,20 @@ export const useSentinel = () => {
     if (typeof window === 'undefined' || !e) return true;
 
     const now = Date.now();
+    if (typeof window !== 'undefined') {
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+
+      if (lastInteraction !== 0 && velocity < 50) {
+        logSecurityEvent('Sub-human interaction velocity detected: ' + velocity + 'ms', 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
     const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification

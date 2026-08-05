@@ -58,7 +58,12 @@
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
 
-## 2026-06-13 - [Cryptographic Broadcast Security & Memory Pinning Tamper Protection]
-**Vulnerability:** Redundant, conflicting BroadcastChannel listeners that could be spoofed by any client-side script, and local storage state (blacklist) which was easily bypassed by clearing local storage.
-**Learning:** Client-to-client BroadcastChannels are bound to the same origin, but malicious scripts running on the page (XSS, extensions, or DevTools inputs) could easily dispatch unvalidated message payloads to spoof lockdown/blacklist states or trigger rate limits. Furthermore, simple client storage states are highly vulnerable to bypass via clear actions.
-**Prevention:** Unify all cross-tab messaging listeners into a single, high-security handler. Cryptographically sign all BroadcastChannel messages using custom circular bit-rotation hashes (`generateSignature`) and reject any unsigned or invalid payload. Pair this with module-scoped in-memory state variable backups ("Memory Pinning") to validate and automatically restore tampered client storage keys.
+## 2026-06-13 - [State-Tampering Defense & Quantum Memory Shadow Pinning]
+**Vulnerability:** Core security blocklists and lockdowns stored in client-side LocalStorage can be cleared or tampered with manually by malicious clients to bypass active bans.
+**Learning:** Pure storage-backed validation relies entirely on client-controlled files which can be deleted at any time. Pairing storage synchronization with an in-memory redundant variable ("Quantum Memory Pinning") allows the application to detect storage deletion and automatically recover the active blacklist.
+**Prevention:** Maintain a redundant, module-scoped cache of critical session identifiers and block states, verifying and auto-restoring them if a mismatch or deletion in LocalStorage/SessionStorage is detected.
+
+## 2026-06-14 - [Broadcast Channel Cryptographic Signature & Consolidation]
+**Vulnerability:** Untrusted cross-tab message spoofing via unsecured and multiple conflicting BroadcastChannel listeners.
+**Learning:** Multiple redundant BroadcastChannel message handlers running in parallel on the same channel can create race conditions and unpredictable state synchronizations. Furthermore, since any client-side script can post custom objects to a shared browser channel, tabs are vulnerable to spoofed lockouts, fake blacklists, or arbitrary event execution if channel messages are parsed and acted upon without cryptographic authenticity checks.
+**Prevention:** Always consolidate BroadcastChannel interactions into a single, unified listener per scope, and cryptographically sign and verify every message passing through browser-level communication channels using a custom hashing signature function.
