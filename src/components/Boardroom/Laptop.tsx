@@ -13,6 +13,7 @@ interface BoardroomEvent extends CustomEvent {
 }
 
 export const Laptop: React.FC = () => {
+  const { level } = useMolt();
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
