@@ -303,6 +303,7 @@ export const useSentinel = () => {
 
   const checkBlacklist = useCallback((): boolean => {
     let stored = secureGet('sentinel_blacklist');
+    let expiry: number | null = null;
     if (memoryBlacklist && Date.now() < memoryBlacklist) {
       if (!stored) {
         logSecurityEvent('Storage tampering detected: Blacklist was removed. Restoring from Memory Pin.', 'CRITICAL');
