@@ -297,6 +297,7 @@ export const useSentinel = () => {
     const expiry = Date.now() + 86400000; // 24 hours
     memoryBlacklist = expiry;
     secureStore('sentinel_blacklist', expiry.toString());
+    memoryBlacklist = expiry;
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
   }, [logSecurityEvent, secureStore]);
@@ -312,6 +313,7 @@ export const useSentinel = () => {
       }
     }
 
+    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -328,7 +330,13 @@ export const useSentinel = () => {
       } else {
         memoryBlacklist = null;
         secureRemove('sentinel_blacklist');
+        memoryBlacklist = null;
       }
+    } else if (memoryBlacklist && Date.now() < memoryBlacklist) {
+      // Memory Pinning: Restore blacklist from redundant memory storage
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      logSecurityEvent('Memory Pinning: Restored blacklist from redundant memory storage.', 'HIGH');
+      return true;
     }
     return false;
   }, [secureGet, secureStore, secureRemove, logSecurityEvent]);
@@ -536,6 +544,7 @@ export const useSentinel = () => {
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
@@ -552,6 +561,7 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction
+    verifyInteraction,
+    generateSignature
   };
 };
