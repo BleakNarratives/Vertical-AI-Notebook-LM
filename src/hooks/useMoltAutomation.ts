@@ -21,70 +21,59 @@ export const useMoltAutomation = () => {
   const { triggerMolt, level, isImproving } = useMolt();
   const {
     logSecurityEvent,
-    generateSignature,
     rotateDecoys,
     checkBlacklist,
     triggerBlacklist,
     secureStore,
     secureGet,
     secureRemove,
-    secureJsonParse
+    secureJsonParse,
+    generateSignature
   } = useSentinel();
-
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
   const [isBlacklisted, setIsBlacklisted] = useState(false);
   const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
   const MAX_AUTONOMOUS_CYCLES = 5;
 
-  // Helper to securely broadcast messages using cryptographic signatures
+  // Centralized, cryptographically-signed broadcast helper
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const postSecureMessage = useCallback((type: string, payload: any) => {
-    if (typeof window === 'undefined' || typeof BroadcastChannel === 'undefined') return;
+  const secureBroadcast = useCallback((type: string, payload: any = null) => {
+    if (!broadcastChannelRef.current) return;
+    const valueStr = payload !== null && payload !== undefined ? JSON.stringify(payload) : '';
+    const signature = generateSignature(type, valueStr);
     try {
-      if (!broadcastChannelRef.current) {
-        broadcastChannelRef.current = new BroadcastChannel('sentinel-state-link');
-      }
-      const valueStr = JSON.stringify(payload || {});
-      const signature = generateSignature(type, valueStr);
       broadcastChannelRef.current.postMessage({ type, payload, signature });
-    } catch (err) {
-      console.error('[🛡️ SENTINEL] Failed to broadcast securely:', err);
+    } catch {
+      // Ignore broadcast errors
     }
   }, [generateSignature]);
 
-  // Unified BroadcastChannel initialization and message handling
+  // Single unified BroadcastChannel listener with strict signature verification
   useEffect(() => {
     if (typeof window === 'undefined' || typeof BroadcastChannel === 'undefined') return;
 
     const channel = new BroadcastChannel('sentinel-state-link');
     broadcastChannelRef.current = channel;
 
-    const handleBroadcast = (event: MessageEvent) => {
+    const handleMessage = (event: MessageEvent) => {
       if (!event.data || typeof event.data !== 'object') return;
       const { type, payload, signature } = event.data;
+      if (!type) return;
 
-      // Verify message signature to mitigate injection/tampering
-      const valueStr = JSON.stringify(payload || {});
-      const calculated = generateSignature(type, valueStr);
+      const valueStr = payload !== null && payload !== undefined ? JSON.stringify(payload) : '';
+      const calculatedSignature = generateSignature(type, valueStr);
 
-      if (calculated !== signature) {
-        logSecurityEvent(`CRITICAL: Dropped unsigned or invalid cross-tab message of type: ${type}`, 'CRITICAL');
+      if (calculatedSignature !== signature) {
+        logSecurityEvent(`CRITICAL: Unsigned or tampered broadcast message dropped: ${type}`, 'CRITICAL');
         return;
       }
 
+      // Process verified message
       switch (type) {
-        case 'security-alert':
-          if (payload && (payload.severity === 'HIGH' || payload.severity === 'CRITICAL')) {
-            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: ${payload.event}`);
-            window.dispatchEvent(new CustomEvent('security-alert', {
-              detail: { ...payload, _isBroadcast: true }
-            }));
-          }
-          break;
         case 'lockdown': {
-          const lockdownExpiry = parseInt(payload, 10);
-          const remaining = lockdownExpiry - Date.now();
+          const expiryTime = parseInt(payload, 10);
+          const remaining = expiryTime - Date.now();
           if (remaining > 0) {
             setIsLockdown(true);
             setTimeout(() => setIsLockdown(false), remaining);
@@ -94,12 +83,21 @@ export const useMoltAutomation = () => {
         case 'blacklist':
           setIsBlacklisted(true);
           break;
+        case 'security-alert':
+          if (payload && (payload.severity === 'HIGH' || payload.severity === 'CRITICAL')) {
+            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: ${payload.event}`);
+            window.dispatchEvent(new CustomEvent('security-alert', {
+              detail: { ...payload, _isBroadcast: true }
+            }));
+          }
+          break;
       }
     };
 
-    channel.addEventListener('message', handleBroadcast);
+    channel.addEventListener('message', handleMessage);
+
     return () => {
-      channel.removeEventListener('message', handleBroadcast);
+      channel.removeEventListener('message', handleMessage);
       channel.close();
       broadcastChannelRef.current = null;
     };
@@ -136,13 +134,13 @@ export const useMoltAutomation = () => {
     secureStore('sentinel_lockdown', expiry.toString());
     setIsLockdown(true);
 
-    // Broadcast lockdown securely to other tabs
-    postSecureMessage('lockdown', expiry.toString());
+    // Broadcast lockdown with cryptographic signature to other tabs
+    secureBroadcast('lockdown', expiry.toString());
 
     // Log as MEDIUM to avoid triggering a new high-severity alert loop
     logSecurityEvent('SYSTEM LOCKDOWN INITIATED: 5-minute cooldown active.', 'MEDIUM');
     setTimeout(() => setIsLockdown(false), 5 * 60 * 1000);
-  }, [isLockdown, logSecurityEvent, secureStore, postSecureMessage]);
+  }, [isLockdown, logSecurityEvent, secureStore, secureBroadcast]);
 
   const attemptAutonomousImprovement = useCallback(async (reason: string) => {
     if (cyclesRun >= MAX_AUTONOMOUS_CYCLES) {
@@ -159,15 +157,16 @@ export const useMoltAutomation = () => {
     await triggerMolt();
   }, [triggerMolt, isImproving, logSecurityEvent, cyclesRun]);
 
+  // Unified event listener hook for UI and security events
   useEffect(() => {
     const handleSecurityAlert = (e: Event) => {
       const securityEvent = e as SecurityAlertEvent;
       const { severity, event, _isBroadcast } = securityEvent.detail;
 
       if (severity === 'HIGH' || severity === 'CRITICAL') {
-        // Broadcast high-severity alert securely to other tabs if not already a broadcast
+        // Securely broadcast high-severity alert to other tabs if not already a broadcast
         if (!_isBroadcast) {
-          postSecureMessage('security-alert', securityEvent.detail);
+          secureBroadcast('security-alert', securityEvent.detail);
         } else {
           return;
         }
@@ -202,6 +201,11 @@ export const useMoltAutomation = () => {
         logSecurityEvent('SHADOW SEQUENCE DETECTED: Forensic logs expanding rapidly. Initializing reconstruction cycle.', 'CRITICAL');
         attemptAutonomousImprovement('Shadow Sequence forensic reconstruction.');
       }
+
+      // Every 3 shadow logs, trigger a minor behavioral reinforcement
+      else if (count > 0 && count % 3 === 0) {
+        attemptAutonomousImprovement("Behavioral trigger: Shadow forensic reconstruction [" + count + "]");
+      }
     };
 
     const handleDecoyBreach = () => {
@@ -222,8 +226,8 @@ export const useMoltAutomation = () => {
       if (breaches >= 5) {
         triggerBlacklist();
         setIsBlacklisted(true);
-        postSecureMessage('blacklist', 'true');
         secureStore(key, '0');
+        secureBroadcast('blacklist', null);
       }
 
       attemptAutonomousImprovement('Decoy breach detected. Rotating defensive signatures.');
@@ -231,7 +235,7 @@ export const useMoltAutomation = () => {
 
     const handleBlacklist = () => {
       setIsBlacklisted(true);
-      postSecureMessage('blacklist', 'true');
+      secureBroadcast('blacklist', null);
     };
 
     const handleIntegrityViolation = () => {
@@ -296,7 +300,7 @@ export const useMoltAutomation = () => {
         window.removeEventListener('sentinel-jitter-alert', handleJitterAlert);
       };
     }
-  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore, secureJsonParse, postSecureMessage]);
+  }, [attemptAutonomousImprovement, isLockdown, triggerLockdown, logSecurityEvent, rotateDecoys, triggerBlacklist, secureGet, secureStore, secureJsonParse, secureBroadcast]);
 
   // Integrity Heartbeat: Verify storage consistency and decay adaptive thresholds every 30s
   useEffect(() => {
