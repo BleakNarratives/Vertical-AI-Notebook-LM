@@ -49,6 +49,7 @@ export const Laptop: React.FC = () => {
       <button
         id="boardroom-laptop"
         type="button"
+        id="boardroom-laptop"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation) [L]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}

@@ -2,57 +2,66 @@
 
 import { useEffect } from 'react';
 
+/**
+ * useKeyboardShortcuts - Standard global hook for Code City boardroom navigation.
+ * Binds keys to trigger actions on interactive props:
+ * - C: CoffeeMug Settings (boardroom-coffeemug)
+ * - L: Laptop Terminal (boardroom-laptop)
+ * - W: Whiteboard Strategy Logger (boardroom-whiteboard)
+ * - V: VideoViewer Monitor Feed (boardroom-videoviewer)
+ *
+ * Keystrokes are ignored when focusing form inputs or contentEditable fields.
+ */
 export const useKeyboardShortcuts = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Avoid triggering when user is focusing form fields or editable areas
-      const activeElement = document.activeElement;
-      if (activeElement) {
-        const tagName = activeElement.tagName.toLowerCase();
-        const isContentEditable = activeElement.hasAttribute('contenteditable') ||
-                                  activeElement.getAttribute('contenteditable') === 'true';
+      // Ignore keys if modifier keys are pressed (e.g., Command, Control, Alt, Shift)
+      // to avoid hijacking standard browser shortcuts like Copy/Paste/Close Tab.
+      if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
+        return;
+      }
 
+      // Ignore keys when typing inside input elements
+      const activeEl = document.activeElement;
+      if (activeEl) {
+        const tagName = activeEl.tagName.toLowerCase();
+        const isContentEditable = activeEl.hasAttribute('contenteditable') || (activeEl as HTMLElement).contentEditable === 'true';
         if (tagName === 'input' || tagName === 'textarea' || isContentEditable) {
           return;
         }
       }
 
-      // Check if any modifier key is pressed (to avoid hijacking browser shortcuts like Cmd+L or Cmd+C)
-      if (event.ctrlKey || event.metaKey || event.altKey) {
-        return;
-      }
-
-      const key = event.key.toLowerCase();
+      const key = event.key.toUpperCase();
       let targetId = '';
 
       switch (key) {
-        case 'c':
+        case 'C':
           targetId = 'boardroom-coffeemug';
           break;
-        case 'l':
+        case 'L':
           targetId = 'boardroom-laptop';
           break;
-        case 'w':
+        case 'W':
           targetId = 'boardroom-whiteboard';
           break;
-        case 'v':
+        case 'V':
           targetId = 'boardroom-videoviewer';
           break;
         default:
           return;
       }
 
-      const targetElement = document.getElementById(targetId);
-      if (targetElement instanceof HTMLElement) {
+      const element = document.getElementById(targetId);
+      if (element instanceof HTMLElement) {
         event.preventDefault();
-        // Set focus programmatically to sync visual focus rings
-        targetElement.focus();
-        // Click programmatically to execute associated actions
-        targetElement.click();
+        element.focus();
+        element.click();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 };

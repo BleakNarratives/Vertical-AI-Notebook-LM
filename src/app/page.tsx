@@ -13,7 +13,11 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  useKeyboardShortcuts();
   const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
+
+  // Register global keyboard shortcuts for interactive boardroom props
+  useKeyboardShortcuts();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
