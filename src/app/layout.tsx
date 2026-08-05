@@ -86,32 +86,14 @@ export default function RootLayout({
              </PerspectiveWrapper>
         </main>
 
-        <footer className="md:h-8 border-t border-grey-dark flex flex-col md:flex-row items-center gap-4 py-4 md:py-0 px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
-          <div className="flex items-center gap-2">
-            <span>[ BLEAK NARRATIVES ]</span>
+        <footer className="h-auto md:h-8 min-h-[2rem] py-2 md:py-0 border-t border-grey-dark flex flex-col md:flex-row items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest gap-2 md:gap-0">
+          <span>[ BLEAK NARRATIVES ]</span>
+          <div className="flex flex-wrap justify-center gap-4 text-neon-amber/60 md:absolute md:left-1/2 md:-translate-x-1/2">
+            <span className="hover:text-neon-amber transition-colors">[C] COFFEE BREAK</span>
+            <span className="hover:text-neon-amber transition-colors">[L] LAPTOP WORKSTATION</span>
+            <span className="hover:text-neon-amber transition-colors">[W] WHITEBOARD</span>
+            <span className="hover:text-neon-amber transition-colors">[V] VIDEO MONITOR</span>
           </div>
-
-          {/* Immersive Keyboard Shortcuts Legend */}
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[9px] text-grey-medium/60 md:ml-12">
-            <span>SHORTCUTS:</span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-amber font-bold rounded">C</kbd>
-              <span>COFFEE BREAK / SNAPSHOT</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-red font-bold rounded">L</kbd>
-              <span>LAPTOP WORKSTATION</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-amber font-bold rounded">W</kbd>
-              <span>WHITEBOARD STRATEGY</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 border border-grey-dark bg-obsidian/50 text-neon-red font-bold rounded">V</kbd>
-              <span>VIDEO MONITOR</span>
-            </span>
-          </div>
-
           <span className="md:ml-auto">TERM: 2829543670389124673</span>
         </footer>
       </body>

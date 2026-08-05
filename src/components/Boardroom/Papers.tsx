@@ -49,7 +49,6 @@ const Paper: React.FC<PaperProps> = ({
       <span className={`absolute ${labelPosition === 'top' ? '-top-8' : '-bottom-8'} left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50`}>
         {title}
       </span>
-
     </button>
   );
 };
@@ -62,17 +61,20 @@ interface DocumentPreviewProps {
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
   const onCloseRef = React.useRef(onClose);
 
-  // Keep ref up to date to avoid re-triggering the effect when onClose changes
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
   useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
+    // Capture previous focus
+    if (typeof document !== 'undefined') {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+    }
 
-    // Auto-focus the close button on mount
+    // Shift focus to close button
     if (closeButtonRef.current) {
       closeButtonRef.current.focus();
     }
@@ -86,12 +88,12 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
 
     return () => {
       window.removeEventListener('keydown', handleEsc, true);
-      // Restore focus on unmount exactly once when the component unmounts
-      if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
-        previouslyFocused.focus();
+      // Restore previous focus on unmount
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+        previousFocusRef.current.focus();
       }
     };
-  }, []); // Run exactly once on mount and unmount
+  }, []);
 
   return createPortal(
     <div
@@ -115,7 +117,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="text-neon-amber/60 hover:text-neon-amber focus-visible:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian outline-none transition-colors font-mono text-xs uppercase cursor-pointer px-1 py-0.5"
+            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer focus-visible:ring-2 focus-visible:ring-neon-amber outline-none p-1"
             aria-label="Close Preview"
           >
             [ ESC ]
