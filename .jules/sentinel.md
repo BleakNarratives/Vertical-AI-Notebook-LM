@@ -58,7 +58,12 @@
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
 
-## 2026-06-13 - [Quantum Integrity Pin & Memory-Pinned Blacklist]
-**Vulnerability:** Client-side local storage can be manually modified or cleared by sophisticated bots/users to bypass blacklist blocks and lockdown restrictions.
-**Learning:** Client-side storage-backed lockdowns lack a second factor of enforcement. If the client clears localStorage, security states are completely lost. Utilizing a module-scope in-memory variable (Memory Pinning) provides an indestructible redundant check.
-**Prevention:** Always pair storage getters with a module-level variable validation check. If browser storage is cleared but the active session remains, dynamically restore security-critical states from memory pinning and fire tampering alerts.
+## 2026-06-13 - [State-Tampering Defense & Quantum Memory Shadow Pinning]
+**Vulnerability:** Core security blocklists and lockdowns stored in client-side LocalStorage can be cleared or tampered with manually by malicious clients to bypass active bans.
+**Learning:** Pure storage-backed validation relies entirely on client-controlled files which can be deleted at any time. Pairing storage synchronization with an in-memory redundant variable ("Quantum Memory Pinning") allows the application to detect storage deletion and automatically recover the active blacklist.
+**Prevention:** Maintain a redundant, module-scoped cache of critical session identifiers and block states, verifying and auto-restoring them if a mismatch or deletion in LocalStorage/SessionStorage is detected.
+
+## 2026-06-14 - [Broadcast Channel Cryptographic Signature & Consolidation]
+**Vulnerability:** Untrusted cross-tab message spoofing via unsecured and multiple conflicting BroadcastChannel listeners.
+**Learning:** Multiple redundant BroadcastChannel message handlers running in parallel on the same channel can create race conditions and unpredictable state synchronizations. Furthermore, since any client-side script can post custom objects to a shared browser channel, tabs are vulnerable to spoofed lockouts, fake blacklists, or arbitrary event execution if channel messages are parsed and acted upon without cryptographic authenticity checks.
+**Prevention:** Always consolidate BroadcastChannel interactions into a single, unified listener per scope, and cryptographically sign and verify every message passing through browser-level communication channels using a custom hashing signature function.
