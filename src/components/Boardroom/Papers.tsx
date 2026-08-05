@@ -12,6 +12,7 @@ interface PaperProps {
   isActive?: boolean;
   labelPosition?: 'top' | 'bottom';
   onClick?: () => void;
+  isActive?: boolean;
 }
 
 const Paper: React.FC<PaperProps> = ({
@@ -264,6 +265,7 @@ export const Papers: React.FC<PapersProps> = ({ context = 'user', labelPosition 
             isActive={statusTitle === data.p2 || activeDoc === data.p2}
             labelPosition={resolvedLabelPosition}
             onClick={() => handleView(data.p2)}
+            isActive={status === `Viewing ${data.p2}...`}
           />
         </div>
       </div>
