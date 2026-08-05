@@ -51,7 +51,7 @@ const Paper: React.FC<PaperProps> = ({
       </span>
 
       {/* Focus indicator */}
-      <FocusIndicator color="amber" />
+      <FocusIndicator color="neon-amber" />
     </button>
   );
 };

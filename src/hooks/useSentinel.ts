@@ -121,18 +121,6 @@ export const useSentinel = () => {
     }
   }, [logSecurityEvent]);
 
-  const secureRemove = useCallback((key: string) => {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(key);
-    sessionStorage.removeItem(key);
-  }, []);
-
-  const secureRemove = useCallback((key: string) => {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(key);
-    sessionStorage.removeItem(key);
-  }, []);
-
   const sanitizeInput = useCallback((input: string): string => {
     if (!input) return '';
     // Advanced defense against XSS and injection
@@ -323,6 +311,7 @@ export const useSentinel = () => {
       }
     }
 
+    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -547,6 +536,7 @@ export const useSentinel = () => {
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
