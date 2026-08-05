@@ -13,6 +13,7 @@ interface BoardroomEvent extends CustomEvent {
 }
 
 export const Laptop: React.FC = () => {
+  const { level } = useMolt();
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -47,9 +48,11 @@ export const Laptop: React.FC = () => {
         {status && <div className="text-[10px] font-mono text-neon-red animate-pulse uppercase">{status}</div>}
       </div>
       <button
+        id="boardroom-laptop"
         type="button"
+        id="boardroom-laptop"
         onClick={handleAccess}
-        aria-label="Access Terminal (Workstation)"
+        aria-label="Access Terminal (Workstation) [L]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
       >
@@ -85,7 +88,7 @@ export const Laptop: React.FC = () => {
 
         {/* Label hidden until focus/hover */}
         <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
-          Terminal / IDEal / 4ward
+          Terminal / IDEal / 4ward [L]
         </span>
       </button>
     </div>

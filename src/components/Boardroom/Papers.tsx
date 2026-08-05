@@ -60,13 +60,40 @@ interface DocumentPreviewProps {
 }
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
+  const onCloseRef = React.useRef(onClose);
+
   useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    // Capture previous focus
+    if (typeof document !== 'undefined') {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+    }
+
+    // Shift focus to close button
+    if (closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onCloseRef.current();
+      }
     };
     window.addEventListener('keydown', handleEsc, true);
-    return () => window.removeEventListener('keydown', handleEsc, true);
-  }, [onClose]);
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc, true);
+      // Restore previous focus on unmount
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, []);
 
   return createPortal(
     <div
@@ -88,8 +115,9 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
             <div className="text-[10px] font-mono text-grey-medium uppercase tracking-tighter">Classification: Restricted / Obelisk-Internal</div>
           </div>
           <button
+            ref={closeButtonRef}
             onClick={onClose}
-            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer"
+            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer focus-visible:ring-2 focus-visible:ring-neon-amber outline-none p-1"
             aria-label="Close Preview"
           >
             [ ESC ]
