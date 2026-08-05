@@ -239,7 +239,6 @@ export const useMoltAutomation = () => {
     };
 
     const handleIntegrityViolation = () => {
-      // Soft response to integrity violation to avoid reload loops while maintaining security
       attemptAutonomousImprovement('Integrity violation detected. Reconstructing environment.');
     };
 
