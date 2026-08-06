@@ -1,39 +1,82 @@
 'use client';
 import React, { useEffect, useRef, useSyncExternalStore } from 'react';
 
-const sub = (cb: () => void) => {
-  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-  mq.addEventListener('change', cb);
-  return () => mq.removeEventListener('change', cb);
-};
-const getSnap = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/**
+ * PerspectiveWrapper - Dynamic 3D parallax tilt for the boardroom.
+ */
+const motionQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
 export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useSyncExternalStore(sub, getSnap, () => false);
+  const isReduced = useSyncExternalStore(
+    (cb) => {
+      motionQuery?.addEventListener('change', cb);
+      return () => motionQuery?.removeEventListener('change', cb);
+    },
+    () => motionQuery?.matches ?? false,
+    () => false
+  );
 
   useEffect(() => {
-    if (reduced) return;
-    const handleMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      ref.current?.style.setProperty('--tilt-x', `${20 - y * 2}deg`);
-      ref.current?.style.setProperty('--tilt-y', `${x * 2}deg`);
+    if (isReduced) return;
+
+    const move = (e: MouseEvent) => {
+      if (!ref.current) return;
+      const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+      const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+      ref.current.style.setProperty('--tx', `${y * 2}deg`);
+      ref.current.style.setProperty('--ty', `${-x * 2}deg`);
+      ref.current.style.setProperty('--mx', `${e.clientX}px`);
+      ref.current.style.setProperty('--my', `${e.clientY}px`);
     };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, [reduced]);
+
+    const handleFocus = (e: FocusEvent) => {
+      if (!ref.current || !(e.target instanceof Element) || !ref.current.contains(e.target)) return;
+      const rect = e.target.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const x = (centerX - window.innerWidth / 2) / (window.innerWidth / 2);
+      const y = (centerY - window.innerHeight / 2) / (window.innerHeight / 2);
+
+      ref.current.style.setProperty('--tx', `${y * 2}deg`);
+      ref.current.style.setProperty('--ty', `${-x * 2}deg`);
+      ref.current.style.setProperty('--tz', '30px');
+      ref.current.style.setProperty('--mx', `${centerX}px`);
+      ref.current.style.setProperty('--my', `${centerY}px`);
+    };
+
+    const handleFocusOut = (e: FocusEvent) => {
+      if (!ref.current || (e.relatedTarget instanceof Element && ref.current.contains(e.relatedTarget))) return;
+      ref.current.style.setProperty('--tz', '0px');
+    };
+
+    window.addEventListener('mousemove', move);
+    window.addEventListener('focusin', handleFocus);
+    window.addEventListener('focusout', handleFocusOut);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('focusin', handleFocus);
+      window.removeEventListener('focusout', handleFocusOut);
+    };
+  }, [isReduced]);
 
   return (
-    <div
-      ref={ref}
+    <div ref={ref} className="group/perspective relative w-full h-full transition-transform duration-150 ease-out transform-gpu"
       style={{
-        transform: reduced ? 'rotateX(20deg) translateZ(0)' : 'rotateX(var(--tilt-x, 20deg)) rotateY(var(--tilt-y, 0deg)) translateZ(0)',
-        transition: 'transform 0.1s ease-out'
+        transform: isReduced ? 'rotateX(35deg)' : 'rotateX(calc(35deg + var(--tx, 0deg))) rotateY(var(--ty, 0deg)) translateZ(var(--tz, 0px))'
       } as React.CSSProperties}
-      className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]"
     >
-      <div className="absolute -bottom-4 left-0 w-full h-8 bg-grey-dark border-t border-grey-medium skew-x-[20deg] origin-bottom opacity-40 pointer-events-none" />
+      {/* Atmospheric Glow */}
+      {!isReduced && (
+        <div
+          className="fixed inset-0 pointer-events-none z-50 mix-blend-screen opacity-30 transition-opacity duration-1000 group-hover/perspective:opacity-50"
+          style={{
+            background: `radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 191, 0, 0.15) 0%, transparent 40%)`
+          }}
+        />
+      )}
+      <div className="absolute -bottom-8 left-0 w-full h-8 bg-grey-dark/40 skew-x-[35deg] border-t border-grey-medium/20 pointer-events-none" />
       {children}
     </div>
   );
