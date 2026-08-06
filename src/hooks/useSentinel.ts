@@ -3,7 +3,7 @@
 import React, { useCallback, useRef } from 'react';
 
 // Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
-const memoryBlacklist: number | null = null;
+let memoryBlacklist: number | null = null;
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -205,6 +205,7 @@ export const useSentinel = () => {
     }
 
     // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
+    // Enhanced with defensive HTML comment, generic tag, and event handler blocking
     const maliciousPatterns = [
       /\.\.\//,             // Path traversal
       /\b__proto__\b/,      // Prototype pollution
@@ -213,6 +214,9 @@ export const useSentinel = () => {
       /etc\/passwd/,        // LFI target
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
+      /<!--/,               // HTML Comment bypass
+      /<[a-zA-Z]/,          // Any HTML tag opening (XSS Prevention)
+      /\bon[a-zA-Z]+\s*=/i, // Any inline event handler assignment (XSS Prevention)
       /javascript:/i,       // Protocol injection
       /\bvbscript:/i,       // VBScript injection
       /onerror\s*=/i,       // XSS Event handler
@@ -318,7 +322,6 @@ export const useSentinel = () => {
       }
     }
 
-    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -566,7 +569,6 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction,
-    generateSignature
+    verifyInteraction
   };
 };

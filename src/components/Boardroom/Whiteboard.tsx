@@ -30,7 +30,6 @@ export const Whiteboard: React.FC = () => {
       <button
         id="boardroom-whiteboard"
         type="button"
-        id="boardroom-whiteboard"
         onMouseMove={handleMouseMove}
         onClick={handleAction}
         aria-label="Iteration Whiteboard (Strategy) [W]"

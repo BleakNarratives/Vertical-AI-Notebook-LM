@@ -67,3 +67,8 @@
 **Vulnerability:** Untrusted cross-tab message spoofing via unsecured and multiple conflicting BroadcastChannel listeners.
 **Learning:** Multiple redundant BroadcastChannel message handlers running in parallel on the same channel can create race conditions and unpredictable state synchronizations. Furthermore, since any client-side script can post custom objects to a shared browser channel, tabs are vulnerable to spoofed lockouts, fake blacklists, or arbitrary event execution if channel messages are parsed and acted upon without cryptographic authenticity checks.
 **Prevention:** Always consolidate BroadcastChannel interactions into a single, unified listener per scope, and cryptographically sign and verify every message passing through browser-level communication channels using a custom hashing signature function.
+
+## 2026-06-15 - [Defense-In-Depth HTML/XSS Restriction & Static Compilation Safety]
+**Vulnerability:** Input validation allowlist was overly permissive for JSX elements, and multiple duplicate props/variable declarations triggered build failures.
+**Learning:** Client-side input validation schemes that allow tag characters (`<` and `>`) require extremely granular filters to prevent advanced nested event-driven script execution. Restricting tag start boundaries and matching generalized event handlers provides robust defense-in-depth. Additionally, duplicate properties in TS return objects and re-assigned `const` module variables must be cleanly resolved to enable Next.js Turbopack production builds.
+**Prevention:** Enhance malicious pattern regex suites to explicitly block raw HTML tags and general inline event handlers. Enforce clean JSX prop uniqueness and use proper `let` bindings for module state pinned caches.
