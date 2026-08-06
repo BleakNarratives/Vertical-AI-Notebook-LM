@@ -28,7 +28,7 @@ export const PerspectiveWrapper: React.FC<{ children: React.ReactNode }> = ({ ch
     <div
       ref={ref}
       style={{
-        transform: reduced ? 'rotateX(20deg)' : 'rotateX(var(--tilt-x, 20deg)) rotateY(var(--tilt-y, 0deg))',
+        transform: reduced ? 'rotateX(20deg) translateZ(0)' : 'rotateX(var(--tilt-x, 20deg)) rotateY(var(--tilt-y, 0deg)) translateZ(0)',
         transition: 'transform 0.1s ease-out'
       } as React.CSSProperties}
       className="w-full max-w-5xl min-h-[75vh] border-x border-grey-dark bg-gradient-to-b from-grey-dark/10 via-obsidian to-obsidian relative transform-gpu shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]"
