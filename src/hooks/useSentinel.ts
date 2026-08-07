@@ -3,7 +3,7 @@
 import React, { useCallback, useRef } from 'react';
 
 // Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
-const memoryBlacklist: number | null = null;
+let memoryBlacklist: number | null = null;
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -242,8 +242,18 @@ export const useSentinel = () => {
   }, [logSecurityEvent, recursiveDecode, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
+    if (typeof token !== 'string') {
+      logSecurityEvent(`Request rejected: Expected string token, received ${typeof token}`, 'HIGH');
+      return false;
+    }
     if (!token || token.length < 32) {
       logSecurityEvent('Invalid or weak session token detected', 'MEDIUM');
+      return false;
+    }
+    // Token structure validation: strictly alphanumeric, hyphen, and underscore characters
+    const safeTokenRegex = /^[a-zA-Z0-9_-]+$/;
+    if (!safeTokenRegex.test(token)) {
+      logSecurityEvent('CRITICAL: Malformed session token detected (possible token/header injection attack)', 'CRITICAL');
       return false;
     }
     return true;
@@ -318,7 +328,6 @@ export const useSentinel = () => {
       }
     }
 
-    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -566,7 +575,6 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction,
-    generateSignature
+    verifyInteraction
   };
 };

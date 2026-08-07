@@ -67,3 +67,8 @@
 **Vulnerability:** Untrusted cross-tab message spoofing via unsecured and multiple conflicting BroadcastChannel listeners.
 **Learning:** Multiple redundant BroadcastChannel message handlers running in parallel on the same channel can create race conditions and unpredictable state synchronizations. Furthermore, since any client-side script can post custom objects to a shared browser channel, tabs are vulnerable to spoofed lockouts, fake blacklists, or arbitrary event execution if channel messages are parsed and acted upon without cryptographic authenticity checks.
 **Prevention:** Always consolidate BroadcastChannel interactions into a single, unified listener per scope, and cryptographically sign and verify every message passing through browser-level communication channels using a custom hashing signature function.
+
+## 2026-06-15 - [Strict Token Schema Validation & Alphanumeric Matching]
+**Vulnerability:** Weak, unvalidated session tokens passed to client-side validations allowing for malformed payloads or object/prototype pollution attacks.
+**Learning:** Client-side token assertions that only verify character length are vulnerable to injection attacks if the token string contains special character sequences, escape codes, or object constructor properties. Normalizing and strictly validating the token schema ensures the session key cannot be leveraged to bypass adjacent security guards.
+**Prevention:** Always enforce type checks on security identifiers and validate structural integrity using precise alphanumeric regular expressions (`/^[a-zA-Z0-9_-]+$/`).
