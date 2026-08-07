@@ -3,7 +3,7 @@
 import React, { useCallback, useRef } from 'react';
 
 // Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
-const memoryBlacklist: number | null = null;
+let memoryBlacklist: number | null = null;
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -318,7 +318,6 @@ export const useSentinel = () => {
       }
     }
 
-    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -566,7 +565,6 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction,
-    generateSignature
+    verifyInteraction
   };
 };

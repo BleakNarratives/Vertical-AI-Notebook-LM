@@ -3,8 +3,26 @@
 import React, { useState } from 'react';
 import { FocusIndicator } from './FocusIndicator';
 
+import { useEffect } from 'react';
+
 export const VideoViewer: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
+  const [showHints, setShowHints] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.localStorage.getItem('sentinel_show_hints') === 'true';
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleToggle = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setShowHints(customEvent.detail?.showHints ?? false);
+    };
+
+    window.addEventListener('sentinel-toggle-hints', handleToggle);
+    return () => window.removeEventListener('sentinel-toggle-hints', handleToggle);
+  }, []);
 
   const handleAction = () => {
     setStatus('FEED_SYNCHRONIZED');
@@ -24,7 +42,6 @@ export const VideoViewer: React.FC = () => {
       <button
         id="boardroom-videoviewer"
         type="button"
-        id="boardroom-videoviewer"
         onClick={handleAction}
         aria-label="Remote Feed / Video Monitor [V]"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
@@ -59,6 +76,12 @@ export const VideoViewer: React.FC = () => {
           Monitor [V]
         </span>
 
+        {/* Visual floating keycap HUD */}
+        {showHints && (
+          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-obsidian border border-neon-amber text-neon-amber text-[10px] font-mono px-1.5 py-0.5 rounded shadow-[0_0_8px_rgba(255,191,0,0.4)] pointer-events-none animate-bounce z-50">
+            [V]
+          </span>
+        )}
       </button>
     </div>
   );

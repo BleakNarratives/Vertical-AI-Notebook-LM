@@ -64,3 +64,7 @@
 ## 2025-05-14 - [Immersive Document Portals]
 **Learning:** In layouts utilizing heavy 3D CSS transforms (e.g., `perspective`, `rotateX`), standard relative-positioned overlays are often clipped or distorted by the parent's stacking context and perspective depth.
 **Action:** Use React Portals (`createPortal`) to render atmospheric overlays (modals, previews) to the document body, bypassing the 3D transform constraints while maintaining the immersive aesthetic.
+
+## 2026-08-02 - [Lazy State Initialization for Storage-dependent State]
+**Learning:** Initializing React state directly with storage values (such as `localStorage` reads) within a `useEffect` can cause a synchronous `setState` warning/error from modern strict linters (`react-hooks/set-state-in-effect`) and trigger cascading double-renders.
+**Action:** Use lazy state initialization (`useState(() => window.localStorage.getItem('key'))`) to fetch storage values synchronously on client mount without invoking an extra state update side-effect.

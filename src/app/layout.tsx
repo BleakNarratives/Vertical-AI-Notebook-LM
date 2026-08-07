@@ -7,6 +7,7 @@ import { Whiteboard } from "@/components/Boardroom/Whiteboard";
 import { VideoViewer } from "@/components/Boardroom/VideoViewer";
 import { Papers } from "@/components/Boardroom/Papers";
 import { PerspectiveWrapper } from "@/components/Boardroom/PerspectiveWrapper";
+import { ShortcutToggle } from "@/components/Boardroom/ShortcutToggle";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -93,6 +94,7 @@ export default function RootLayout({
             <span className="hover:text-neon-amber transition-colors">[L] LAPTOP WORKSTATION</span>
             <span className="hover:text-neon-amber transition-colors">[W] WHITEBOARD</span>
             <span className="hover:text-neon-amber transition-colors">[V] VIDEO MONITOR</span>
+            <ShortcutToggle />
           </div>
           <span className="md:ml-auto">TERM: 2829543670389124673</span>
         </footer>

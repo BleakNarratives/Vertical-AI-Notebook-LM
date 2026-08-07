@@ -32,6 +32,19 @@ export const useKeyboardShortcuts = () => {
       }
 
       const key = event.key.toUpperCase();
+
+      if (key === 'K') {
+        event.preventDefault();
+        // Toggle HUD state and broadcast to listener hooks
+        const currentHints = window.localStorage.getItem('sentinel_show_hints') === 'true';
+        const nextState = !currentHints;
+        window.localStorage.setItem('sentinel_show_hints', String(nextState));
+        window.dispatchEvent(new CustomEvent('sentinel-toggle-hints', {
+          detail: { showHints: nextState }
+        }));
+        return;
+      }
+
       let targetId = '';
 
       switch (key) {

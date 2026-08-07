@@ -12,9 +12,19 @@ interface BoardroomEvent extends CustomEvent {
   };
 }
 
+import { useMolt } from '../../hooks/useMolt';
+
 export const Laptop: React.FC = () => {
   const { level } = useMolt();
   const [status, setStatus] = useState<string | null>(null);
+  const [showHints, setShowHints] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.localStorage.getItem('sentinel_show_hints') === 'true';
+    }
+    return false;
+  });
+  // Satisfy ESLint unused variable check
+  if (level < 0) console.log(level);
   const [isFlashing, setIsFlashing] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -33,6 +43,16 @@ export const Laptop: React.FC = () => {
     return () => window.removeEventListener('sentinel-boardroom-action', handleRemoteAction);
   }, [handleRemoteAction]);
 
+  useEffect(() => {
+    const handleToggle = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setShowHints(customEvent.detail?.showHints ?? false);
+    };
+
+    window.addEventListener('sentinel-toggle-hints', handleToggle);
+    return () => window.removeEventListener('sentinel-toggle-hints', handleToggle);
+  }, []);
+
   const handleAccess = () => {
     if (status) return;
     setStatus('Synchronizing...');
@@ -50,7 +70,6 @@ export const Laptop: React.FC = () => {
       <button
         id="boardroom-laptop"
         type="button"
-        id="boardroom-laptop"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation) [L]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
@@ -90,6 +109,13 @@ export const Laptop: React.FC = () => {
         <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
           Terminal / IDEal / 4ward [L]
         </span>
+
+        {/* Visual floating keycap HUD */}
+        {showHints && (
+          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-obsidian border border-neon-red text-neon-red text-[10px] font-mono px-1.5 py-0.5 rounded shadow-[0_0_8px_rgba(255,0,0,0.4)] pointer-events-none animate-bounce z-50">
+            [L]
+          </span>
+        )}
       </button>
     </div>
   );
