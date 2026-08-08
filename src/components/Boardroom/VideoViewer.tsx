@@ -24,6 +24,7 @@ export const VideoViewer: React.FC = () => {
       <button
         id="boardroom-videoviewer"
         type="button"
+        id="boardroom-videoviewer"
         onClick={handleAction}
         aria-label="Remote Feed / Video Monitor [V]"
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
