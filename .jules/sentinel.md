@@ -57,3 +57,18 @@
 **Vulnerability:** Storage keys and dynamic configs parsed via standard `JSON.parse` were vulnerable to client-side prototype pollution.
 **Learning:** Storing structured states (decoy configs, alert histories, rate limit structures) in client-side storage is extremely powerful, but parsing raw strings using simple `JSON.parse` can allow attackers to inject keys like `__proto__`, `prototype`, or `constructor` that modify object behaviors globally.
 **Prevention:** Always use a custom JSON parser `secureJsonParse` with a reviver function that strictly filters out dangerous properties (`__proto__`, `constructor`, `prototype`) from incoming payloads before returning parsed objects.
+
+## 2026-06-13 - [State-Tampering Defense & Quantum Memory Shadow Pinning]
+**Vulnerability:** Core security blocklists and lockdowns stored in client-side LocalStorage can be cleared or tampered with manually by malicious clients to bypass active bans.
+**Learning:** Pure storage-backed validation relies entirely on client-controlled files which can be deleted at any time. Pairing storage synchronization with an in-memory redundant variable ("Quantum Memory Pinning") allows the application to detect storage deletion and automatically recover the active blacklist.
+**Prevention:** Maintain a redundant, module-scoped cache of critical session identifiers and block states, verifying and auto-restoring them if a mismatch or deletion in LocalStorage/SessionStorage is detected.
+
+## 2026-06-14 - [Broadcast Channel Cryptographic Signature & Consolidation]
+**Vulnerability:** Untrusted cross-tab message spoofing via unsecured and multiple conflicting BroadcastChannel listeners.
+**Learning:** Multiple redundant BroadcastChannel message handlers running in parallel on the same channel can create race conditions and unpredictable state synchronizations. Furthermore, since any client-side script can post custom objects to a shared browser channel, tabs are vulnerable to spoofed lockouts, fake blacklists, or arbitrary event execution if channel messages are parsed and acted upon without cryptographic authenticity checks.
+**Prevention:** Always consolidate BroadcastChannel interactions into a single, unified listener per scope, and cryptographically sign and verify every message passing through browser-level communication channels using a custom hashing signature function.
+
+## 2026-06-15 - [Defense-In-Depth HTML/XSS Restriction & Static Compilation Safety]
+**Vulnerability:** Input validation allowlist was overly permissive for JSX elements, and multiple duplicate props/variable declarations triggered build failures.
+**Learning:** Client-side input validation schemes that allow tag characters (`<` and `>`) require extremely granular filters to prevent advanced nested event-driven script execution. Restricting tag start boundaries and matching generalized event handlers provides robust defense-in-depth. Additionally, duplicate properties in TS return objects and re-assigned `const` module variables must be cleanly resolved to enable Next.js Turbopack production builds.
+**Prevention:** Enhance malicious pattern regex suites to explicitly block raw HTML tags and general inline event handlers. Enforce clean JSX prop uniqueness and use proper `let` bindings for module state pinned caches.

@@ -83,12 +83,18 @@ export default function RootLayout({
                <SecurityOverlay />
                <SentinelIntegrity />
                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber to-transparent opacity-30" />
-          </PerspectiveWrapper>
+             </PerspectiveWrapper>
         </main>
 
-        <footer className="h-8 border-t border-grey-dark flex items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest">
+        <footer className="h-auto md:h-8 min-h-[2rem] py-2 md:py-0 border-t border-grey-dark flex flex-col md:flex-row items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest gap-2 md:gap-0">
           <span>[ BLEAK NARRATIVES ]</span>
-          <span className="ml-auto">TERM: 2829543670389124673</span>
+          <div className="flex flex-wrap justify-center gap-4 text-neon-amber/60 md:absolute md:left-1/2 md:-translate-x-1/2">
+            <span className="hover:text-neon-amber transition-colors">[C] COFFEE BREAK</span>
+            <span className="hover:text-neon-amber transition-colors">[L] LAPTOP WORKSTATION</span>
+            <span className="hover:text-neon-amber transition-colors">[W] WHITEBOARD</span>
+            <span className="hover:text-neon-amber transition-colors">[V] VIDEO MONITOR</span>
+          </div>
+          <span className="md:ml-auto">TERM: 2829543670389124673</span>
         </footer>
       </body>
     </html>

@@ -47,9 +47,10 @@ export const Laptop: React.FC = () => {
         {status && <div className="text-[10px] font-mono text-neon-red animate-pulse uppercase">{status}</div>}
       </div>
       <button
+        id="boardroom-laptop"
         type="button"
         onClick={handleAccess}
-        aria-label="Access Terminal (Workstation)"
+        aria-label="Access Terminal (Workstation) [L]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
       >
@@ -65,9 +66,8 @@ export const Laptop: React.FC = () => {
           >
             <div className="text-neon-red opacity-80">{">"} {status || 'SYSTEM_READY'}</div>
             {logs.length > 0 ? (
-              <div className="mt-1 space-y-0.5">
                 {logs.map((log, i) => (
-                  <div key={`${log}-${i}`} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
+                  <div key={log} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
                 ))}
               </div>
             ) : (

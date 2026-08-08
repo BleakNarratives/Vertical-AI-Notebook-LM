@@ -3,61 +3,59 @@
 import { useEffect } from 'react';
 
 /**
- * useKeyboardShortcuts - Global keyboard event listener for primary boardroom interactive props.
- * Maps:
- * - 'C' -> CoffeeMug (System Settings)
- * - 'L' -> Laptop (Access Terminal)
- * - 'W' -> Whiteboard (Iteration Whiteboard)
- * - 'V' -> VideoViewer (Remote Feed / Video Monitor)
- * Shortcuts are bypassed when focusing inputs, textareas, or content-editable elements.
+ * useKeyboardShortcuts - Standard global hook for Code City boardroom navigation.
+ * Binds keys to trigger actions on interactive props:
+ * - C: CoffeeMug Settings (boardroom-coffeemug)
+ * - L: Laptop Terminal (boardroom-laptop)
+ * - W: Whiteboard Strategy Logger (boardroom-whiteboard)
+ * - V: VideoViewer Monitor Feed (boardroom-videoviewer)
+ *
+ * Keystrokes are ignored when focusing form inputs or contentEditable fields.
  */
 export const useKeyboardShortcuts = () => {
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Bypass if user is actively focusing an input field, textarea, or contenteditable element
-      const active = document.activeElement;
-      if (active && (
-        active.tagName === 'INPUT' ||
-        active.tagName === 'TEXTAREA' ||
-        active.getAttribute('contenteditable') === 'true'
-      )) {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore keys if modifier keys are pressed (e.g., Command, Control, Alt, Shift)
+      // to avoid hijacking standard browser shortcuts like Copy/Paste/Close Tab.
+      if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
         return;
       }
 
-      // Bypass if modifier keys are pressed to avoid interfering with standard browser/system shortcuts
-      if (e.ctrlKey || e.altKey || e.metaKey) {
-        return;
+      // Ignore keys when typing inside input elements
+      const activeEl = document.activeElement;
+      if (activeEl) {
+        const tagName = activeEl.tagName.toLowerCase();
+        const isContentEditable = activeEl.hasAttribute('contenteditable') || (activeEl as HTMLElement).contentEditable === 'true';
+        if (tagName === 'input' || tagName === 'textarea' || isContentEditable) {
+          return;
+        }
       }
 
-      const key = e.key.toLowerCase();
-      let targetAriaLabel: string | null = null;
+      const key = event.key.toUpperCase();
+      let targetId = '';
 
       switch (key) {
-        case 'c':
-          targetAriaLabel = 'System Settings (Coffee Break)';
+        case 'C':
+          targetId = 'boardroom-coffeemug';
           break;
-        case 'l':
-          targetAriaLabel = 'Access Terminal (Workstation)';
+        case 'L':
+          targetId = 'boardroom-laptop';
           break;
-        case 'w':
-          targetAriaLabel = 'Iteration Whiteboard (Strategy)';
+        case 'W':
+          targetId = 'boardroom-whiteboard';
           break;
-        case 'v':
-          targetAriaLabel = 'Remote Feed / Video Monitor';
+        case 'V':
+          targetId = 'boardroom-videoviewer';
           break;
         default:
-          break;
+          return;
       }
 
-      if (targetAriaLabel) {
-        e.preventDefault();
-        const button = document.querySelector(`button[aria-label="${targetAriaLabel}"]`) as HTMLButtonElement | null;
-        if (button) {
-          button.focus();
-          button.click();
-        }
+      const element = document.getElementById(targetId);
+      if (element instanceof HTMLElement) {
+        event.preventDefault();
+        element.focus();
+        element.click();
       }
     };
 
