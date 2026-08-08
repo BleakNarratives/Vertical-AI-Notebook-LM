@@ -2,45 +2,66 @@
 
 import { useEffect } from 'react';
 
+/**
+ * useKeyboardShortcuts - Standard global hook for Code City boardroom navigation.
+ * Binds keys to trigger actions on interactive props:
+ * - C: CoffeeMug Settings (boardroom-coffeemug)
+ * - L: Laptop Terminal (boardroom-laptop)
+ * - W: Whiteboard Strategy Logger (boardroom-whiteboard)
+ * - V: VideoViewer Monitor Feed (boardroom-videoviewer)
+ *
+ * Keystrokes are ignored when focusing form inputs or contentEditable fields.
+ */
 export const useKeyboardShortcuts = () => {
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is focusing an input, textarea, or element with contentEditable
-      const target = e.target as HTMLElement;
-      if (
-        target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.isContentEditable)
-      ) {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore keys if modifier keys are pressed (e.g., Command, Control, Alt, Shift)
+      // to avoid hijacking standard browser shortcuts like Copy/Paste/Close Tab.
+      if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) {
         return;
       }
 
-      // Check key triggers (support both lowercase and uppercase keys)
-      const key = e.key.toLowerCase();
-      let buttonId = '';
-
-      if (key === 'c') {
-        buttonId = 'boardroom-coffeemug';
-      } else if (key === 'l') {
-        buttonId = 'boardroom-laptop';
-      } else if (key === 'w') {
-        buttonId = 'boardroom-whiteboard';
-      } else if (key === 'v') {
-        buttonId = 'boardroom-videoviewer';
+      // Ignore keys when typing inside input elements
+      const activeEl = document.activeElement;
+      if (activeEl) {
+        const tagName = activeEl.tagName.toLowerCase();
+        const isContentEditable = activeEl.hasAttribute('contenteditable') || (activeEl as HTMLElement).contentEditable === 'true';
+        if (tagName === 'input' || tagName === 'textarea' || isContentEditable) {
+          return;
+        }
       }
 
-      if (buttonId) {
-        const btn = document.getElementById(buttonId) as HTMLButtonElement | null;
-        if (btn) {
-          e.preventDefault();
-          btn.focus();
-          btn.click();
-        }
+      const key = event.key.toUpperCase();
+      let targetId = '';
+
+      switch (key) {
+        case 'C':
+          targetId = 'boardroom-coffeemug';
+          break;
+        case 'L':
+          targetId = 'boardroom-laptop';
+          break;
+        case 'W':
+          targetId = 'boardroom-whiteboard';
+          break;
+        case 'V':
+          targetId = 'boardroom-videoviewer';
+          break;
+        default:
+          return;
+      }
+
+      const element = document.getElementById(targetId);
+      if (element instanceof HTMLElement) {
+        event.preventDefault();
+        element.focus();
+        element.click();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 };

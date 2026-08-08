@@ -1,6 +1,14 @@
-## 2026-07-26 - [Unified Global Keyboard Shortcuts with Visual Suffixes]
-**Learning:** Adding keyboard shortcuts to 3D perspective dashboard components provides a monumental UX boost, making navigation extremely efficient for keyboard-only users. Furthermore, pairing these shortcuts with explicit visual cues (like appending `[Key]` to hover/focus labels and `aria-label` elements) increases user discoverability, aligns perfectly with visual accessibility standards, and maintains seamless compatibility with screen readers.
-**Action:** When designing complex 3D-positioned dashboard components, provide keyboard alternatives with clear visual shortcuts and ARIA suffixes to keep interactions highly discoverable and fully accessible.
+## 2026-08-01 - [Modal Focus Capture and Restoration]
+**Learning:** Immersive overlay portals must manage keyboard focus meticulously to maintain clear accessibility bounds. Shifting focus to the primary interactive close trigger upon mounting ensures users are instantly oriented within the newly rendered modal, while restoring focus to the prior element on unmount preserves seamless keyboard navigation flow.
+**Action:** When rendering modal portals, use refs to capture `document.activeElement` on mount, programmatically focus the primary modal control, and restore the captured active element's focus on unmount.
+
+## 2026-07-31 - [Keyboard Shortcut Modifier Key Safety]
+**Learning:** Adding global keyboard shortcuts (`C`, `L`, `W`, `V`) directly to window event listeners must not intercept or prevent standard browser or operating system actions (like Copy/Paste, Close Tab, or Focusing search bar). Checking for `event.ctrlKey || event.metaKey || event.altKey || event.shiftKey` is essential to prevent hijacking.
+**Action:** Always verify modifier key states before executing and preventing defaults on global keystroke shortcuts.
+
+## 2026-08-01 - [Keyboard Shortcut HUD for Discoverability]
+**Learning:** In a highly stylized, immersive 3D-perspective environment, hidden keyboard shortcuts (such as `C`, `L`, `W`, `V`) are easily forgotten. A toggleable HUD (using `K` or a footer toggle) that overlays animated floating keycaps directly on the 3D-rotated props provides immediate discoverability without permanently cluttering the aesthetic.
+**Action:** Provide a toggleable visual keyboard-shortcut overlay (HUD) for any complex or immersive interfaces that rely on custom keyboard hotkeys.
 
 ## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
 **Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
@@ -30,7 +38,7 @@
 **Action:** Remove `overflow-hidden` from interactive prop containers and instead apply it to internal content wrappers to preserve atmospheric UI elements.
 
 ## 2025-05-19 - [Vertical Spacing for Atmospheric Labels]
-**Learning:** Introducing persistent absolute-positioned labels (e.g., at `-top-8` or `-bottom-8`) significantly increases the effective height of components. Standard layout gaps (like `gap-8`) are insufficient and lead to label collisions. Standardizing on `gap-16` and `mb-20` provides the necessary clearance for these immersive identifiers.
+**Learning:** Introducing persistent absolute-positioned labels (e.g., at `-top-8` or `-bottom-8`) significantly increases the effective height of components. Standard layout gaps (like `gap-8`) are insufficient and lead to label collisions. Standardizing on `gap-16` and `mb-20` provides the necessary clearance for some immersive identifiers.
 **Action:** Use `gap-16` or higher for stacks containing absolute atmospheric labels to prevent vertical overlap and maintain legibility.
 
 ## 2025-05-20 - [Unifying Immersive Interaction States]
