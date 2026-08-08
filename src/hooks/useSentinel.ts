@@ -105,7 +105,7 @@ export const useSentinel = () => {
 
     if (localVal !== sessionVal) {
       logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
-      return sessionVal || localVal;
+      return null; // Fail secure on divergence
     }
 
     // Reference memoryBlacklist to satisfy linter
@@ -123,6 +123,20 @@ export const useSentinel = () => {
       sessionStorage.removeItem(key);
     } catch {
       logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
+    }
+  }, [logSecurityEvent]);
+
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`LocalStorage removal failed for key: ${key}`, 'MEDIUM');
+    }
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`SessionStorage removal failed for key: ${key}`, 'MEDIUM');
     }
   }, [logSecurityEvent]);
 
@@ -564,6 +578,7 @@ export const useSentinel = () => {
     verifyStorageIntegrity,
     secureStore,
     secureGet,
+    secureRemove
     secureRemove,
     monitorIntegrity,
     verifyInteraction,
