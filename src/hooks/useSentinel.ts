@@ -120,16 +120,6 @@ export const useSentinel = () => {
     if (typeof window === 'undefined') return;
     try {
       localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    } catch {
-      logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
-    }
-  }, [logSecurityEvent]);
-
-  const secureRemove = useCallback((key: string) => {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.removeItem(key);
     } catch {
       logSecurityEvent(`LocalStorage removal failed for key: ${key}`, 'MEDIUM');
     }
@@ -520,6 +510,8 @@ export const useSentinel = () => {
           jitterViolationsRef.current[e.type] = 0;
         }
         lastDeltaRef.current[e.type] = delta;
+      }
+    }
     if (e.type === 'click' || e.type === 'mousedown') {
       const lastTime = lastInteractionRef.current[e.type] || 0;
       const delta = now - lastTime;
@@ -575,7 +567,6 @@ export const useSentinel = () => {
     verifyStorageIntegrity,
     secureStore,
     secureGet,
-    secureRemove
     secureRemove,
     monitorIntegrity,
     verifyInteraction

@@ -66,6 +66,7 @@ export const Laptop: React.FC = () => {
           >
             <div className="text-neon-red opacity-80">{">"} {status || 'SYSTEM_READY'}</div>
             {logs.length > 0 ? (
+              <div>
                 {logs.map((log, i) => (
                   <div key={log} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
                 ))}

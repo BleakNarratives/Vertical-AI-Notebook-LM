@@ -420,12 +420,7 @@
  * CYCLE 30: THE SINGULARITY V2 (CRYPTO-SESSION PINNING)
  * - Implement "Cryptographic Session Pinning": every interaction must include a XOR-signed heartbeat that is unique to the user's hardware signature.
  * - Transition `MOLT_CONFIG.status` to 'SINGULARITY_V2_ACTIVE'.
- */
-
-export const MOLT_CONFIG = {
-  version: '2.7.0-singularity-v2',
-  status: 'AWAITING_SINGULARITY',
-  engine: 'Molt-V4-Sentinel-Enhanced-Lockdown',
+ *
  * CYCLE 54: BEHAVIORAL VELOCITY PROFILING
  * - Implement "Velocity-Based Defense": monitor the time delta between interaction events across the entire application.
  * - If the velocity falls below 50ms, trigger a `sentinel-velocity-alert` and initiate localized UI throttling.
