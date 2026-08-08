@@ -27,6 +27,7 @@ const Paper: React.FC<PaperProps> = ({
     <button
       type="button"
       aria-label={label}
+      aria-pressed={isActive}
       onClick={onClick}
       style={{
         transform: `rotateX(-35deg) rotateZ(var(--tw-rotate, ${rotation})) translateY(calc(${translateY} + ${isActive ? '-4px' : '0px'} + var(--tw-translate-y, 0px))) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))`
