@@ -520,24 +520,18 @@ export const useSentinel = () => {
           jitterViolationsRef.current[e.type] = 0;
         }
         lastDeltaRef.current[e.type] = delta;
+    if (e.type === 'click' || e.type === 'mousedown') {
+      const lastTime = lastInteractionRef.current[e.type] || 0;
+      const delta = now - lastTime;
+      lastInteractionRef.current[e.type] = now;
 
-        // Velocity Profiling: Detection of sub-human interaction speeds (default < 50ms)
-        // Adaptive threshold read from secureStore
-        const thresholdStored = secureGet('sentinel_velocity_threshold');
-        const threshold = parseInt(thresholdStored || '50', 10) || 50;
-
-        if (delta >= 0 && delta < threshold) {
-          velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
-          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (threshold: ${threshold}ms)`, 'HIGH');
-          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-            detail: { delta, type: e.type, timestamp: now, violations: velocityViolationsRef.current[e.type] }
-          }));
-        } else if (delta > 500) {
-          velocityViolationsRef.current[e.type] = 0;
-        }
-      } else {
-        // Human-like pause resets the violation counter
-        velocityViolationsRef.current[e.type] = 0;
+      // Detection of sub-human interaction speeds (< 50ms)
+      if (lastTime !== 0 && delta >= 0 && delta < 50) {
+        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { delta, type: e.type, timestamp: now }
+        }));
+        return false;
       }
     }
 
