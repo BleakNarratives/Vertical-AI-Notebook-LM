@@ -60,7 +60,7 @@ export const PerspectiveWrapper: React.FC<PerspectiveWrapperProps> = ({ children
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 [mask-image:linear-gradient(to_top,black_20%,transparent_80%)]" />
 
       {/* Table Edge Reinforcement */}
-      <div className="absolute -bottom-2 left-0 right-0 h-4 bg-grey-dark/40 border-b border-grey-medium/20 [transform:rotateX(-40deg)_skewX(var(--tilt-y,0deg))] origin-top pointer-events-none" />
+      <div className="absolute -bottom-2 left-0 right-0 h-4 bg-grey-dark/40 border-b border-grey-medium/20 [transform:rotateX(-40deg)_skewX(var(--tilt-y,0deg))] origin-top pointer-events-none transition-transform duration-300 ease-out" />
 
       <div className="absolute -bottom-20 -left-20 -right-20 h-40 bg-obsidian blur-3xl opacity-50 -z-10" />
 
