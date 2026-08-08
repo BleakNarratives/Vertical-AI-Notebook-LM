@@ -41,7 +41,7 @@ export const VideoViewer: React.FC = () => {
             <span className={`text-[8px] font-mono transition-colors duration-500 ${isActive ? 'text-neon-amber' : 'text-neon-red'} uppercase`}>REC</span>
           </div>
 
-          <div className={`absolute text-[10px] font-mono transition-colors duration-500 ${isActive ? 'text-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.4)]' : 'text-neon-red/60'} tracking-widest animate-pulse`}>
+          <div className={`absolute text-[10px] font-mono transition-all duration-500 ${isActive ? 'text-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.4)]' : 'text-neon-red/60'} tracking-widest animate-pulse`}>
             {isActive ? 'FEED_SYNCHRONIZED' : 'SIGNAL_WAITING...'}
           </div>
         </div>
