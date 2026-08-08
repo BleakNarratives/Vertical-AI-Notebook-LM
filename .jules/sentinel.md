@@ -67,3 +67,8 @@
 **Vulnerability:** Untrusted cross-tab message spoofing via unsecured and multiple conflicting BroadcastChannel listeners.
 **Learning:** Multiple redundant BroadcastChannel message handlers running in parallel on the same channel can create race conditions and unpredictable state synchronizations. Furthermore, since any client-side script can post custom objects to a shared browser channel, tabs are vulnerable to spoofed lockouts, fake blacklists, or arbitrary event execution if channel messages are parsed and acted upon without cryptographic authenticity checks.
 **Prevention:** Always consolidate BroadcastChannel interactions into a single, unified listener per scope, and cryptographically sign and verify every message passing through browser-level communication channels using a custom hashing signature function.
+
+## 2026-06-15 - [Session Token Type and Pattern Tamper Safeguards]
+**Vulnerability:** Session token checking function `validateRequest` was vulnerable to type confusion/tampering and non-alphanumeric parameter injections because it lacked strict type checking and character/length limitations.
+**Learning:** Even if dynamic values are marked with TypeScript type definitions, client-side runtime values can be manipulated or bypassed. Without type safeguards (`typeof token !== 'string'`) and character allowlist validation, session identifiers can be abused for parameter pollution or cross-component injections.
+**Prevention:** Enforce explicit runtime type verification, mandatory length constraints, and strict character pattern allowlists (e.g. `/^[a-zA-Z0-9_-]+$/`) to safeguard all security-critical inputs and parameters.

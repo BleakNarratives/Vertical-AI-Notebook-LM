@@ -3,7 +3,7 @@
 import React, { useCallback, useRef } from 'react';
 
 // Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
-const memoryBlacklist: number | null = null;
+let memoryBlacklist: number | null = null;
 
 /**
  * useSentinel - Security-focused hook for Code City.
@@ -242,10 +242,25 @@ export const useSentinel = () => {
   }, [logSecurityEvent, recursiveDecode, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
-    if (!token || token.length < 32) {
-      logSecurityEvent('Invalid or weak session token detected', 'MEDIUM');
+    // Enforce strict string type validation to safeguard against parameter or type tampering
+    if (typeof token !== 'string') {
+      logSecurityEvent('Request validation rejected: Session token must be a string type.', 'HIGH');
       return false;
     }
+
+    // Enforce minimum length restriction of 32 characters
+    if (token.length < 32) {
+      logSecurityEvent(`Invalid or weak session token detected: token length is ${token.length} (minimum 32 expected).`, 'MEDIUM');
+      return false;
+    }
+
+    // Strict alphanumeric, hyphen, and underscore matching to prevent injection or parameter/prototype manipulation
+    const allowedPattern = /^[a-zA-Z0-9_-]+$/;
+    if (!allowedPattern.test(token)) {
+      logSecurityEvent('Request validation rejected: Session token contains unauthorized characters.', 'HIGH');
+      return false;
+    }
+
     return true;
   }, [logSecurityEvent]);
 
@@ -318,7 +333,6 @@ export const useSentinel = () => {
       }
     }
 
-    let expiry: number | null = null;
     if (stored) {
       expiry = parseInt(stored, 10);
     } else if (memoryBlacklist) {
@@ -566,7 +580,6 @@ export const useSentinel = () => {
     secureGet,
     secureRemove,
     monitorIntegrity,
-    verifyInteraction,
-    generateSignature
+    verifyInteraction
   };
 };
