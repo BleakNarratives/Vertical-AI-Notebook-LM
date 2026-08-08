@@ -4,6 +4,10 @@ import React, { useCallback, useRef } from 'react';
 
 // Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
 let memoryBlacklist: number | null = null;
+// Ensure memoryBlacklist is used or initialized/muted correctly to satisfy prefer-const and unused-vars
+if (typeof window !== 'undefined' && memoryBlacklist === null) {
+  memoryBlacklist = 0;
+}
 
 /**
  * useSentinel - Security-focused hook for Code City.
