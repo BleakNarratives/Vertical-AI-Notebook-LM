@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { triggerAgent } from '@/lib/agents';
 import { useSentinel } from './useSentinel';
 
@@ -9,8 +9,8 @@ export const useHiggins = () => {
   const [, setShadowCounter] = useState(0);
   const { logSecurityEvent, checkRateLimit, storeShadowLog, verifyInteraction } = useSentinel();
 
-  const consultHiggins = useCallback(async (event: React.MouseEvent | React.KeyboardEvent) => {
-    if (!verifyInteraction(event)) return;
+  const consultHiggins = useCallback(async (e?: React.UIEvent) => {
+    if (!verifyInteraction(e)) return;
 
     // Enforce rate limiting: 3 calls per 60 seconds
     if (!checkRateLimit('consultHiggins', 3, 60000)) {

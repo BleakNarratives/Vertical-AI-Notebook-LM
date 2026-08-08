@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { triggerAgent } from '@/lib/agents';
 import { useSentinel } from './useSentinel';
 
@@ -8,8 +8,8 @@ export const useZeroclaw = () => {
   const [isSwarming, setIsSwarming] = useState(false);
   const { logSecurityEvent, checkRateLimit, verifyInteraction } = useSentinel();
 
-  const triggerSwarm = useCallback(async (event: React.MouseEvent | React.KeyboardEvent) => {
-    if (!verifyInteraction(event)) return;
+  const triggerSwarm = useCallback(async (e?: React.UIEvent) => {
+    if (!verifyInteraction(e)) return;
     if (!checkRateLimit('triggerSwarm', 2, 120000)) return;
 
     setIsSwarming(true);
