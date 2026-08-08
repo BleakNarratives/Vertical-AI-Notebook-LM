@@ -1,3 +1,19 @@
+## 2026-08-01 - [Modal Focus Capture and Restoration]
+**Learning:** Immersive overlay portals must manage keyboard focus meticulously to maintain clear accessibility bounds. Shifting focus to the primary interactive close trigger upon mounting ensures users are instantly oriented within the newly rendered modal, while restoring focus to the prior element on unmount preserves seamless keyboard navigation flow.
+**Action:** When rendering modal portals, use refs to capture `document.activeElement` on mount, programmatically focus the primary modal control, and restore the captured active element's focus on unmount.
+
+## 2026-07-31 - [Keyboard Shortcut Modifier Key Safety]
+**Learning:** Adding global keyboard shortcuts (`C`, `L`, `W`, `V`) directly to window event listeners must not intercept or prevent standard browser or operating system actions (like Copy/Paste, Close Tab, or Focusing search bar). Checking for `event.ctrlKey || event.metaKey || event.altKey || event.shiftKey` is essential to prevent hijacking.
+**Action:** Always verify modifier key states before executing and preventing defaults on global keystroke shortcuts.
+
+## 2026-08-01 - [Keyboard Shortcut HUD for Discoverability]
+**Learning:** In a highly stylized, immersive 3D-perspective environment, hidden keyboard shortcuts (such as `C`, `L`, `W`, `V`) are easily forgotten. A toggleable HUD (using `K` or a footer toggle) that overlays animated floating keycaps directly on the 3D-rotated props provides immediate discoverability without permanently cluttering the aesthetic.
+**Action:** Provide a toggleable visual keyboard-shortcut overlay (HUD) for any complex or immersive interfaces that rely on custom keyboard hotkeys.
+
+## 2026-06-11 - [Internal Vertical Spacing for Atmospheric UI]
+**Learning:** In the 'Obelisk-Center' boardroom, interactive props often utilize absolute-positioned labels at `-top-8` or `-bottom-8`. Standardizing the internal container gap to `gap-16` ensures these labels have clear architectural "breathing room" and do not collide with dynamic status text or focus indicators.
+**Action:** Use `gap-16` as the default vertical spacing for boardroom components that feature +/- 8 unit absolute labels.
+
 ## 2026-06-10 - [Standardized Boardroom Focus Indicators]
 **Learning:** Generic `group-*` utility classes in Tailwind v4 require the immediate interactive parent to have the standard `group` class. Named groups (e.g., `group/laptop`) block these generic selectors for their children. Additionally, absolute-positioned decorative elements like the `FocusIndicator` (`-inset-3`) will be clipped if the parent uses `overflow-hidden`.
 
@@ -22,7 +38,7 @@
 **Action:** Remove `overflow-hidden` from interactive prop containers and instead apply it to internal content wrappers to preserve atmospheric UI elements.
 
 ## 2025-05-19 - [Vertical Spacing for Atmospheric Labels]
-**Learning:** Introducing persistent absolute-positioned labels (e.g., at `-top-8` or `-bottom-8`) significantly increases the effective height of components. Standard layout gaps (like `gap-8`) are insufficient and lead to label collisions. Standardizing on `gap-16` and `mb-20` provides the necessary clearance for these immersive identifiers.
+**Learning:** Introducing persistent absolute-positioned labels (e.g., at `-top-8` or `-bottom-8`) significantly increases the effective height of components. Standard layout gaps (like `gap-8`) are insufficient and lead to label collisions. Standardizing on `gap-16` and `mb-20` provides the necessary clearance for some immersive identifiers.
 **Action:** Use `gap-16` or higher for stacks containing absolute atmospheric labels to prevent vertical overlap and maintain legibility.
 
 ## 2025-05-20 - [Unifying Immersive Interaction States]
@@ -44,3 +60,7 @@
 ## 2025-05-22 - [Synchronized Environmental Feedback]
 **Learning:** In an immersive UI with multiple disconnected interactive props, users can lose the sense of "system connectivity." Bridging these elements with a central feedback hub (like the Laptop terminal) using custom events provides a powerful micro-UX win that reinforces the narrative without complex state management.
 **Action:** Use a "Central Hub" pattern for environmental feedback; dispatch timestamped events from peripheral props to update a global log or terminal for a cohesive "connected" feel.
+
+## 2025-05-14 - [Immersive Document Portals]
+**Learning:** In layouts utilizing heavy 3D CSS transforms (e.g., `perspective`, `rotateX`), standard relative-positioned overlays are often clipped or distorted by the parent's stacking context and perspective depth.
+**Action:** Use React Portals (`createPortal`) to render atmospheric overlays (modals, previews) to the document body, bypassing the 3D transform constraints while maintaining the immersive aesthetic.

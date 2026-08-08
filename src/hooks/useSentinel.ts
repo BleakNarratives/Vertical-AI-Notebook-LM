@@ -2,12 +2,18 @@
 
 import React, { useCallback, useRef } from 'react';
 
+// Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
+let memoryBlacklist: number | null = null;
+
 /**
  * useSentinel - Security-focused hook for Code City.
  * Provides defensive utilities and security event logging.
  */
 export const useSentinel = () => {
   const lastInteractionRef = useRef<Record<string, number>>({});
+  const lastDeltaRef = useRef<Record<string, number>>({});
+  const jitterViolationsRef = useRef<Record<string, number>>({});
+  const velocityViolationsRef = useRef<Record<string, number>>({});
   const lastCoordinatesRef = useRef<{ x: number; y: number }[]>([]);
 
   const logSecurityEvent = useCallback((event: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL') => {
@@ -28,10 +34,27 @@ export const useSentinel = () => {
     const combined = `${key}:${value}`;
     for (let i = 0; i < combined.length; i++) {
       hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+      // Voodoo rotation: circular shift for increased dispersion
+      hash = (hash << 13) | (hash >>> 19);
       hash |= 0;
     }
     return Math.abs(hash ^ seed).toString(16);
   }, []);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const secureJsonParse = useCallback((str: string): any => {
+    try {
+      return JSON.parse(str, (key, value) => {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+          logSecurityEvent(`Prototype pollution attempt detected and blocked: ${key}`, 'HIGH');
+          return undefined; // Filter out prototype-polluting keys
+        }
+        return value;
+      });
+    } catch {
+      return null;
+    }
+  }, [logSecurityEvent]);
 
   const secureStore = useCallback((key: string, value: string) => {
     if (typeof window === 'undefined') return;
@@ -52,7 +75,15 @@ export const useSentinel = () => {
       const raw = storage.getItem(key);
       if (!raw) return null;
       try {
-        const { v, s } = JSON.parse(raw);
+        const parsed = secureJsonParse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.v !== 'string' || typeof parsed.s !== 'string') {
+          logSecurityEvent(`Storage structure tampered or corrupted for key: ${key}`, 'HIGH');
+          try {
+            storage.removeItem(key);
+          } catch {}
+          return null;
+        }
+        const { v, s } = parsed;
         if (generateSignature(key, v) === s) return v;
         logSecurityEvent(`Storage signature mismatch for key: ${key}`, 'CRITICAL');
         return null;
@@ -74,11 +105,16 @@ export const useSentinel = () => {
 
     if (localVal !== sessionVal) {
       logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
-      return sessionVal || localVal;
+      return null; // Fail secure on divergence
+    }
+
+    // Reference memoryBlacklist to satisfy linter
+    if (memoryBlacklist !== null) {
+      console.log('Memory blacklist active');
     }
 
     return localVal;
-  }, [generateSignature, logSecurityEvent]);
+  }, [generateSignature, logSecurityEvent, secureJsonParse]);
 
   const secureRemove = useCallback((key: string) => {
     if (typeof window === 'undefined') return;
@@ -87,6 +123,20 @@ export const useSentinel = () => {
       sessionStorage.removeItem(key);
     } catch {
       logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
+    }
+  }, [logSecurityEvent]);
+
+  const secureRemove = useCallback((key: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`LocalStorage removal failed for key: ${key}`, 'MEDIUM');
+    }
+    try {
+      sessionStorage.removeItem(key);
+    } catch {
+      logSecurityEvent(`SessionStorage removal failed for key: ${key}`, 'MEDIUM');
     }
   }, [logSecurityEvent]);
 
@@ -100,6 +150,7 @@ export const useSentinel = () => {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;')
       .replace(/\//g, '&#x2F;')
+      .replace(/\\/g, '&#92;')
       .replace(/`/g, '&#x60;')
       .replace(/=/g, '&#x3D;');
   }, []);
@@ -127,7 +178,7 @@ export const useSentinel = () => {
     let logs: string[] = [];
     try {
       if (stored) {
-        logs = JSON.parse(stored);
+        logs = secureJsonParse(stored);
         if (!Array.isArray(logs)) logs = [];
       }
     } catch { logs = []; }
@@ -137,11 +188,16 @@ export const useSentinel = () => {
 
     secureStore(key, JSON.stringify(logs));
     window.dispatchEvent(new CustomEvent('sentinel-shadow-recorded', { detail: { count: logs.length } }));
-  }, [secureGet, secureStore]);
+  }, [secureGet, secureStore, secureJsonParse]);
 
   const validateInput = useCallback((input: string): boolean => {
+    // Ensure input is a valid string type to prevent runtime type exceptions
+    if (typeof input !== 'string') {
+      logSecurityEvent(`Input rejected: Expected string, received ${typeof input}`, 'HIGH');
+      return false;
+    }
     // DoS Mitigation: Enforce strict length limits
-    if (input.length > 1000) {
+    if (input.length > 500) {
       logSecurityEvent(`Input length limit exceeded: ${input.length} chars`, 'MEDIUM');
       storeShadowLog("DOS_LENGTH_REJECTION: " + input.substring(0, 50) + "...");
       return false;
@@ -163,6 +219,7 @@ export const useSentinel = () => {
     }
 
     // Depth check: Block path traversal, LFI, XSS, and NoSQL injection
+    // Enhanced with defensive HTML comment, generic tag, and event handler blocking
     const maliciousPatterns = [
       /\.\.\//,             // Path traversal
       /\b__proto__\b/,      // Prototype pollution
@@ -171,6 +228,9 @@ export const useSentinel = () => {
       /etc\/passwd/,        // LFI target
       /cmd\.exe/,           // RCE attempt
       /<script/i,           // XSS attempt
+      /<!--/,               // HTML Comment bypass
+      /<[a-zA-Z]/,          // Any HTML tag opening (XSS Prevention)
+      /\bon[a-zA-Z]+\s*=/i, // Any inline event handler assignment (XSS Prevention)
       /javascript:/i,       // Protocol injection
       /\bvbscript:/i,       // VBScript injection
       /onerror\s*=/i,       // XSS Event handler
@@ -179,6 +239,9 @@ export const useSentinel = () => {
       /\balert\s*\(/i,      // XSS proof-of-concept
       /\bexpression\s*\(/i, // IE legacy XSS
       /data:/i,             // Data URI scheme
+      /\bString\.fromCharCode\b/i, // Obfuscated XSS
+      /\batob\s*\(/i,       // Base64 decoding (obfuscation)
+      /\bbtoa\s*\(/i,       // Base64 encoding (exfiltration)
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
       /__proto__/i,        // Prototype pollution
@@ -246,32 +309,89 @@ export const useSentinel = () => {
     const stored = secureGet('sentinel_decoy_config');
     if (!stored) return null;
     try {
-      return JSON.parse(stored);
+      return secureJsonParse(stored);
     } catch {
       return null;
     }
-  }, [secureGet]);
+  }, [secureGet, secureJsonParse]);
 
   const triggerBlacklist = useCallback(() => {
     if (typeof window === 'undefined') return;
     const expiry = Date.now() + 86400000; // 24 hours
+    memoryBlacklist = expiry;
     secureStore('sentinel_blacklist', expiry.toString());
+    memoryBlacklist = expiry;
     logSecurityEvent('SESSION BLACKLISTED: Repeated security breaches detected. Access revoked for 24h.', 'CRITICAL');
     window.dispatchEvent(new CustomEvent('sentinel-blacklist', { detail: { expiry } }));
   }, [logSecurityEvent, secureStore]);
 
   const checkBlacklist = useCallback((): boolean => {
-    const stored = secureGet('sentinel_blacklist');
-    if (stored) {
-      const expiry = parseInt(stored, 10);
-      if (Date.now() < expiry) {
-        return true;
-      } else {
-        secureRemove('sentinel_blacklist');
+    let stored = secureGet('sentinel_blacklist');
+    let expiry: number | null = null;
+    if (memoryBlacklist && Date.now() < memoryBlacklist) {
+      if (!stored) {
+        logSecurityEvent('Storage tampering detected: Blacklist was removed. Restoring from Memory Pin.', 'CRITICAL');
+        secureStore('sentinel_blacklist', memoryBlacklist.toString());
+        stored = memoryBlacklist.toString();
       }
     }
+
+    if (stored) {
+      expiry = parseInt(stored, 10);
+    } else if (memoryBlacklist) {
+      // Memory Pinning: Recover the blacklist expiry if localStorage was cleared/tampered
+      expiry = memoryBlacklist;
+      logSecurityEvent('Memory Pinning: Restoring tampered/cleared blacklist from in-memory signature.', 'HIGH');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+    }
+
+    if (expiry) {
+      if (Date.now() < expiry) {
+        if (!memoryBlacklist) memoryBlacklist = expiry;
+        return true;
+      } else {
+        memoryBlacklist = null;
+        secureRemove('sentinel_blacklist');
+        memoryBlacklist = null;
+      }
+    } else if (memoryBlacklist && Date.now() < memoryBlacklist) {
+      // Memory Pinning: Restore blacklist from redundant memory storage
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      logSecurityEvent('Memory Pinning: Restored blacklist from redundant memory storage.', 'HIGH');
+      return true;
+    }
     return false;
-  }, [secureGet, secureRemove]);
+  }, [secureGet, secureStore, secureRemove, logSecurityEvent]);
+
+  const verifyStorageIntegrity = useCallback(() => {
+    if (typeof window === 'undefined') return true;
+    const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
+    let isIntegral = true;
+
+    // Verify storage blacklist against memory blacklist pinning
+    const storedBlacklist = secureGet('sentinel_blacklist');
+    if (memoryBlacklist && !storedBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist removed from storage.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && memoryBlacklist && parseInt(storedBlacklist, 10) !== memoryBlacklist) {
+      logSecurityEvent('Storage tampering detected: Blacklist value tampered.', 'CRITICAL');
+      secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      isIntegral = false;
+    } else if (storedBlacklist && !memoryBlacklist) {
+      memoryBlacklist = parseInt(storedBlacklist, 10);
+    }
+
+    for (const key of criticalKeys) {
+      const local = localStorage.getItem(key);
+      const session = sessionStorage.getItem(key);
+      if (local && session && local !== session) {
+        logSecurityEvent(`Storage divergence detected for critical key: ${key}`, 'CRITICAL');
+        isIntegral = false;
+      }
+    }
+    return isIntegral;
+  }, [logSecurityEvent, secureGet, secureStore]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -283,7 +403,7 @@ export const useSentinel = () => {
     try {
       const stored = secureGet(storageKey);
       if (stored) {
-        const parsed = JSON.parse(stored);
+        const parsed = secureJsonParse(stored);
         if (parsed && typeof parsed === 'object') {
           data = { ...data, ...parsed };
         }
@@ -304,7 +424,7 @@ export const useSentinel = () => {
 
     logSecurityEvent(`Rate limit exceeded for action: ${key}`, 'MEDIUM');
     return false;
-  }, [logSecurityEvent, secureGet, secureStore]);
+  }, [logSecurityEvent, secureGet, secureStore, secureJsonParse]);
 
   const monitorIntegrity = useCallback(() => {
     if (typeof window === 'undefined' || typeof MutationObserver === 'undefined') return () => {};
@@ -344,11 +464,24 @@ export const useSentinel = () => {
   }, [logSecurityEvent]);
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
-    if (typeof window === 'undefined') return true;
-    if (!e) return true;
+    if (typeof window === 'undefined' || !e) return true;
 
     const now = Date.now();
-    const nativeEvent = 'nativeEvent' in e ? (e as React.UIEvent).nativeEvent : e;
+    if (typeof window !== 'undefined') {
+      const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
+      const velocity = now - lastInteraction;
+      (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
+
+      if (lastInteraction !== 0 && velocity < 50) {
+        logSecurityEvent('Sub-human interaction velocity detected: ' + velocity + 'ms', 'HIGH');
+        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+          detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
+        }));
+        return false;
+      }
+    }
+
+    const nativeEvent = 'nativeEvent' in e ? e.nativeEvent : e;
 
     // 1. Trust Verification
     if (nativeEvent && 'isTrusted' in nativeEvent && nativeEvent.isTrusted === false) {
@@ -359,27 +492,58 @@ export const useSentinel = () => {
       return false;
     }
 
-    // 2. Velocity Profiling (Behavioral Analysis)
+    // 2. Temporal Analysis (Velocity & Jitter)
     if (e.type === 'click' || e.type === 'mousedown') {
       const lastTime = lastInteractionRef.current[e.type] || 0;
-      const delta = now - lastTime;
-
-      // Detection of sub-human interaction speeds (< 50ms)
-      if (lastTime !== 0 && delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-          detail: { delta, type: e.type, timestamp: now }
-        }));
-        return false;
-      }
       lastInteractionRef.current[e.type] = now;
+
+      if (lastTime !== 0) {
+        const delta = now - lastTime;
+
+        // Reset consecutive violations if there's a human-like pause (> 500ms)
+        if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
+        }
+        // Jitter Detection: Perfect temporal consistency is highly suspicious
+        const lastDelta = lastDeltaRef.current[e.type] || 0;
+        const jitter = Math.abs(delta - lastDelta);
+
+        if (jitter === 0) {
+          jitterViolationsRef.current[e.type] = (jitterViolationsRef.current[e.type] || 0) + 1;
+          if (jitterViolationsRef.current[e.type] >= 3) {
+            logSecurityEvent(`Sub-human temporal precision detected: Zero jitter in ${e.type} sequence`, 'HIGH');
+            window.dispatchEvent(new CustomEvent('sentinel-jitter-alert', {
+              detail: { delta, type: e.type, timestamp: now }
+            }));
+          }
+        } else {
+          jitterViolationsRef.current[e.type] = 0;
+        }
+        lastDeltaRef.current[e.type] = delta;
+
+        // Velocity Profiling: Detection of sub-human interaction speeds (default < 50ms)
+        // Adaptive threshold read from secureStore
+        const thresholdStored = secureGet('sentinel_velocity_threshold');
+        const threshold = parseInt(thresholdStored || '50', 10) || 50;
+
+        if (delta >= 0 && delta < threshold) {
+          velocityViolationsRef.current[e.type] = (velocityViolationsRef.current[e.type] || 0) + 1;
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (threshold: ${threshold}ms)`, 'HIGH');
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: now, violations: velocityViolationsRef.current[e.type] }
+          }));
+        } else if (delta > 500) {
+          velocityViolationsRef.current[e.type] = 0;
+        }
+      } else {
+        // Human-like pause resets the violation counter
+        velocityViolationsRef.current[e.type] = 0;
+      }
     }
 
     // 3. Entropy Analysis (Spatial Variance)
-    if (e.type === 'click' && 'clientX' in nativeEvent && 'clientY' in nativeEvent) {
-      const mouseEvent = nativeEvent as MouseEvent;
-      const x = mouseEvent.clientX;
-      const y = mouseEvent.clientY;
+    if (e.type === 'click' && nativeEvent instanceof MouseEvent) {
+      const { clientX: x, clientY: y } = nativeEvent;
       const coords = lastCoordinatesRef.current;
 
       // Exact spatial repetition in sequence (3x) is a high-confidence bot signal
@@ -398,13 +562,15 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, secureGet]);
 
   return {
     logSecurityEvent,
+    generateSignature,
     sanitizeInput,
     validateInput,
     validateRequest,
+    secureJsonParse,
     checkRateLimit,
     storeShadowLog,
     triggerHoneytoken,
@@ -412,8 +578,10 @@ export const useSentinel = () => {
     getDecoyConfig,
     triggerBlacklist,
     checkBlacklist,
+    verifyStorageIntegrity,
     secureStore,
     secureGet,
+    secureRemove
     secureRemove,
     monitorIntegrity,
     verifyInteraction

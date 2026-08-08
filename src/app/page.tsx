@@ -9,15 +9,23 @@ import { usePytch } from "@/hooks/usePytch";
 import { useZeroclaw } from "@/hooks/useZeroclaw";
 import { useSentinel } from "@/hooks/useSentinel";
 import { useMoltAutomation } from "@/hooks/useMoltAutomation";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  useKeyboardShortcuts();
   const { isLockdown, isBlacklisted, level, isImproving, triggerMolt } = useMoltAutomation();
+
+  // Register global keyboard shortcuts for interactive boardroom props
+  useKeyboardShortcuts();
   const { consultHiggins, isProcessing: isHigginsActive } = useHiggins();
   const { wakePytch, isConstructing: isPytchActive } = usePytch();
   const { triggerSwarm, isSwarming: isZeroclawActive } = useZeroclaw();
   const { logSecurityEvent } = useSentinel();
   const [isGlitching, setIsGlitching] = useState(false);
+
+  // Initialize global keyboard shortcuts (C, L, W, V)
+  useKeyboardShortcuts();
 
   useEffect(() => {
     logSecurityEvent('Home module initialized', 'LOW');
@@ -142,28 +150,28 @@ export default function Home() {
           variant="primary"
           onClick={(e) => triggerMolt(e)}
           isLoading={isImproving}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isHigginsActive ? "Consulting..." : "Consult Higgins"}
           variant="secondary"
           onClick={(e) => consultHiggins(e)}
           isLoading={isHigginsActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isPytchActive ? "Awakening..." : "Wake Pytch"}
           variant="secondary"
           onClick={(e) => wakePytch(e)}
           isLoading={isPytchActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
         <ModuleButton
           label={isZeroclawActive ? "Swarming..." : "Zeroclaw Swarm"}
           variant="secondary"
           onClick={(e) => triggerSwarm(e)}
           isLoading={isZeroclawActive}
-          disabled={isLockdown}
+          disabled={isLockdown || isBlacklisted}
         />
       </div>
 
