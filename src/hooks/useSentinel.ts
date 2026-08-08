@@ -272,6 +272,27 @@ export const useSentinel = () => {
   }, [logSecurityEvent]);
 
   /**
+   * verifyInteraction - Checks if an interaction is trusted (human-originated).
+   */
+  const verifyInteraction = useCallback((event: { isTrusted: boolean; type: string }): boolean => {
+    if (!event) {
+      logSecurityEvent('Untrusted interaction: No event object provided', 'MEDIUM');
+      return false;
+    }
+
+    // Check if the event is trusted (originated from a human interaction)
+    if (!event.isTrusted) {
+      logSecurityEvent('CRITICAL: Synthetic/Scripted interaction detected.', 'CRITICAL');
+      window.dispatchEvent(new CustomEvent('sentinel-integrity-violation', {
+        detail: { type: 'synthetic_interaction', event: event.type }
+      }));
+      return false;
+    }
+
+    return true;
+  }, [logSecurityEvent]);
+
+  /**
    * checkRateLimit - Simple client-side rate limiting to prevent trigger spamming.
    */
   const triggerHoneytoken = useCallback((type: string) => {
@@ -571,6 +592,7 @@ export const useSentinel = () => {
     secureJsonParse,
     checkRateLimit,
     storeShadowLog,
+    verifyInteraction,
     triggerHoneytoken,
     rotateDecoys,
     getDecoyConfig,
