@@ -72,3 +72,8 @@
 **Vulnerability:** Input validation allowlist was overly permissive for JSX elements, and multiple duplicate props/variable declarations triggered build failures.
 **Learning:** Client-side input validation schemes that allow tag characters (`<` and `>`) require extremely granular filters to prevent advanced nested event-driven script execution. Restricting tag start boundaries and matching generalized event handlers provides robust defense-in-depth. Additionally, duplicate properties in TS return objects and re-assigned `const` module variables must be cleanly resolved to enable Next.js Turbopack production builds.
 **Prevention:** Enhance malicious pattern regex suites to explicitly block raw HTML tags and general inline event handlers. Enforce clean JSX prop uniqueness and use proper `let` bindings for module state pinned caches.
+
+## 2026-06-16 - [Strict Session Token Hardening & Syntax Sanitization]
+**Vulnerability:** Weak, non-enforced session token structures could allow parameter tampering, prototype pollution, or injection if types or values are unvalidated.
+**Learning:** Purely client-side verification functions like `validateRequest` must explicitly enforce primitive types (e.g., `typeof token === 'string'`) and strictly restrict alphanumeric character classes before verifying token length. This prevents dynamic inputs (like array-based or object-based keys) from bypassing safety validations or causing JS crashes.
+**Prevention:** Hardened `validateRequest` with strict string-type verification and exact `/^[a-zA-Z0-9_-]+$/` character matching to block prototype/parameter injection patterns.

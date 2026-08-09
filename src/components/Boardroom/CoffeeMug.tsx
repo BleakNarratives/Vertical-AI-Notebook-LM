@@ -35,7 +35,6 @@ export const CoffeeMug: React.FC = () => {
       <button
         id="boardroom-coffeemug"
         type="button"
-        id="boardroom-coffeemug"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break) [C]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}

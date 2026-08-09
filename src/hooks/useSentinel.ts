@@ -124,16 +124,6 @@ export const useSentinel = () => {
     if (typeof window === 'undefined') return;
     try {
       localStorage.removeItem(key);
-      sessionStorage.removeItem(key);
-    } catch {
-      logSecurityEvent(`Storage removal failure for key: ${key}`, 'MEDIUM');
-    }
-  }, [logSecurityEvent]);
-
-  const secureRemove = useCallback((key: string) => {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.removeItem(key);
     } catch {
       logSecurityEvent(`LocalStorage removal failed for key: ${key}`, 'MEDIUM');
     }
@@ -264,31 +254,20 @@ export const useSentinel = () => {
   }, [logSecurityEvent, recursiveDecode, storeShadowLog]);
 
   const validateRequest = useCallback((token: string) => {
-    if (!token || token.length < 32) {
-      logSecurityEvent('Invalid or weak session token detected', 'MEDIUM');
+    if (typeof token !== 'string') {
+      logSecurityEvent('Request rejected: Session token must be a string type', 'HIGH');
       return false;
     }
-    return true;
-  }, [logSecurityEvent]);
-
-  /**
-   * verifyInteraction - Checks if an interaction is trusted (human-originated).
-   */
-  const verifyInteraction = useCallback((event: { isTrusted: boolean; type: string }): boolean => {
-    if (!event) {
-      logSecurityEvent('Untrusted interaction: No event object provided', 'MEDIUM');
+    if (token.length < 32) {
+      logSecurityEvent('Invalid or weak session token length detected', 'MEDIUM');
       return false;
     }
-
-    // Check if the event is trusted (originated from a human interaction)
-    if (!event.isTrusted) {
-      logSecurityEvent('CRITICAL: Synthetic/Scripted interaction detected.', 'CRITICAL');
-      window.dispatchEvent(new CustomEvent('sentinel-integrity-violation', {
-        detail: { type: 'synthetic_interaction', event: event.type }
-      }));
+    // Strict alphanumeric/hyphen/underscore validation to prevent parameter tampering or injection
+    const sessionTokenRegex = /^[a-zA-Z0-9_-]+$/;
+    if (!sessionTokenRegex.test(token)) {
+      logSecurityEvent('Request rejected: Session token contains invalid characters', 'HIGH');
       return false;
     }
-
     return true;
   }, [logSecurityEvent]);
 
@@ -529,6 +508,16 @@ export const useSentinel = () => {
         if (delta > 500) {
           velocityViolationsRef.current[e.type] = 0;
         }
+
+        // Detection of sub-human interaction speeds (< 50ms)
+        if (delta >= 0 && delta < 50) {
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+          window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
+            detail: { delta, type: e.type, timestamp: now }
+          }));
+          return false;
+        }
+
         // Jitter Detection: Perfect temporal consistency is highly suspicious
         const lastDelta = lastDeltaRef.current[e.type] || 0;
         const jitter = Math.abs(delta - lastDelta);
@@ -545,18 +534,6 @@ export const useSentinel = () => {
           jitterViolationsRef.current[e.type] = 0;
         }
         lastDeltaRef.current[e.type] = delta;
-    if (e.type === 'click' || e.type === 'mousedown') {
-      const lastTime = lastInteractionRef.current[e.type] || 0;
-      const delta = now - lastTime;
-      lastInteractionRef.current[e.type] = now;
-
-      // Detection of sub-human interaction speeds (< 50ms)
-      if (lastTime !== 0 && delta >= 0 && delta < 50) {
-        logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
-        window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-          detail: { delta, type: e.type, timestamp: now }
-        }));
-        return false;
       }
     }
 
@@ -581,7 +558,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent, secureGet]);
+  }, [logSecurityEvent]);
 
   return {
     logSecurityEvent,
@@ -601,9 +578,7 @@ export const useSentinel = () => {
     verifyStorageIntegrity,
     secureStore,
     secureGet,
-    secureRemove
     secureRemove,
-    monitorIntegrity,
-    verifyInteraction
+    monitorIntegrity
   };
 };

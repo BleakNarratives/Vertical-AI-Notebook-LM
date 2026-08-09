@@ -49,7 +49,6 @@ export const Laptop: React.FC = () => {
       <button
         id="boardroom-laptop"
         type="button"
-        id="boardroom-laptop"
         onClick={handleAccess}
         aria-label="Access Terminal (Workstation) [L]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
@@ -67,6 +66,7 @@ export const Laptop: React.FC = () => {
           >
             <div className="text-neon-red opacity-80">{">"} {status || 'SYSTEM_READY'}</div>
             {logs.length > 0 ? (
+              <div className="space-y-1">
                 {logs.map((log, i) => (
                   <div key={log} className={i === 0 ? "text-neon-amber/80" : "opacity-40"}>{log}</div>
                 ))}
