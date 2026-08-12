@@ -77,3 +77,8 @@
 **Vulnerability:** Weak, non-enforced session token structures could allow parameter tampering, prototype pollution, or injection if types or values are unvalidated.
 **Learning:** Purely client-side verification functions like `validateRequest` must explicitly enforce primitive types (e.g., `typeof token === 'string'`) and strictly restrict alphanumeric character classes before verifying token length. This prevents dynamic inputs (like array-based or object-based keys) from bypassing safety validations or causing JS crashes.
 **Prevention:** Hardened `validateRequest` with strict string-type verification and exact `/^[a-zA-Z0-9_-]+$/` character matching to block prototype/parameter injection patterns.
+
+## 2026-06-17 - [Cross-Storage Divergence Validation Bypass & Automated Integrity Heartbeat]
+**Vulnerability:** The cross-storage state validation used a weak logical AND condition which permitted malicious or bug-induced selective key deletion to go undetected, bypassing critical integrity logs.
+**Learning:** When validating synchronized multi-storage states (like `localStorage` vs `sessionStorage`), verifying `local && session` can be bypassed if an attacker deletes only one of the storage keys. The condition must check if *either* key exists and then confirm they are strictly equal.
+**Prevention:** Always use `(local || session) && local !== session` to detect single-sided storage deletion/tampering, and actively hook integrity checks into the main automation/reconstruction heartbeat.

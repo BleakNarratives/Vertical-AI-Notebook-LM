@@ -389,7 +389,7 @@ export const useSentinel = () => {
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
       const session = sessionStorage.getItem(key);
-      if (local && session && local !== session) {
+      if ((local || session) && local !== session) {
         logSecurityEvent(`Storage divergence detected for critical key: ${key}`, 'CRITICAL');
         isIntegral = false;
       }
