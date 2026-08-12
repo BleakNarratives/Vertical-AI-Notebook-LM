@@ -7,6 +7,7 @@ import { Whiteboard } from "@/components/Boardroom/Whiteboard";
 import { VideoViewer } from "@/components/Boardroom/VideoViewer";
 import { Papers } from "@/components/Boardroom/Papers";
 import { PerspectiveWrapper } from "@/components/Boardroom/PerspectiveWrapper";
+import { ShortcutToggle } from "@/components/Boardroom/ShortcutToggle";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -62,18 +63,18 @@ export default function RootLayout({
                </div>
 
                {/* Boardroom Props */}
-               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-auto z-20 scale-75 md:scale-90 origin-bottom">
-                 <div className="relative group/user-papers">
+               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-end gap-12 md:gap-24 pointer-events-none z-20 scale-75 md:scale-90 origin-bottom">
+                 <div className="relative group/user-papers pointer-events-auto">
                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-8 bg-black/40 blur-xl rounded-full -z-10" />
                    <Papers context="user" labelPosition="top" />
                  </div>
 
-                 <div className="relative group/laptop">
+                 <div className="relative group/laptop pointer-events-auto">
                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-12 bg-black/40 blur-xl rounded-full -z-10" />
                    <Laptop />
                  </div>
 
-                 <div className="relative group/mug">
+                 <div className="relative group/mug pointer-events-auto">
                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-16 h-6 bg-black/40 blur-xl rounded-full -z-10" />
                    <CoffeeMug />
                  </div>
@@ -86,7 +87,7 @@ export default function RootLayout({
              </PerspectiveWrapper>
         </main>
 
-        <footer className="h-auto md:h-8 min-h-[2rem] py-2 md:py-0 border-t border-grey-dark flex flex-col md:flex-row items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest gap-2 md:gap-0">
+        <footer className="h-auto md:h-8 min-h-[2rem] py-2 md:py-0 border-t border-grey-dark flex flex-col md:flex-row items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest gap-2 md:gap-0 relative">
           <span>[ BLEAK NARRATIVES ]</span>
           <div className="flex flex-wrap justify-center gap-4 text-neon-amber/60 md:absolute md:left-1/2 md:-translate-x-1/2">
             <span className="hover:text-neon-amber transition-colors">[C] COFFEE BREAK</span>
@@ -94,7 +95,10 @@ export default function RootLayout({
             <span className="hover:text-neon-amber transition-colors">[W] WHITEBOARD</span>
             <span className="hover:text-neon-amber transition-colors">[V] VIDEO MONITOR</span>
           </div>
-          <span className="md:ml-auto">TERM: 2829543670389124673</span>
+          <div className="md:ml-auto flex items-center gap-4">
+            <ShortcutToggle />
+            <span>TERM: 2829543670389124673</span>
+          </div>
         </footer>
       </body>
     </html>
