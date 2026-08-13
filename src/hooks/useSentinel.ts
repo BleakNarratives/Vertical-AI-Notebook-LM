@@ -4,9 +4,14 @@ import React, { useCallback, useRef } from 'react';
 
 // Module-level redundancy to detect storage tampering (Quantum Integrity Pin)
 let memoryBlacklist: number | null = null;
-// Ensure memoryBlacklist is used or initialized/muted correctly to satisfy prefer-const and unused-vars
-if (typeof window !== 'undefined' && memoryBlacklist === null) {
-  memoryBlacklist = 0;
+let memoryLockdown: number | null = null;
+let memoryAlertHistory: number[] | null = null;
+
+// Ensure memory variables are initialized/muted correctly to satisfy prefer-const and unused-vars
+if (typeof window !== 'undefined') {
+  if (memoryBlacklist === null) memoryBlacklist = 0;
+  if (memoryLockdown === null) memoryLockdown = 0;
+  if (memoryAlertHistory === null) memoryAlertHistory = [];
 }
 
 /**
@@ -70,6 +75,20 @@ export const useSentinel = () => {
     } catch {
       logSecurityEvent(`Storage failure for key: ${key}`, 'MEDIUM');
     }
+
+    // Synchronize memory pins
+    if (key === 'sentinel_blacklist') {
+      memoryBlacklist = parseInt(value, 10);
+    } else if (key === 'sentinel_lockdown') {
+      memoryLockdown = parseInt(value, 10);
+    } else if (key === 'sentinel_alert_history') {
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          memoryAlertHistory = parsed;
+        }
+      } catch {}
+    }
   }, [generateSignature, logSecurityEvent]);
 
   const secureGet = useCallback((key: string): string | null => {
@@ -112,9 +131,38 @@ export const useSentinel = () => {
       return null; // Fail secure on divergence
     }
 
-    // Reference memoryBlacklist to satisfy linter
-    if (memoryBlacklist !== null) {
-      console.log('Memory blacklist active');
+    if (!localVal && !sessionVal) {
+      // If both are missing, but we have pinned memory values, restore them!
+      if (key === 'sentinel_blacklist' && memoryBlacklist && Date.now() < memoryBlacklist) {
+        logSecurityEvent('Memory Pinning: Restoring missing blacklist from memory.', 'HIGH');
+        const signature = generateSignature(key, memoryBlacklist.toString());
+        const payload = JSON.stringify({ v: memoryBlacklist.toString(), s: signature });
+        localStorage.setItem(key, payload);
+        sessionStorage.setItem(key, payload);
+        return memoryBlacklist.toString();
+      }
+      if (key === 'sentinel_lockdown' && memoryLockdown && Date.now() < memoryLockdown) {
+        logSecurityEvent('Memory Pinning: Restoring missing lockdown from memory.', 'HIGH');
+        const signature = generateSignature(key, memoryLockdown.toString());
+        const payload = JSON.stringify({ v: memoryLockdown.toString(), s: signature });
+        localStorage.setItem(key, payload);
+        sessionStorage.setItem(key, payload);
+        return memoryLockdown.toString();
+      }
+      if (key === 'sentinel_alert_history' && memoryAlertHistory && memoryAlertHistory.length > 0) {
+        logSecurityEvent('Memory Pinning: Restoring missing alert history from memory.', 'HIGH');
+        const stringVal = JSON.stringify(memoryAlertHistory);
+        const signature = generateSignature(key, stringVal);
+        const payload = JSON.stringify({ v: stringVal, s: signature });
+        localStorage.setItem(key, payload);
+        sessionStorage.setItem(key, payload);
+        return stringVal;
+      }
+    }
+
+    // Reference memory pins to satisfy linter
+    if (memoryBlacklist !== null || memoryLockdown !== null || memoryAlertHistory !== null) {
+      console.log('Memory security pins active');
     }
 
     return localVal;
@@ -131,6 +179,15 @@ export const useSentinel = () => {
       sessionStorage.removeItem(key);
     } catch {
       logSecurityEvent(`SessionStorage removal failed for key: ${key}`, 'MEDIUM');
+    }
+
+    // Synchronize memory pins on removal
+    if (key === 'sentinel_blacklist') {
+      memoryBlacklist = null;
+    } else if (key === 'sentinel_lockdown') {
+      memoryLockdown = null;
+    } else if (key === 'sentinel_alert_history') {
+      memoryAlertHistory = null;
     }
   }, [logSecurityEvent]);
 
@@ -372,7 +429,7 @@ export const useSentinel = () => {
     const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
     let isIntegral = true;
 
-    // Verify storage blacklist against memory blacklist pinning
+    // 1. Verify storage blacklist against memory blacklist pinning
     const storedBlacklist = secureGet('sentinel_blacklist');
     if (memoryBlacklist && !storedBlacklist) {
       logSecurityEvent('Storage tampering detected: Blacklist removed from storage.', 'CRITICAL');
@@ -386,6 +443,49 @@ export const useSentinel = () => {
       memoryBlacklist = parseInt(storedBlacklist, 10);
     }
 
+    // 2. Verify storage lockdown against memory lockdown pinning
+    const storedLockdown = secureGet('sentinel_lockdown');
+    if (memoryLockdown && !storedLockdown) {
+      logSecurityEvent('Storage tampering detected: Lockdown removed from storage.', 'CRITICAL');
+      secureStore('sentinel_lockdown', memoryLockdown.toString());
+      isIntegral = false;
+    } else if (storedLockdown && memoryLockdown && parseInt(storedLockdown, 10) !== memoryLockdown) {
+      logSecurityEvent('Storage tampering detected: Lockdown value tampered.', 'CRITICAL');
+      secureStore('sentinel_lockdown', memoryLockdown.toString());
+      isIntegral = false;
+    } else if (storedLockdown && !memoryLockdown) {
+      memoryLockdown = parseInt(storedLockdown, 10);
+    }
+
+    // 3. Verify storage alert history against memory alert history pinning
+    const storedAlertHistory = secureGet('sentinel_alert_history');
+    if (memoryAlertHistory && memoryAlertHistory.length > 0 && !storedAlertHistory) {
+      logSecurityEvent('Storage tampering detected: Alert history removed from storage.', 'CRITICAL');
+      secureStore('sentinel_alert_history', JSON.stringify(memoryAlertHistory));
+      isIntegral = false;
+    } else if (storedAlertHistory && memoryAlertHistory && memoryAlertHistory.length > 0) {
+      try {
+        const parsed = JSON.parse(storedAlertHistory);
+        if (!Array.isArray(parsed) || parsed.length !== memoryAlertHistory.length || !parsed.every((val, i) => val === memoryAlertHistory?.[i])) {
+          logSecurityEvent('Storage tampering detected: Alert history tampered.', 'CRITICAL');
+          secureStore('sentinel_alert_history', JSON.stringify(memoryAlertHistory));
+          isIntegral = false;
+        }
+      } catch {
+        logSecurityEvent('Storage tampering detected: Alert history corrupted.', 'CRITICAL');
+        secureStore('sentinel_alert_history', JSON.stringify(memoryAlertHistory));
+        isIntegral = false;
+      }
+    } else if (storedAlertHistory && (!memoryAlertHistory || memoryAlertHistory.length === 0)) {
+      try {
+        const parsed = JSON.parse(storedAlertHistory);
+        if (Array.isArray(parsed)) {
+          memoryAlertHistory = parsed;
+        }
+      } catch {}
+    }
+
+    // 4. Verify overall local/session storage consistency
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
       const session = sessionStorage.getItem(key);

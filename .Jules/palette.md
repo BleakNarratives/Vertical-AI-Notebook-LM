@@ -1,3 +1,7 @@
+## 2026-08-11 - [Perspective-Based Pointer Event Interception]
+**Learning:** In a highly-styled, immersive perspective boardroom layout, absolute-positioned containers holding grouped interactive props can inadvertently overlap and intercept pointer events (clicks, hovers) meant for components behind them, even if the layout appears clear visually. Standardizing the container with `pointer-events-none` and setting `pointer-events-auto` strictly on individual item containers ensures clicks bypass the empty spaces seamlessly.
+**Action:** When grouping interactive props in a 3D perspective dashboard, always use `pointer-events-none` on the parent layout wrapper and apply `pointer-events-auto` directly on the child components.
+
 ## 2026-08-01 - [Modal Focus Capture and Restoration]
 **Learning:** Immersive overlay portals must manage keyboard focus meticulously to maintain clear accessibility bounds. Shifting focus to the primary interactive close trigger upon mounting ensures users are instantly oriented within the newly rendered modal, while restoring focus to the prior element on unmount preserves seamless keyboard navigation flow.
 **Action:** When rendering modal portals, use refs to capture `document.activeElement` on mount, programmatically focus the primary modal control, and restore the captured active element's focus on unmount.
