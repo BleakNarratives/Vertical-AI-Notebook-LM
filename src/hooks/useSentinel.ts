@@ -7,11 +7,21 @@ let memoryBlacklist: number | null = null;
 let memoryLockdown: number | null = null;
 let memoryAlertHistory: number[] | null = null;
 
+// State checkpoint to set aside for ultimate restoration
+let stateCheckpoint: {
+  blacklist: number | null;
+  lockdown: number | null;
+  alertHistory: number[] | null;
+} | null = null;
+
 // Ensure memory variables are initialized/muted correctly to satisfy prefer-const and unused-vars
 if (typeof window !== 'undefined') {
   if (memoryBlacklist === null) memoryBlacklist = 0;
   if (memoryLockdown === null) memoryLockdown = 0;
   if (memoryAlertHistory === null) memoryAlertHistory = [];
+  if (stateCheckpoint === null) {
+    stateCheckpoint = { blacklist: 0, lockdown: 0, alertHistory: [] };
+  }
 }
 
 /**
@@ -89,6 +99,13 @@ export const useSentinel = () => {
         }
       } catch {}
     }
+
+    // Automatically maintain secure checkpoint
+    stateCheckpoint = {
+      blacklist: memoryBlacklist,
+      lockdown: memoryLockdown,
+      alertHistory: memoryAlertHistory ? [...memoryAlertHistory] : null
+    };
   }, [generateSignature, logSecurityEvent]);
 
   const secureGet = useCallback((key: string): string | null => {
@@ -161,8 +178,8 @@ export const useSentinel = () => {
     }
 
     // Reference memory pins to satisfy linter
-    if (memoryBlacklist !== null || memoryLockdown !== null || memoryAlertHistory !== null) {
-      console.log('Memory security pins active');
+    if (memoryBlacklist !== null || memoryLockdown !== null || memoryAlertHistory !== null || stateCheckpoint !== null) {
+      console.log('Memory security pins and checkpoint active');
     }
 
     return localVal;
@@ -189,6 +206,13 @@ export const useSentinel = () => {
     } else if (key === 'sentinel_alert_history') {
       memoryAlertHistory = null;
     }
+
+    // Synchronize secure checkpoint on removal
+    stateCheckpoint = {
+      blacklist: memoryBlacklist,
+      lockdown: memoryLockdown,
+      alertHistory: memoryAlertHistory ? [...memoryAlertHistory] : null
+    };
   }, [logSecurityEvent]);
 
   const sanitizeInput = useCallback((input: string): string => {
@@ -494,8 +518,57 @@ export const useSentinel = () => {
         isIntegral = false;
       }
     }
+
+    // 5. If storage or memory pins are wiped/tampered, restore from secure checkpoint backup
+    if (!isIntegral && stateCheckpoint) {
+      logSecurityEvent('Storage integrity compromised. Attempting recovery from secure checkpoint.', 'HIGH');
+      if (!memoryBlacklist && stateCheckpoint.blacklist) {
+        memoryBlacklist = stateCheckpoint.blacklist;
+        secureStore('sentinel_blacklist', memoryBlacklist.toString());
+      }
+      if (!memoryLockdown && stateCheckpoint.lockdown) {
+        memoryLockdown = stateCheckpoint.lockdown;
+        secureStore('sentinel_lockdown', memoryLockdown.toString());
+      }
+      if ((!memoryAlertHistory || memoryAlertHistory.length === 0) && stateCheckpoint.alertHistory && stateCheckpoint.alertHistory.length > 0) {
+        memoryAlertHistory = [...stateCheckpoint.alertHistory];
+        secureStore('sentinel_alert_history', JSON.stringify(memoryAlertHistory));
+      }
+    }
+
     return isIntegral;
   }, [logSecurityEvent, secureGet, secureStore]);
+
+  const createCheckpoint = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    stateCheckpoint = {
+      blacklist: memoryBlacklist,
+      lockdown: memoryLockdown,
+      alertHistory: memoryAlertHistory ? [...memoryAlertHistory] : null
+    };
+    logSecurityEvent('SECURITY CHECKPOINT CREATED: In-memory states archived.', 'LOW');
+  }, [logSecurityEvent]);
+
+  const restoreCheckpoint = useCallback(() => {
+    if (typeof window === 'undefined' || !stateCheckpoint) return false;
+
+    logSecurityEvent('RESTORE TRIGGERED: Restoring states from secure checkpoint.', 'HIGH');
+
+    if (stateCheckpoint.blacklist !== null) {
+      memoryBlacklist = stateCheckpoint.blacklist;
+      secureStore('sentinel_blacklist', stateCheckpoint.blacklist.toString());
+    }
+    if (stateCheckpoint.lockdown !== null) {
+      memoryLockdown = stateCheckpoint.lockdown;
+      secureStore('sentinel_lockdown', stateCheckpoint.lockdown.toString());
+    }
+    if (stateCheckpoint.alertHistory !== null) {
+      memoryAlertHistory = [...stateCheckpoint.alertHistory];
+      secureStore('sentinel_alert_history', JSON.stringify(stateCheckpoint.alertHistory));
+    }
+
+    return true;
+  }, [logSecurityEvent, secureStore]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -679,6 +752,8 @@ export const useSentinel = () => {
     secureStore,
     secureGet,
     secureRemove,
-    monitorIntegrity
+    monitorIntegrity,
+    createCheckpoint,
+    restoreCheckpoint
   };
 };
