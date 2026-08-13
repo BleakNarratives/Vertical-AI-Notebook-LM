@@ -494,8 +494,17 @@ export const useSentinel = () => {
         isIntegral = false;
       }
     }
+
+    if (!isIntegral) {
+      logSecurityEvent('SESSION LOCKOUT ENGAGED: Storage tampering or divergence detected. Automatic session ban.', 'CRITICAL');
+      triggerBlacklist();
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
+    }
+
     return isIntegral;
-  }, [logSecurityEvent, secureGet, secureStore]);
+  }, [logSecurityEvent, secureGet, secureStore, triggerBlacklist]);
 
   const checkRateLimit = useCallback((key: string, limit: number, windowMs: number): boolean => {
     if (typeof window === 'undefined') return true;
@@ -569,6 +578,11 @@ export const useSentinel = () => {
 
   const verifyInteraction = useCallback((e?: React.UIEvent | Event): boolean => {
     if (typeof window === 'undefined' || !e) return true;
+
+    // Assertively verify storage integrity on every single user interaction!
+    if (!verifyStorageIntegrity()) {
+      return false; // Terminate interaction immediately and fail secure
+    }
 
     const now = Date.now();
     if (typeof window !== 'undefined') {
@@ -658,7 +672,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent]);
+  }, [logSecurityEvent, verifyStorageIntegrity]);
 
   return {
     logSecurityEvent,
