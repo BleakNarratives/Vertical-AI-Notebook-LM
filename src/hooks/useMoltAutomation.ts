@@ -28,7 +28,8 @@ export const useMoltAutomation = () => {
     secureGet,
     secureRemove,
     secureJsonParse,
-    generateSignature
+    generateSignature,
+    verifyStorageIntegrity
   } = useSentinel();
   const [cyclesRun, setCyclesRun] = useState(0);
   const [isLockdown, setIsLockdown] = useState(false);
@@ -309,6 +310,11 @@ export const useMoltAutomation = () => {
       secureGet('sentinel_blacklist');
       secureGet('sentinel_lockdown');
 
+      // Verify overall storage integrity; attempt autonomous recovery on failure
+      if (!verifyStorageIntegrity()) {
+        attemptAutonomousImprovement('Storage integrity failure detected.');
+      }
+
       // Adaptive Threshold Decay: Slowly return to nominal 50ms if no violations
       const currentThreshold = parseInt(secureGet('sentinel_velocity_threshold') || '50', 10);
       if (currentThreshold > 50) {
@@ -320,7 +326,7 @@ export const useMoltAutomation = () => {
       }
     }, 30000);
     return () => clearInterval(interval);
-  }, [secureGet, secureStore, logSecurityEvent]);
+  }, [secureGet, secureStore, logSecurityEvent, verifyStorageIntegrity, attemptAutonomousImprovement]);
 
   return { cyclesRun, isImproving, level, isLockdown, isBlacklisted, triggerMolt };
 };

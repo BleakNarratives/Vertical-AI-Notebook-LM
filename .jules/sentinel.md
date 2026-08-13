@@ -78,7 +78,7 @@
 **Learning:** Purely client-side verification functions like `validateRequest` must explicitly enforce primitive types (e.g., `typeof token === 'string'`) and strictly restrict alphanumeric character classes before verifying token length. This prevents dynamic inputs (like array-based or object-based keys) from bypassing safety validations or causing JS crashes.
 **Prevention:** Hardened `validateRequest` with strict string-type verification and exact `/^[a-zA-Z0-9_-]+$/` character matching to block prototype/parameter injection patterns.
 
-## 2026-06-17 - [Complete Storage Deletion and Divergence Integrity]
-**Vulnerability:** Storage verification short-circuiting allowed undetected deletion of individual critical security keys.
-**Learning:** When comparing localStorage and sessionStorage for cross-tab or redundant state verification, a standard logical comparison `local && session && local !== session` will pass if one of the stores is completely emptied/cleared of a key. This allows an attacker to bypass integrity validations by selectively deleting keys.
-**Prevention:** Ensure integrity comparisons verify if *at least* one value is present and detect if there is any mismatch: `(local || session) && local !== session`.
+## 2026-06-17 - [Cross-Storage Divergence Validation Bypass & Automated Integrity Heartbeat]
+**Vulnerability:** The cross-storage state validation used a weak logical AND condition which permitted malicious or bug-induced selective key deletion to go undetected, bypassing critical integrity logs.
+**Learning:** When validating synchronized multi-storage states (like `localStorage` vs `sessionStorage`), verifying `local && session` can be bypassed if an attacker deletes only one of the storage keys. The condition must check if *either* key exists and then confirm they are strictly equal.
+**Prevention:** Always use `(local || session) && local !== session` to detect single-sided storage deletion/tampering, and actively hook integrity checks into the main automation/reconstruction heartbeat.
