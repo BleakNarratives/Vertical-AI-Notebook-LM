@@ -1,3 +1,7 @@
+## 2026-08-15 - [Informative Tooltips & Inline Loaders on Module Action Controls]
+**Learning:** For interactive action controls that can be temporarily disabled due to system states (e.g. lockdowns or active async processes), providing both an inline visual loading indicator (e.g., SVG spinner) and an explicit `title` / `disabledReason` tooltip ensures users immediately understand why an action is unavailable or in progress.
+**Action:** Always provide explicit visual feedback (spinning SVG) and screen-reader/hover tooltip guidance (`title`/`aria-busy`) on buttons handling async state triggers or restriction states.
+
 ## 2026-08-11 - [Perspective-Based Pointer Event Interception]
 **Learning:** In a highly-styled, immersive perspective boardroom layout, absolute-positioned containers holding grouped interactive props can inadvertently overlap and intercept pointer events (clicks, hovers) meant for components behind them, even if the layout appears clear visually. Standardizing the container with `pointer-events-none` and setting `pointer-events-auto` strictly on individual item containers ensures clicks bypass the empty spaces seamlessly.
 **Action:** When grouping interactive props in a 3D perspective dashboard, always use `pointer-events-none` on the parent layout wrapper and apply `pointer-events-auto` directly on the child components.
