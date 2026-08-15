@@ -126,6 +126,14 @@ export const useSentinel = () => {
       return localVal;
     }
 
+    if (!localVal && sessionVal) {
+      // Sync to local storage if session is present but local is not (e.g. storage cleared)
+      const signature = generateSignature(key, sessionVal);
+      const payload = JSON.stringify({ v: sessionVal, s: signature });
+      localStorage.setItem(key, payload);
+      return sessionVal;
+    }
+
     if (localVal !== sessionVal) {
       logSecurityEvent(`Storage divergence detected for key: ${key}`, 'CRITICAL');
       return null; // Fail secure on divergence
