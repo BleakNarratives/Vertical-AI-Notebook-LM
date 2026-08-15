@@ -6,12 +6,14 @@ import React, { useCallback, useRef } from 'react';
 let memoryBlacklist: number | null = null;
 let memoryLockdown: number | null = null;
 let memoryAlertHistory: number[] | null = null;
+let memoryShadowLogs: string[] | null = null;
 
 // Ensure memory variables are initialized/muted correctly to satisfy prefer-const and unused-vars
 if (typeof window !== 'undefined') {
   if (memoryBlacklist === null) memoryBlacklist = 0;
   if (memoryLockdown === null) memoryLockdown = 0;
   if (memoryAlertHistory === null) memoryAlertHistory = [];
+  if (memoryShadowLogs === null) memoryShadowLogs = [];
 }
 
 /**
@@ -86,6 +88,13 @@ export const useSentinel = () => {
         const parsed = JSON.parse(value);
         if (Array.isArray(parsed)) {
           memoryAlertHistory = parsed;
+        }
+      } catch {}
+    } else if (key === 'sentinel_shadow_logs') {
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          memoryShadowLogs = parsed;
         }
       } catch {}
     }
@@ -166,10 +175,19 @@ export const useSentinel = () => {
         sessionStorage.setItem(key, payload);
         return stringVal;
       }
+      if (key === 'sentinel_shadow_logs' && memoryShadowLogs && memoryShadowLogs.length > 0) {
+        logSecurityEvent('Memory Pinning: Restoring missing shadow logs from memory.', 'HIGH');
+        const stringVal = JSON.stringify(memoryShadowLogs);
+        const signature = generateSignature(key, stringVal);
+        const payload = JSON.stringify({ v: stringVal, s: signature });
+        localStorage.setItem(key, payload);
+        sessionStorage.setItem(key, payload);
+        return stringVal;
+      }
     }
 
     // Reference memory pins to satisfy linter
-    if (memoryBlacklist !== null || memoryLockdown !== null || memoryAlertHistory !== null) {
+    if (memoryBlacklist !== null || memoryLockdown !== null || memoryAlertHistory !== null || memoryShadowLogs !== null) {
       console.log('Memory security pins active');
     }
 
@@ -196,6 +214,8 @@ export const useSentinel = () => {
       memoryLockdown = null;
     } else if (key === 'sentinel_alert_history') {
       memoryAlertHistory = null;
+    } else if (key === 'sentinel_shadow_logs') {
+      memoryShadowLogs = null;
     }
   }, [logSecurityEvent]);
 
@@ -439,7 +459,7 @@ export const useSentinel = () => {
 
   const verifyStorageIntegrity = useCallback(() => {
     if (typeof window === 'undefined') return true;
-    const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history'];
+    const criticalKeys = ['sentinel_blacklist', 'sentinel_lockdown', 'sentinel_alert_history', 'sentinel_shadow_logs'];
     let isIntegral = true;
 
     // 1. Verify storage blacklist against memory blacklist pinning
@@ -498,7 +518,35 @@ export const useSentinel = () => {
       } catch {}
     }
 
-    // 4. Verify overall local/session storage consistency
+    // 4. Verify storage shadow logs against memory shadow logs pinning
+    const storedShadowLogs = secureGet('sentinel_shadow_logs');
+    if (memoryShadowLogs && memoryShadowLogs.length > 0 && !storedShadowLogs) {
+      logSecurityEvent('Storage tampering detected: Shadow logs removed from storage.', 'CRITICAL');
+      secureStore('sentinel_shadow_logs', JSON.stringify(memoryShadowLogs));
+      isIntegral = false;
+    } else if (storedShadowLogs && memoryShadowLogs && memoryShadowLogs.length > 0) {
+      try {
+        const parsed = JSON.parse(storedShadowLogs);
+        if (!Array.isArray(parsed) || parsed.length !== memoryShadowLogs.length) {
+          logSecurityEvent('Storage tampering detected: Shadow logs tampered.', 'CRITICAL');
+          secureStore('sentinel_shadow_logs', JSON.stringify(memoryShadowLogs));
+          isIntegral = false;
+        }
+      } catch {
+        logSecurityEvent('Storage tampering detected: Shadow logs corrupted.', 'CRITICAL');
+        secureStore('sentinel_shadow_logs', JSON.stringify(memoryShadowLogs));
+        isIntegral = false;
+      }
+    } else if (storedShadowLogs && (!memoryShadowLogs || memoryShadowLogs.length === 0)) {
+      try {
+        const parsed = JSON.parse(storedShadowLogs);
+        if (Array.isArray(parsed)) {
+          memoryShadowLogs = parsed;
+        }
+      } catch {}
+    }
+
+    // 5. Verify overall local/session storage consistency
     for (const key of criticalKeys) {
       const local = localStorage.getItem(key);
       const session = sessionStorage.getItem(key);
