@@ -296,7 +296,12 @@ export const useSentinel = () => {
       /union\s+select/i,    // SQL injection
       /\$(where|regex|ne|gt|lt|in)/i, // NoSQL injection
       /__proto__/i,        // Prototype pollution
-      /constructor\.prototype/i // Prototype pollution
+      /constructor\.prototype/i, // Prototype pollution
+      /\bimport\s*\(/i,     // Dynamic Module Imports Injection
+      /\brequire\s*\(/i,    // CommonJS dynamic require
+      /\bFunction\s*\(/i,   // Dynamic Function construction
+      /\bset(Timeout|Interval)\s*\(\s*['"`]/i, // Dynamic timers evaluation
+      /<\s*(iframe|object|embed|svg|svg\s+onload)/i // Dangerous bypass elements
     ];
 
     for (const pattern of maliciousPatterns) {

@@ -69,10 +69,16 @@ export const useMoltAutomation = () => {
         return;
       }
 
+      // Sanitize the payload against prototype pollution to prevent client-side exploits
+      let sanitizedPayload = payload;
+      if (payload && typeof payload === 'object') {
+        sanitizedPayload = secureJsonParse(JSON.stringify(payload));
+      }
+
       // Process verified message
       switch (type) {
         case 'lockdown': {
-          const expiryTime = parseInt(payload, 10);
+          const expiryTime = parseInt(sanitizedPayload, 10);
           const remaining = expiryTime - Date.now();
           if (remaining > 0) {
             setIsLockdown(true);
@@ -84,10 +90,10 @@ export const useMoltAutomation = () => {
           setIsBlacklisted(true);
           break;
         case 'security-alert':
-          if (payload && (payload.severity === 'HIGH' || payload.severity === 'CRITICAL')) {
-            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: ${payload.event}`);
+          if (sanitizedPayload && (sanitizedPayload.severity === 'HIGH' || sanitizedPayload.severity === 'CRITICAL')) {
+            console.log(`[🛡️ SENTINEL][BROADCAST] Received remote security alert: ${sanitizedPayload.event}`);
             window.dispatchEvent(new CustomEvent('security-alert', {
-              detail: { ...payload, _isBroadcast: true }
+              detail: { ...sanitizedPayload, _isBroadcast: true }
             }));
           }
           break;
@@ -101,7 +107,7 @@ export const useMoltAutomation = () => {
       channel.close();
       broadcastChannelRef.current = null;
     };
-  }, [generateSignature, logSecurityEvent]);
+  }, [generateSignature, logSecurityEvent, secureJsonParse]);
 
   // Check for security states on mount
   useEffect(() => {
