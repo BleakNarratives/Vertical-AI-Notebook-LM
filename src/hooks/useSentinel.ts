@@ -646,12 +646,15 @@ export const useSentinel = () => {
     }
 
     const now = Date.now();
+    const storedThreshold = secureGet('sentinel_velocity_threshold');
+    const velocityThreshold = storedThreshold ? (parseInt(storedThreshold, 10) || 50) : 50;
+
     if (typeof window !== 'undefined') {
       const lastInteraction = (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction || 0;
       const velocity = now - lastInteraction;
       (window as unknown as { _sentinel_last_interaction: number })._sentinel_last_interaction = now;
 
-      if (lastInteraction !== 0 && velocity < 50) {
+      if (lastInteraction !== 0 && velocity < velocityThreshold) {
         logSecurityEvent('Sub-human interaction velocity detected: ' + velocity + 'ms', 'HIGH');
         window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
           detail: { velocity, type: e.type, timestamp: new Date().toISOString() }
@@ -684,11 +687,13 @@ export const useSentinel = () => {
           velocityViolationsRef.current[e.type] = 0;
         }
 
-        // Detection of sub-human interaction speeds (< 50ms)
-        if (delta >= 0 && delta < 50) {
-          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms`, 'HIGH');
+        // Dynamic detection of interaction speeds exceeding adaptive threshold
+        if (delta >= 0 && delta < velocityThreshold) {
+          const violations = (velocityViolationsRef.current[e.type] || 0) + 1;
+          velocityViolationsRef.current[e.type] = violations;
+          logSecurityEvent(`Sub-human interaction velocity detected: ${delta}ms (threshold: ${velocityThreshold}ms)`, 'HIGH');
           window.dispatchEvent(new CustomEvent('sentinel-velocity-alert', {
-            detail: { delta, type: e.type, timestamp: now }
+            detail: { delta, type: e.type, timestamp: now, violations }
           }));
           return false;
         }
@@ -733,7 +738,7 @@ export const useSentinel = () => {
     }
 
     return true;
-  }, [logSecurityEvent, verifyStorageIntegrity]);
+  }, [logSecurityEvent, secureGet, verifyStorageIntegrity]);
 
   return {
     logSecurityEvent,
