@@ -8,6 +8,7 @@ import { VideoViewer } from "@/components/Boardroom/VideoViewer";
 import { Papers } from "@/components/Boardroom/Papers";
 import { PerspectiveWrapper } from "@/components/Boardroom/PerspectiveWrapper";
 import { ShortcutToggle } from "@/components/Boardroom/ShortcutToggle";
+import { ShortcutLegend } from "@/components/Boardroom/ShortcutLegend";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -89,12 +90,7 @@ export default function RootLayout({
 
         <footer className="h-auto md:h-8 min-h-[2rem] py-2 md:py-0 border-t border-grey-dark flex flex-col md:flex-row items-center px-8 bg-obsidian text-[10px] font-mono text-grey-medium uppercase tracking-widest gap-2 md:gap-0 relative">
           <span>[ BLEAK NARRATIVES ]</span>
-          <div className="flex flex-wrap justify-center gap-4 text-neon-amber/60 md:absolute md:left-1/2 md:-translate-x-1/2">
-            <span className="hover:text-neon-amber transition-colors">[C] COFFEE BREAK</span>
-            <span className="hover:text-neon-amber transition-colors">[L] LAPTOP WORKSTATION</span>
-            <span className="hover:text-neon-amber transition-colors">[W] WHITEBOARD</span>
-            <span className="hover:text-neon-amber transition-colors">[V] VIDEO MONITOR</span>
-          </div>
+          <ShortcutLegend />
           <div className="md:ml-auto flex items-center gap-4">
             <ShortcutToggle />
             <span>TERM: 2829543670389124673</span>
