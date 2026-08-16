@@ -97,3 +97,8 @@
 **Vulnerability:** Forensic shadow logs (`sentinel_shadow_logs`) recording rejected inputs, DoS triggers, and malicious pattern attempts were vulnerable to client-side erasure via `localStorage`/`sessionStorage` clearing or tampering.
 **Learning:** Attackers can cover their tracks by clearing browser Web Storage after attempting malicious injection or probe inputs. Web Storage alone cannot guarantee forensic trace retention.
 **Prevention:** Extend Quantum Memory Shadow Pinning to array-based forensic records like `sentinel_shadow_logs`. Maintain a module-scoped in-memory cache, verify array structure and length during storage integrity pulses, and automatically restore deleted or tampered shadow logs from memory on access or heartbeat.
+
+## 2026-06-21 - [Dynamic Adaptive Velocity Threshold Enforcement]
+**Vulnerability:** Adaptive velocity throttling escalated stored thresholds (e.g. from 50ms up to 250ms) in Web Storage during attack sequences, but `verifyInteraction` in `useSentinel.ts` checked against a hardcoded `50` value rather than reading the updated threshold from storage.
+**Learning:** Having adaptive security thresholds in storage is ineffective if the verification function doesn't actively read and enforce the stored configuration value during event validation.
+**Prevention:** Ensure verification functions dynamically query stored security settings (`secureGet('sentinel_velocity_threshold')`) so that automated threats trigger real-time, persistent throttling.
