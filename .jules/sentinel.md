@@ -102,3 +102,8 @@
 **Vulnerability:** Adaptive velocity throttling escalated stored thresholds (e.g. from 50ms up to 250ms) in Web Storage during attack sequences, but `verifyInteraction` in `useSentinel.ts` checked against a hardcoded `50` value rather than reading the updated threshold from storage.
 **Learning:** Having adaptive security thresholds in storage is ineffective if the verification function doesn't actively read and enforce the stored configuration value during event validation.
 **Prevention:** Ensure verification functions dynamically query stored security settings (`secureGet('sentinel_velocity_threshold')`) so that automated threats trigger real-time, persistent throttling.
+
+## 2026-06-22 - [Custom Event Payload Input Sanitization]
+**Vulnerability:** Boardroom component listeners (e.g., `Laptop.tsx`) processed and logged custom event detail properties (`source`, `action`, `payload`) without type checking or input validation/sanitization.
+**Learning:** DOM CustomEvents dispatched across components or third-party scripts can carry untrusted user input or malicious strings. Directly rendering or logging `event.detail` fields without type validation and sanitization exposes the component to XSS or unhandled formatting crashes.
+**Prevention:** Always validate primitive string types and pass custom event detail fields through `validateInput` and `sanitizeInput` before logging or rendering UI updates.
