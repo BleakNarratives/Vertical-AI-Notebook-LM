@@ -1,3 +1,7 @@
+## 2026-08-17 - [Hover Tooltip Guidance for Atmospheric Keyboard Legend Buttons]
+**Learning:** In highly atmospheric, dark-themed UIs where footer buttons or keyboard shortcuts use minimal monospaced labels (such as `[C] COFFEE BREAK` or `[K] HINTS: OFF`), adding descriptive `title` attributes ensures mouse and screen-reader users immediately understand the exact effect and action triggered by the button without overloading the clean visual design.
+**Action:** Always provide explicit, action-oriented `title` tooltips on concise or symbol-heavy shortcut legend controls.
+
 ## 2026-08-15 - [Informative Tooltips & Inline Loaders on Module Action Controls]
 **Learning:** For interactive action controls that can be temporarily disabled due to system states (e.g. lockdowns or active async processes), providing both an inline visual loading indicator (e.g., SVG spinner) and an explicit `title` / `disabledReason` tooltip ensures users immediately understand why an action is unavailable or in progress.
 **Action:** Always provide explicit visual feedback (spinning SVG) and screen-reader/hover tooltip guidance (`title`/`aria-busy`) on buttons handling async state triggers or restriction states.
