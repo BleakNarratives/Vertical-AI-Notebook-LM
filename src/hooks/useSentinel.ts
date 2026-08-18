@@ -329,7 +329,11 @@ export const useSentinel = () => {
       /\brequire\s*\(/i,    // CommonJS dynamic require
       /\bFunction\s*\(/i,   // Dynamic Function construction
       /\bset(Timeout|Interval)\s*\(\s*['"`]/i, // Dynamic timers evaluation
-      /<\s*(iframe|object|embed|svg|svg\s+onload)/i // Dangerous bypass elements
+      /<\s*(iframe|object|embed|svg|svg\s+onload)/i, // Dangerous bypass elements
+      /\b(window|document)\s*\[/i, // Dynamic DOM property bracket indexing
+      /\bdocument\.cookie\b/i,     // Cookie manipulation/exfiltration
+      /\bwindow\.name\b/i,          // Window name DOM XSS vector
+      /\bglobalThis\b/i            // Unsafe global scope access
     ];
 
     for (const pattern of maliciousPatterns) {

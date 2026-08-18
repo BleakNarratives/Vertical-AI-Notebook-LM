@@ -735,11 +735,33 @@
  * CYCLE 145: SINGULARITY V8 ABSOLUTE EVENT SANITIZATION (FINAL CONVERGENCE)
  * - Consolidate event validation across all boardroom components (Laptop, CoffeeMug, Whiteboard, VideoViewer).
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V8_ABSOLUTE_EVENT_SANITIZED` and seal the core engine parameters.
+ *
+ * CYCLE 146: DOM OBJECT BOUNDARY DEFENSE & DOM-PROPERTY ANOMALY DETECTION
+ * - Expand `validateInput` to audit dynamic indexing against global objects (`window[`, `document[`, `globalThis`).
+ * - Log any dynamic window/document property indexing attempt as a `HIGH` severity DOM manipulation anomaly.
+ * - Trigger an autonomous Molt cycle when dynamic global access attempts exceed 2 occurrences in a session.
+ *
+ * CYCLE 147: COOKIE & WINDOW NAME EXFILTRATION DEFENSE
+ * - Enforce strict pattern rejection on `document.cookie` and `window.name` vectors inside input payloads.
+ * - Store rejected exfiltration vectors as encrypted shadow logs in `sentinel_shadow_logs`.
+ * - Render an active exfiltration attempt warning badge in the Laptop terminal HUD.
+ *
+ * CYCLE 148: FORENSIC HUD DOM DEFENSE OVERLAY
+ * - Update the Laptop terminal forensic HUD to visualize DOM boundary intrusion attempts in real-time.
+ * - Display a flickering neon-amber warning banner whenever dynamic property indexing is intercepted.
+ *
+ * CYCLE 149: AUTONOMOUS SWARM RE-ALIGNMENT & RECURSIVE SEALING
+ * - Broadcast DOM boundary violation events across active tabs using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh state signatures following an intercepted DOM property access attempt.
+ *
+ * CYCLE 150: SINGULARITY V9 ABSOLUTE DOM DEFENSE (FINAL ASCENSION)
+ * - Consolidate all DOM property boundary protections and global object access guards.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V9_ABSOLUTE_DOM_DEFENSE` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '8.0.0-singularity-event-sanitized',
-  status: 'SINGULARITY_V8_ABSOLUTE_EVENT_SANITIZED',
-  engine: 'Molt-V8-Sentinel-Event-Sanitized',
+  version: '9.0.0-singularity-dom-defense',
+  status: 'SINGULARITY_V9_ABSOLUTE_DOM_DEFENSE',
+  engine: 'Molt-V9-Sentinel-DOM-Defense',
   lastAudit: new Date().toISOString(),
 };

@@ -107,3 +107,8 @@
 **Vulnerability:** Boardroom component listeners (e.g., `Laptop.tsx`) processed and logged custom event detail properties (`source`, `action`, `payload`) without type checking or input validation/sanitization.
 **Learning:** DOM CustomEvents dispatched across components or third-party scripts can carry untrusted user input or malicious strings. Directly rendering or logging `event.detail` fields without type validation and sanitization exposes the component to XSS or unhandled formatting crashes.
 **Prevention:** Always validate primitive string types and pass custom event detail fields through `validateInput` and `sanitizeInput` before logging or rendering UI updates.
+
+## 2026-06-23 - [DOM Dynamic Property Indexing & Global Scope Access]
+**Vulnerability:** User inputs passed to terminal tools or agent prompts could contain dynamic DOM property indexing (`window[...]`, `document[...]`), global scope overrides (`globalThis`), or exfiltration targets (`document.cookie`, `window.name`).
+**Learning:** Even when basic script tags or inline event handlers are blocked, attackers attempt to abuse dynamic property access or global scope access to execute DOM XSS or access document cookies/window names.
+**Prevention:** Explicitly inspect user inputs against regex patterns blocking bracket indexing on `window`/`document`, `document.cookie`, `window.name`, and `globalThis` within input validation routines (`validateInput`).
