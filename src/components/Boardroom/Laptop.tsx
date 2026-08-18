@@ -2,13 +2,14 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
+import { useSentinel } from '@/hooks/useSentinel';
 
 interface BoardroomEvent extends CustomEvent {
   detail: {
     source: string;
     action: string;
     payload?: string;
-    timestamp: string;
+    timestamp?: string;
   };
 }
 
@@ -16,16 +17,24 @@ export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const { validateInput, sanitizeInput } = useSentinel();
 
   const handleRemoteAction = useCallback((e: Event) => {
     const event = e as BoardroomEvent;
+    if (!event.detail || typeof event.detail !== 'object') return;
     const { source, action, payload, timestamp } = event.detail;
-    const logMessage = `[${timestamp}] ${source}: ${action}${payload ? ` (${payload})` : ''}`;
+
+    const safeSource = typeof source === 'string' && validateInput(source) ? sanitizeInput(source) : 'UNKNOWN';
+    const safeAction = typeof action === 'string' && validateInput(action) ? sanitizeInput(action) : 'ACTION';
+    const safePayload = typeof payload === 'string' && validateInput(payload) ? sanitizeInput(payload) : '';
+    const safeTime = typeof timestamp === 'string' ? sanitizeInput(timestamp) : new Date().toLocaleTimeString();
+
+    const logMessage = `[${safeTime}] ${safeSource}: ${safeAction}${safePayload ? ` (${safePayload})` : ''}`;
 
     setLogs(prev => [logMessage, ...prev].slice(0, 4));
     setIsFlashing(true);
     setTimeout(() => setIsFlashing(false), 300);
-  }, []);
+  }, [sanitizeInput, validateInput]);
 
   useEffect(() => {
     window.addEventListener('sentinel-boardroom-action', handleRemoteAction);
