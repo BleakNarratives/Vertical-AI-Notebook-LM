@@ -9,6 +9,7 @@ import { useEffect } from 'react';
  * - L: Laptop Terminal (boardroom-laptop)
  * - W: Whiteboard Strategy Logger (boardroom-whiteboard)
  * - V: VideoViewer Monitor Feed (boardroom-videoviewer)
+ * - K: Toggle Shortcut Hints HUD (sentinel-toggle-hints)
  *
  * Keystrokes are ignored when focusing form inputs or contentEditable fields.
  */
@@ -32,6 +33,13 @@ export const useKeyboardShortcuts = () => {
       }
 
       const key = event.key.toUpperCase();
+
+      if (key === 'K') {
+        event.preventDefault();
+        window.dispatchEvent(new CustomEvent('sentinel-toggle-hints'));
+        return;
+      }
+
       let targetId = '';
 
       switch (key) {
