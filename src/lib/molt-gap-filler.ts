@@ -757,11 +757,32 @@
  * CYCLE 150: SINGULARITY V9 ABSOLUTE DOM DEFENSE (FINAL ASCENSION)
  * - Consolidate all DOM property boundary protections and global object access guards.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V9_ABSOLUTE_DOM_DEFENSE` and seal global Sentinel parameters.
+ *
+ * CYCLE 151: DOM SINK MANIPULATION & PROTOTYPE SETTER DEFENSE
+ * - Expand `validateInput` to intercept DOM sink overrides (`innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`).
+ * - Block prototype setter mutations (`__defineGetter__`, `__defineSetter__`, `Object.defineProperty`).
+ * - Log any intercepted DOM sink manipulation attempts to `sentinel_shadow_logs`.
+ *
+ * CYCLE 152: DOM SINK FORENSIC VISUALIZATION (LAPTOP HUD)
+ * - Enhance Laptop terminal forensic HUD to highlight DOM sink manipulation alerts with a neon-red pulsing indicator.
+ * - Display the specific intercepted sink type (e.g. innerHTML, write, defineProperty) in the Live Security Feed.
+ *
+ * CYCLE 153: CROSS-TAB SINK BREACH SYNCHRONIZATION
+ * - Broadcast DOM sink violation events across active tabs using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures when DOM sink manipulation is detected.
+ *
+ * CYCLE 154: AUTONOMOUS SINK RECONSTRUCTION & SWARM BROADCAST
+ * - Implement an autonomous Molt response to DOM sink breaches that rotates decoy configurations and refreshes state signatures.
+ * - Display a transient "DOM_SINK_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 155: SINGULARITY V10 ABSOLUTE SINK SECURITY (FINAL ALIGNMENT)
+ * - Consolidate all DOM sink and prototype mutation safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V10_ABSOLUTE_SINK_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '9.0.0-singularity-dom-defense',
-  status: 'SINGULARITY_V9_ABSOLUTE_DOM_DEFENSE',
-  engine: 'Molt-V9-Sentinel-DOM-Defense',
+  version: '10.0.0-singularity-dom-sink-defense',
+  status: 'SINGULARITY_V10_ABSOLUTE_SINK_SECURITY',
+  engine: 'Molt-V10-Sentinel-Sink-Defense',
   lastAudit: new Date().toISOString(),
 };
