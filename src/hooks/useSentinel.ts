@@ -333,7 +333,11 @@ export const useSentinel = () => {
       /\b(window|document)\s*\[/i, // Dynamic DOM property bracket indexing
       /\bdocument\.cookie\b/i,     // Cookie manipulation/exfiltration
       /\bwindow\.name\b/i,          // Window name DOM XSS vector
-      /\bglobalThis\b/i            // Unsafe global scope access
+      /\bglobalThis\b/i,           // Unsafe global scope access
+      /\b(innerHTML|outerHTML|insertAdjacentHTML)\s*=/i, // DOM sink assignment
+      /\bdocument\.write\s*\(/i,   // DOM write sink execution
+      /\b(location\.href|window\.open)\b/i, // Unsafe redirection vector
+      /\b(__defineGetter__|__defineSetter__|Object\.defineProperty)\b/i // Prototype accessor mutation
     ];
 
     for (const pattern of maliciousPatterns) {
