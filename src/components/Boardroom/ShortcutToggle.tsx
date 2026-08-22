@@ -41,10 +41,11 @@ export const ShortcutToggle: React.FC = () => {
   return (
     <button
       type="button"
+      role="switch"
       onClick={handleClick}
       aria-label="Toggle Keyboard Shortcut Hints [K]"
       title="Toggle shortcut visual indicators on interactive boardroom elements [K]"
-      aria-pressed={enabled}
+      aria-checked={enabled}
       className={`px-2 py-0.5 border font-mono text-[10px] transition-all hover:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber outline-none cursor-pointer ${
         enabled
           ? 'bg-neon-amber/20 text-neon-amber border-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.3)]'
