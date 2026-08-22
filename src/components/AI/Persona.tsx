@@ -19,11 +19,16 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
     }));
   };
 
+  const titleText = disabled
+    ? `Consultation for ${name} is unavailable during active system restrictions`
+    : `Consult ${name} (${role})`;
+
   return (
     <button
       type="button"
       onClick={handleClick}
       disabled={disabled}
+      title={titleText}
       aria-busy={status === 'active'}
       aria-pressed={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
