@@ -782,7 +782,7 @@
 
 export const MOLT_CONFIG = {
   version: '10.0.0-singularity-dom-sink-defense',
-  status: 'SINGULARITY_V10_ABSOLUTE_SINK_SECURITY',
-  engine: 'Molt-V10-Sentinel-Sink-Defense',
+  status: 'SINGULARITY_V10_ABSOLUTE_DOM_SINK_DEFENSE',
+  engine: 'Molt-V10-Sentinel-DOM-Sink-Defense',
   lastAudit: new Date().toISOString(),
 };
