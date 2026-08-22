@@ -19,14 +19,20 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
     }));
   };
 
+  const titleText = disabled
+    ? `Consultation for ${name} is unavailable during active system restrictions`
+    : `Consult ${name} (${role})`;
+
   return (
     <button
       type="button"
       onClick={handleClick}
       disabled={disabled}
+      title={titleText}
       aria-busy={status === 'active'}
       aria-pressed={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
+      title={disabled ? `Consulting ${name} is unavailable during system lockdown` : `Consult ${name} (${role})`}
       style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
       className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
     >
@@ -55,7 +61,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       </div>
       <div className="text-center mt-2">
         <p className="text-xs font-mono text-white/40 uppercase transition-colors">{role}</p>
-        <h3 className="text-xs font-mono text-neon-red uppercase tracking-[0.2em] mt-1">{name}</h3>
+        <span className="block text-xs font-mono text-neon-red uppercase tracking-[0.2em] mt-1">{name}</span>
       </div>
 
       {/* Focus indicator */}

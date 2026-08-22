@@ -1,3 +1,7 @@
+## 2026-08-21 - [Semantic HTML for Interactive Persona Controls]
+**Learning:** Nesting heading elements (`<h3>`) inside interactive `<button>` elements violates HTML semantics and causes confusion in screen reader accessibility trees. Using a block-styled `<span>` instead of `<h3>` inside buttons preserves exact visual styling while maintaining valid semantic HTML. Additionally, adding dynamic action/disabled `title` tooltips gives desktop users clear context before interaction.
+**Action:** Avoid nesting heading elements inside `<button>` tags; use styled `<span>` tags and include descriptive `title` tooltips for hover guidance on interactive controls.
+
 ## 2026-08-17 - [Hover Tooltip Guidance for Atmospheric Keyboard Legend Buttons]
 **Learning:** In highly atmospheric, dark-themed UIs where footer buttons or keyboard shortcuts use minimal monospaced labels (such as `[C] COFFEE BREAK` or `[K] HINTS: OFF`), adding descriptive `title` attributes ensures mouse and screen-reader users immediately understand the exact effect and action triggered by the button without overloading the clean visual design.
 **Action:** Always provide explicit, action-oriented `title` tooltips on concise or symbol-heavy shortcut legend controls.

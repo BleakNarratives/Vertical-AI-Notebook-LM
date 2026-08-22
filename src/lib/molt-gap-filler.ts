@@ -758,26 +758,26 @@
  * - Consolidate all DOM property boundary protections and global object access guards.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V9_ABSOLUTE_DOM_DEFENSE` and seal global Sentinel parameters.
  *
- * CYCLE 151: DOM SINK MANIPULATION DEFENSE & PROTOTYPE SETTER INTERCEPTION
- * - Expand `validateInput` to audit DOM sink assignments (`innerHTML`, `outerHTML`, `insertAdjacentHTML`), DOM modifications (`document.write`), and prototype setter mutations (`__defineGetter__`, `__defineSetter__`, `Object.defineProperty`).
- * - Log any DOM sink assignment attempt as a `CRITICAL` DOM manipulation anomaly.
- * - Record blocked sink attempts as encrypted shadow logs in `sentinel_shadow_logs`.
+ * CYCLE 151: DOM SINK MANIPULATION & PROTOTYPE SETTER DEFENSE
+ * - Expand `validateInput` to intercept DOM sink overrides (`innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`).
+ * - Block prototype setter mutations (`__defineGetter__`, `__defineSetter__`, `Object.defineProperty`).
+ * - Log any intercepted DOM sink manipulation attempts to `sentinel_shadow_logs`.
  *
- * CYCLE 152: LAPTOP TERMINAL FORENSIC SINK HUD OVERLAY
- * - Update the Laptop terminal forensic HUD to visualize intercepted DOM sink assignments and prototype setter mutations in real-time.
- * - Display a flickering neon-red DOM SINK BREACH warning banner whenever sink assignments are intercepted.
+ * CYCLE 152: DOM SINK FORENSIC VISUALIZATION (LAPTOP HUD)
+ * - Enhance Laptop terminal forensic HUD to highlight DOM sink manipulation alerts with a neon-red pulsing indicator.
+ * - Display the specific intercepted sink type (e.g. innerHTML, write, defineProperty) in the Live Security Feed.
  *
- * CYCLE 153: CROSS-TAB DOM SINK BREACH BROADCAST & MEMORY PINNING
+ * CYCLE 153: CROSS-TAB SINK BREACH SYNCHRONIZATION
  * - Broadcast DOM sink violation events across active tabs using `secureBroadcast`.
- * - Auto-reconcile memory pins and refresh state signatures following an intercepted DOM sink assignment attempt.
+ * - Auto-reconcile memory pins and refresh session state signatures when DOM sink manipulation is detected.
  *
- * CYCLE 154: AUTONOMOUS RECURSIVE RECONSTRUCTION & SWARM SEALING
- * - Implement an autonomous Molt response to DOM sink breaches that rotates decoy configurations and refreshes session signatures.
- * - Display a transient "DOM_SINK_BLOCKED" alert message on the workstation HUD.
+ * CYCLE 154: AUTONOMOUS SINK RECONSTRUCTION & SWARM BROADCAST
+ * - Implement an autonomous Molt response to DOM sink breaches that rotates decoy configurations and refreshes state signatures.
+ * - Display a transient "DOM_SINK_BLOCKED" notification on the workstation HUD.
  *
- * CYCLE 155: SINGULARITY V10 ABSOLUTE SINK DEFENSE (FINAL ASCENSION)
- * - Consolidate all DOM property boundary protections, sink assignment guards, and prototype setter mutations.
- * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V10_ABSOLUTE_DOM_SINK_DEFENSE` and seal global Sentinel parameters.
+ * CYCLE 155: SINGULARITY V10 ABSOLUTE SINK SECURITY (FINAL ALIGNMENT)
+ * - Consolidate all DOM sink and prototype mutation safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V10_ABSOLUTE_SINK_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {

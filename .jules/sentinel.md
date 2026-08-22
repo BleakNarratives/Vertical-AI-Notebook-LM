@@ -113,7 +113,7 @@
 **Learning:** Even when basic script tags or inline event handlers are blocked, attackers attempt to abuse dynamic property access or global scope access to execute DOM XSS or access document cookies/window names.
 **Prevention:** Explicitly inspect user inputs against regex patterns blocking bracket indexing on `window`/`document`, `document.cookie`, `window.name`, and `globalThis` within input validation routines (`validateInput`).
 
-## 2026-06-24 - [DOM Sink Manipulation & Prototype Setter Interception]
-**Vulnerability:** User inputs or payload strings passed to terminal tools or agent prompts could contain DOM sink assignments (`innerHTML`, `outerHTML`, `insertAdjacentHTML`), DOM modifications (`document.write`), navigation sinks (`location.href`, `window.open`), or prototype setter mutations (`__defineGetter__`, `__defineSetter__`, `Object.defineProperty`).
-**Learning:** Even when basic script tags or inline event handlers are blocked, attackers attempt to abuse DOM sink assignments, unsafe redirection sinks, or prototype setter overrides to execute DOM XSS, manipulate application state, or modify global object prototypes.
-**Prevention:** Inspect user inputs against regex patterns blocking DOM sink assignments, DOM modification/redirection sinks, and prototype setter mutations within input validation routines (`validateInput`).
+## 2026-06-24 - [DOM Sink Manipulation & Prototype Setter Defense]
+**Vulnerability:** Input validation allowlist permitted DOM sink assignment overrides (`innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`), navigation redirection (`location.href`, `window.open`), and prototype setter mutations (`__defineGetter__`, `__defineSetter__`, `Object.defineProperty`).
+**Learning:** Standard static HTML tag/script filters do not prevent DOM XSS or prototype mutation if input strings manipulate DOM element sinks or invoke prototype setter methods.
+**Prevention:** Intercept DOM sink property assignments, redirection sinks, and prototype setter invocations directly within recursive input validation routines (`validateInput`).

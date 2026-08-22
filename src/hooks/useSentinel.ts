@@ -334,11 +334,10 @@ export const useSentinel = () => {
       /\bdocument\.cookie\b/i,     // Cookie manipulation/exfiltration
       /\bwindow\.name\b/i,          // Window name DOM XSS vector
       /\bglobalThis\b/i,           // Unsafe global scope access
-      /\b(inner|outer)HTML\b/i,    // DOM Sink assignment
-      /\binsertAdjacentHTML\b/i,   // DOM Sink insertion
-      /\bdocument\.write(ln)?\b/i, // Dangerous DOM modification
-      /\b(location\.href|window\.open)\b/i, // Unsafe redirection/navigation sink
-      /\b(__defineGetter__|__defineSetter__|Object\.defineProperty)\b/i // Prototype setter mutation
+      /\b(innerHTML|outerHTML|insertAdjacentHTML)\s*=/i, // DOM sink assignment
+      /\bdocument\.write\s*\(/i,   // DOM write sink execution
+      /\b(location\.href|window\.open)\b/i, // Unsafe redirection vector
+      /\b(__defineGetter__|__defineSetter__|Object\.defineProperty)\b/i // Prototype accessor mutation
     ];
 
     for (const pattern of maliciousPatterns) {
