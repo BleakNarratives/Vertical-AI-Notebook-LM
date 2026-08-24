@@ -778,11 +778,32 @@
  * CYCLE 155: SINGULARITY V10 ABSOLUTE SINK SECURITY (FINAL ALIGNMENT)
  * - Consolidate all DOM sink and prototype mutation safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V10_ABSOLUTE_SINK_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 156: CSS & XML INJECTION PATTERN DEFENSE
+ * - Expand `validateInput` to audit inline CSS style exfiltration (`style\s*=`), `@import` CSS vectors, and XML parser entity injections (`<!ENTITY`, `<!ELEMENT`).
+ * - Intercept executable data URI schemes (`data:text/html`, `data:application/javascript`).
+ * - Log any intercepted CSS/XML injection attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 157: FORENSIC HUD CSS/XML THREAT OVERLAY
+ * - Update Laptop workstation forensic HUD to visualize CSS and XML injection threats in real-time.
+ * - Display a pulsing neon-cyan alert tag when CSS exfiltration or XXE vectors are intercepted.
+ *
+ * CYCLE 158: SWARM CROSS-TAB INJECTION BROADCAST
+ * - Broadcast CSS/XML threat interception events across active tab swarms using `secureBroadcast`.
+ * - Synchronize memory pins and state signatures following an intercepted CSS/XML injection attempt.
+ *
+ * CYCLE 159: AUTONOMOUS STYLE/XML RECONSTRUCTION
+ * - Implement an autonomous Molt response to CSS/XML threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "CSS_XML_INJECTION_BLOCKED" notification on the boardroom HUD.
+ *
+ * CYCLE 160: SINGULARITY V11 ABSOLUTE STYLE & ENTITY SECURITY (FINAL ASCENSION)
+ * - Consolidate CSS exfiltration, XXE, and data URI safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '10.0.0-singularity-dom-sink-defense',
-  status: 'SINGULARITY_V10_ABSOLUTE_DOM_SINK_DEFENSE',
-  engine: 'Molt-V10-Sentinel-DOM-Sink-Defense',
+  version: '11.0.0-singularity-style-entity-defense',
+  status: 'SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_DEFENSE',
+  engine: 'Molt-V11-Sentinel-Style-Entity-Defense',
   lastAudit: new Date().toISOString(),
 };

@@ -62,6 +62,7 @@ interface DocumentPreviewProps {
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const modalRef = React.useRef<HTMLDivElement>(null);
   const previousFocusRef = React.useRef<HTMLElement | null>(null);
   const modalRef = React.useRef<HTMLDivElement>(null);
   const onCloseRef = React.useRef(onClose);
@@ -84,13 +85,17 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onCloseRef.current();
-      } else if (e.key === 'Tab' && modalRef.current) {
+        return;
+      }
+
+      if (e.key === 'Tab' && modalRef.current) {
         const focusables = modalRef.current.querySelectorAll<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
         if (focusables.length === 0) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
+
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
