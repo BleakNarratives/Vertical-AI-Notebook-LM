@@ -117,3 +117,8 @@
 **Vulnerability:** Input validation allowlist permitted DOM sink assignment overrides (`innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`), navigation redirection (`location.href`, `window.open`), and prototype setter mutations (`__defineGetter__`, `__defineSetter__`, `Object.defineProperty`).
 **Learning:** Standard static HTML tag/script filters do not prevent DOM XSS or prototype mutation if input strings manipulate DOM element sinks or invoke prototype setter methods.
 **Prevention:** Intercept DOM sink property assignments, redirection sinks, and prototype setter invocations directly within recursive input validation routines (`validateInput`).
+
+## 2026-06-25 - [CSS Inline Exfiltration & XML Entity Injection Defense]
+**Vulnerability:** Input validation allowlist did not block CSS inline exfiltration (`style=`, `@import`) or XXE / XML entity injection signatures (`<!ENTITY`, `<!ELEMENT`, `<!DOCTYPE`).
+**Learning:** Client-side input validation that ignores CSS style attributes and XML entity declarations leaves the system open to CSS-based data exfiltration and XML parser exploitation when dynamic contents are processed or reflected.
+**Prevention:** Include CSS exfiltration vectors (`style=`, `@import`) and XML entity injection signatures (`<!ENTITY`, `<!ELEMENT`, `<!DOCTYPE`) in recursive input validation checks (`validateInput`).
