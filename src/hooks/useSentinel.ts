@@ -337,7 +337,11 @@ export const useSentinel = () => {
       /\b(innerHTML|outerHTML|insertAdjacentHTML)\s*=/i, // DOM sink assignment
       /\bdocument\.write\s*\(/i,   // DOM write sink execution
       /\b(location\.href|window\.open)\b/i, // Unsafe redirection vector
-      /\b(__defineGetter__|__defineSetter__|Object\.defineProperty)\b/i // Prototype accessor mutation
+      /\b(__defineGetter__|__defineSetter__|Object\.defineProperty)\b/i, // Prototype accessor mutation
+      /\bstyle\s*=/i,              // CSS injection / inline style exfiltration
+      /@import\b/i,                 // CSS import exfiltration vector
+      /<!(ENTITY|ELEMENT|DOCTYPE)\b/i, // XXE / XML Entity Injection vector
+      /data:(text\/html|application\/javascript|text\/javascript)/i // Executable data URI scheme
     ];
 
     for (const pattern of maliciousPatterns) {
