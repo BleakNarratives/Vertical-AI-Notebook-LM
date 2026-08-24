@@ -62,7 +62,9 @@ interface DocumentPreviewProps {
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const modalRef = React.useRef<HTMLDivElement>(null);
   const previousFocusRef = React.useRef<HTMLElement | null>(null);
+  const modalRef = React.useRef<HTMLDivElement>(null);
   const onCloseRef = React.useRef(onClose);
 
   useEffect(() => {
@@ -80,15 +82,33 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
       closeButtonRef.current.focus();
     }
 
-    const handleEsc = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onCloseRef.current();
+        return;
+      }
+
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
-    window.addEventListener('keydown', handleEsc, true);
+    window.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
-      window.removeEventListener('keydown', handleEsc, true);
+      window.removeEventListener('keydown', handleKeyDown, true);
       // Restore previous focus on unmount
       if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
         previousFocusRef.current.focus();
@@ -103,8 +123,10 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
       role="dialog"
       aria-modal="true"
       aria-labelledby="preview-title"
+      aria-describedby="preview-content"
     >
       <div
+        ref={modalRef}
         className="relative w-full max-w-lg p-8 bg-obsidian border border-neon-amber/30 shadow-[0_0_50px_rgba(255,191,0,0.2)] transition-transform duration-500 scale-100"
         onClick={(e) => e.stopPropagation()}
       >
@@ -125,7 +147,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
           </button>
         </header>
 
-        <div className="space-y-4 font-mono text-xs text-grey-medium leading-relaxed">
+        <div id="preview-content" className="space-y-4 font-mono text-xs text-grey-medium leading-relaxed">
           {content.split('\n').map((line, i) => (
             <p key={i} className={line.startsWith('>') ? 'text-neon-red/80' : ''}>
               {line}

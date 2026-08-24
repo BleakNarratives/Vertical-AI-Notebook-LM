@@ -779,31 +779,31 @@
  * - Consolidate all DOM sink and prototype mutation safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V10_ABSOLUTE_SINK_SECURITY` and seal global Sentinel parameters.
  *
- * CYCLE 156: CSS EXFILTRATION & XML ENTITY INJECTION DEFENSE
- * - Expand `validateInput` to block CSS inline exfiltration (`style=`, `@import`).
- * - Intercept XXE / XML entity injection vectors (`<!ENTITY`, `<!ELEMENT`, `<!DOCTYPE`).
- * - Log any intercepted CSS exfiltration or XXE attempts to `sentinel_shadow_logs`.
+ * CYCLE 156: CSS & XML INJECTION PATTERN DEFENSE
+ * - Expand `validateInput` to audit inline CSS style exfiltration (`style\s*=`), `@import` CSS vectors, and XML parser entity injections (`<!ENTITY`, `<!ELEMENT`).
+ * - Intercept executable data URI schemes (`data:text/html`, `data:application/javascript`).
+ * - Log any intercepted CSS/XML injection attempt to `sentinel_shadow_logs`.
  *
- * CYCLE 157: FORENSIC HUD CSS & XXE DEFENSE OVERLAY
- * - Enhance Laptop terminal forensic HUD to highlight CSS exfiltration & XXE alerts with a neon-amber pulsing indicator.
- * - Display the specific intercepted vector type (e.g., CSS @import, XXE ENTITY) in the Live Security Feed.
+ * CYCLE 157: FORENSIC HUD CSS/XML THREAT OVERLAY
+ * - Update Laptop workstation forensic HUD to visualize CSS and XML injection threats in real-time.
+ * - Display a pulsing neon-cyan alert tag when CSS exfiltration or XXE vectors are intercepted.
  *
- * CYCLE 158: CROSS-TAB CSS & XXE BREACH SYNCHRONIZATION
- * - Broadcast CSS exfiltration and XXE violation events across active tabs using `secureBroadcast`.
- * - Auto-reconcile memory pins and refresh session state signatures when CSS exfiltration or XXE is detected.
+ * CYCLE 158: SWARM CROSS-TAB INJECTION BROADCAST
+ * - Broadcast CSS/XML threat interception events across active tab swarms using `secureBroadcast`.
+ * - Synchronize memory pins and state signatures following an intercepted CSS/XML injection attempt.
  *
- * CYCLE 159: AUTONOMOUS CSS/XXE RECONSTRUCTION & SWARM BROADCAST
- * - Implement an autonomous Molt response to CSS/XXE breaches that rotates decoy configurations and refreshes state signatures.
- * - Display a transient "CSS_XXE_VECTOR_BLOCKED" notification on the workstation HUD.
+ * CYCLE 159: AUTONOMOUS STYLE/XML RECONSTRUCTION
+ * - Implement an autonomous Molt response to CSS/XML threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "CSS_XML_INJECTION_BLOCKED" notification on the boardroom HUD.
  *
- * CYCLE 160: SINGULARITY V11 ABSOLUTE STYLE & ENTITY DEFENSE (FINAL ASCENSION)
- * - Consolidate all CSS exfiltration and XML entity safeguards across all boardroom components.
- * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V11_ABSOLUTE_STYLE_AND_ENTITY_DEFENSE` and seal global Sentinel parameters.
+ * CYCLE 160: SINGULARITY V11 ABSOLUTE STYLE & ENTITY SECURITY (FINAL ASCENSION)
+ * - Consolidate CSS exfiltration, XXE, and data URI safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
   version: '11.0.0-singularity-style-entity-defense',
-  status: 'SINGULARITY_V11_ABSOLUTE_STYLE_AND_ENTITY_DEFENSE',
+  status: 'SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_DEFENSE',
   engine: 'Molt-V11-Sentinel-Style-Entity-Defense',
   lastAudit: new Date().toISOString(),
 };
