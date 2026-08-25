@@ -122,3 +122,8 @@
 **Vulnerability:** Input validation allowlist did not block CSS inline exfiltration (`style=`, `@import`) or XXE / XML entity injection signatures (`<!ENTITY`, `<!ELEMENT`, `<!DOCTYPE`).
 **Learning:** Client-side input validation that ignores CSS style attributes and XML entity declarations leaves the system open to CSS-based data exfiltration and XML parser exploitation when dynamic contents are processed or reflected.
 **Prevention:** Include CSS exfiltration vectors (`style=`, `@import`) and XML entity injection signatures (`<!ENTITY`, `<!ELEMENT`, `<!DOCTYPE`) in recursive input validation checks (`validateInput`).
+
+## 2026-06-26 - [Network Exfiltration & Background Worker Script Execution Defense]
+**Vulnerability:** Input validation allowlist permitted dynamic network request dispatchers (`fetch()`, `XMLHttpRequest`, `WebSocket`, `EventSource`), web background worker constructors (`Worker`, `ServiceWorker`), and `srcdoc=` HTML injection vectors.
+**Learning:** Blocking static scripts and DOM sinks is incomplete if unvalidated input can trigger async background requests or instantiate background threads (Workers) to bypass standard UI-thread security checks.
+**Prevention:** Intercept network request invocations (`fetch`, `xhr`, `sockets`), web worker instantiations (`Worker`, `ServiceWorker`), and `srcdoc=` iframe attributes directly within `validateInput`.

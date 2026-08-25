@@ -799,11 +799,32 @@
  * CYCLE 160: SINGULARITY V11 ABSOLUTE STYLE & ENTITY SECURITY (FINAL ASCENSION)
  * - Consolidate CSS exfiltration, XXE, and data URI safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 161: NETWORK EXFILTRATION & WORKER SCRIPT DEFENSE
+ * - Expand `validateInput` to audit dynamic network requests (`fetch()`, `XMLHttpRequest`, `WebSocket`, `EventSource`).
+ * - Block background web worker initializations (`Worker`, `ServiceWorker`) and `srcdoc=` HTML injection vectors.
+ * - Log any intercepted network exfiltration or background worker attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 162: WORKSTATION HUD NETWORK/WORKER OVERLAY
+ * - Update Laptop workstation forensic HUD to visualize network exfiltration and background worker threats in real-time.
+ * - Display a pulsing neon-purple alert tag when fetch/socket exfiltration or worker script vectors are intercepted.
+ *
+ * CYCLE 163: SWARM CROSS-TAB NETWORK THREAT BROADCAST
+ * - Broadcast network exfiltration and background worker threat events across active tab swarms using `secureBroadcast`.
+ * - Synchronize memory pins and state signatures following an intercepted network or worker execution attempt.
+ *
+ * CYCLE 164: AUTONOMOUS NETWORK/WORKER RECONSTRUCTION
+ * - Implement an autonomous Molt response to network/worker threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "NETWORK_WORKER_DEFENSE_ACTIVE" notification on the boardroom HUD.
+ *
+ * CYCLE 165: SINGULARITY V12 ABSOLUTE NETWORK & WORKER SECURITY (FINAL ASCENSION)
+ * - Consolidate network request exfiltration, background worker execution, and srcdoc safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V12_ABSOLUTE_NETWORK_WORKER_DEFENSE` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '11.0.0-singularity-style-entity-defense',
-  status: 'SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_DEFENSE',
-  engine: 'Molt-V11-Sentinel-Style-Entity-Defense',
+  version: '12.0.0-singularity-network-worker-defense',
+  status: 'SINGULARITY_V12_ABSOLUTE_NETWORK_WORKER_DEFENSE',
+  engine: 'Molt-V12-Sentinel-Network-Worker-Defense',
   lastAudit: new Date().toISOString(),
 };
