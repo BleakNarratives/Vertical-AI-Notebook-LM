@@ -62,7 +62,6 @@ interface DocumentPreviewProps {
 
 const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClose }) => {
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
-  const modalRef = React.useRef<HTMLDivElement>(null);
   const previousFocusRef = React.useRef<HTMLElement | null>(null);
   const modalRef = React.useRef<HTMLDivElement>(null);
   const onCloseRef = React.useRef(onClose);
