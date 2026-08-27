@@ -341,7 +341,11 @@ export const useSentinel = () => {
       /\bstyle\s*=/i,              // CSS injection / inline style exfiltration
       /@import\b/i,                 // CSS import exfiltration vector
       /<!(ENTITY|ELEMENT|DOCTYPE)\b/i, // XXE / XML Entity Injection vector
-      /data:(text\/html|application\/javascript|text\/javascript)/i // Executable data URI scheme
+      /data:(text\/html|application\/javascript|text\/javascript)/i, // Executable data URI scheme
+      /\b(fetch|XMLHttpRequest)\s*\(/i, // Asynchronous network invocation
+      /\bnavigator\.sendBeacon\b/i, // Background data exfiltration vector
+      /\b(new\s+)?(Worker|ServiceWorker|WebSocket)\s*\(/i, // Background worker or socket instantiation
+      /\bsrcdoc\s*=/i // Iframe srcdoc HTML content injection
     ];
 
     for (const pattern of maliciousPatterns) {
