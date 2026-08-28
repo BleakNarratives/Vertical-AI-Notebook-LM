@@ -801,29 +801,29 @@
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V11_ABSOLUTE_STYLE_ENTITY_SECURITY` and seal global Sentinel parameters.
  *
  * CYCLE 161: NETWORK EXFILTRATION & BACKGROUND WORKER SCRIPT DEFENSE
- * - Expand `validateInput` to intercept asynchronous network calls (`fetch`, `XMLHttpRequest`), beacon exfiltration (`navigator.sendBeacon`), background worker or socket creations (`Worker`, `ServiceWorker`, `WebSocket`), and iframe `srcdoc=` HTML injections.
+ * - Expand `validateInput` to audit asynchronous network calls (`fetch`, `XMLHttpRequest`), background worker construction (`Worker`, `ServiceWorker`, `WebSocket`), and inline iframe document injections (`srcdoc=`).
  * - Log any intercepted background worker or exfiltration attempt to `sentinel_shadow_logs`.
  *
- * CYCLE 162: FORENSIC HUD WORKSTATION NETWORK OVERLAY
- * - Update Laptop workstation forensic HUD to display live network and background script defense indicators.
- * - Render a pulsing neon-amber warning icon when exfiltration or background worker vectors are intercepted.
+ * CYCLE 162: WORKSTATION FORENSIC HUD EXFILTRATION OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize network exfiltration and background worker threats in real-time.
+ * - Display a pulsing neon-purple warning badge when background worker or socket injection vectors are intercepted.
  *
- * CYCLE 163: SWARM CROSS-TAB NETWORK THREAT BROADCAST
+ * CYCLE 163: CROSS-TAB SWARM EXFILTRATION THREAT BROADCAST
  * - Broadcast network exfiltration threat events across active tab swarms using `secureBroadcast`.
- * - Auto-reconcile memory pins and refresh session signatures upon detecting background exfiltration vectors.
+ * - Auto-reconcile memory pins and state signatures following an intercepted worker/socket instantiation attempt.
  *
- * CYCLE 164: AUTONOMOUS WORKER & NETWORK RECONSTRUCTION
+ * CYCLE 164: AUTONOMOUS EXFILTRATION DEFENSE RECONSTRUCTION
  * - Implement an autonomous Molt response to network exfiltration threats that rotates decoy parameters and refreshes session signatures.
- * - Display a transient "NETWORK_EXFILTRATION_BLOCKED" notification on the workstation HUD.
+ * - Display a transient "EXFILTRATION_WORKER_BLOCKED" notification on the workstation HUD.
  *
- * CYCLE 165: SINGULARITY V12 ABSOLUTE WORKER & NETWORK SECURITY (FINAL ALIGNMENT)
- * - Consolidate network call, beacon exfiltration, background worker, and iframe srcdoc safeguards across all boardroom components.
- * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V12_ABSOLUTE_WORKER_NETWORK_SECURITY` and seal global Sentinel parameters.
+ * CYCLE 165: SINGULARITY V12 ABSOLUTE NETWORK & WORKER SECURITY (FINAL CONVERGENCE)
+ * - Consolidate network exfiltration, worker script injection, and iframe document safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V12_ABSOLUTE_NETWORK_WORKER_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '12.0.0-singularity-worker-network-defense',
-  status: 'SINGULARITY_V12_ABSOLUTE_WORKER_NETWORK_SECURITY',
-  engine: 'Molt-V12-Sentinel-Worker-Network-Defense',
+  version: '12.0.0-singularity-network-worker-defense',
+  status: 'SINGULARITY_V12_ABSOLUTE_NETWORK_WORKER_SECURITY',
+  engine: 'Molt-V12-Sentinel-Network-Worker-Defense',
   lastAudit: new Date().toISOString(),
 };
