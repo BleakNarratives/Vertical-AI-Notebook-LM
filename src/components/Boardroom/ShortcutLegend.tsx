@@ -16,7 +16,12 @@ const SHORTCUTS: ShortcutItem[] = [
 ];
 
 export const ShortcutLegend: React.FC = () => {
-  const handleTrigger = (targetId: string) => {
+  const handleTrigger = (key: string, label: string, targetId: string) => {
+    window.dispatchEvent(
+      new CustomEvent('sentinel-boardroom-action', {
+        detail: { source: `LEGEND_[${key}]`, action: 'TRIGGER_SHORTCUT', payload: label }
+      })
+    );
     const el = document.getElementById(targetId);
     if (el instanceof HTMLElement) {
       el.focus();
@@ -30,7 +35,7 @@ export const ShortcutLegend: React.FC = () => {
         <button
           key={key}
           type="button"
-          onClick={() => handleTrigger(targetId)}
+          onClick={() => handleTrigger(key, label, targetId)}
           aria-label={`Trigger [${key}] ${label}`}
           title={`Focus and trigger ${label} [${key}]`}
           className="hover:text-neon-amber focus-visible:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber outline-none transition-colors cursor-pointer text-[10px] font-mono uppercase tracking-widest"

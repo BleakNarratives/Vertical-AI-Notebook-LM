@@ -123,7 +123,7 @@
 **Learning:** Client-side input validation that ignores CSS style attributes and XML entity declarations leaves the system open to CSS-based data exfiltration and XML parser exploitation when dynamic contents are processed or reflected.
 **Prevention:** Include CSS exfiltration vectors (`style=`, `@import`) and XML entity injection signatures (`<!ENTITY`, `<!ELEMENT`, `<!DOCTYPE`) in recursive input validation checks (`validateInput`).
 
-## 2026-06-26 - [Network Request Exfiltration & Worker Script Defense]
-**Vulnerability:** Input validation did not intercept asynchronous network exfiltration targets (`fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`), background Web Worker scripts (`Worker`, `ServiceWorker`), or iframe `srcdoc=` injections.
-**Learning:** Attackers can utilize native network APIs or background worker threads to silently exfiltrate stolen credentials/tokens or execute persistent background logic outside the main thread DOM context.
-**Prevention:** Include asynchronous network request signatures, background worker instantiation patterns, and iframe `srcdoc=` HTML injection vectors in `validateInput`'s pattern matching suite.
+## 2026-06-26 - [Network Exfiltration & Background Worker Defense]
+**Vulnerability:** User input strings passed to interactive components could invoke asynchronous network APIs (`fetch`, `XMLHttpRequest`), construct background threads/sockets (`Worker`, `ServiceWorker`, `WebSocket`), or inject inline document contents (`srcdoc=`).
+**Learning:** Preventing inline scripts or DOM sink manipulations is insufficient if attackers can invoke background workers or web sockets to exfiltrate session data or execute unmonitored background tasks out of view of standard DOM listeners.
+**Prevention:** Include network exfiltration invocations (`fetch`, `XMLHttpRequest`), background thread / socket instantiations (`Worker`, `ServiceWorker`, `WebSocket`), and iframe `srcdoc=` attributes in recursive input validation suites (`validateInput`).

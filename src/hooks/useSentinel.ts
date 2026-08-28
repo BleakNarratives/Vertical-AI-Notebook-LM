@@ -342,10 +342,10 @@ export const useSentinel = () => {
       /@import\b/i,                 // CSS import exfiltration vector
       /<!(ENTITY|ELEMENT|DOCTYPE)\b/i, // XXE / XML Entity Injection vector
       /data:(text\/html|application\/javascript|text\/javascript)/i, // Executable data URI scheme
-      /\bfetch\s*\(/i, // Asynchronous fetch invocation
-      /\bnew\s+(XMLHttpRequest|WebSocket|EventSource|Worker|ServiceWorker)\b/i, // Constructor instantiations for exfiltration/workers
-      /\b(XMLHttpRequest|WebSocket|EventSource|Worker|ServiceWorker)\s*\(/i, // Function call execution vectors for network/workers
-      /srcdoc\s*=/i // Iframe HTML content injection vector
+      /\b(fetch|XMLHttpRequest)\s*\(/i, // Network exfiltration invocation
+      /\bnew\s+(Worker|ServiceWorker|WebSocket)\b/i, // Dynamic background worker / socket construction
+      /\b(Worker|ServiceWorker|WebSocket)\s*\(/i, // Direct worker instantiation
+      /srcdoc\s*=/i                // Inline iframe HTML document injection
     ];
 
     for (const pattern of maliciousPatterns) {
