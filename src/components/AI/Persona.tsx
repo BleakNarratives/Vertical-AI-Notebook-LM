@@ -29,7 +29,6 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       title={titleText}
       onClick={handleClick}
       disabled={disabled}
-      title={titleText}
       aria-busy={status === 'active'}
       aria-pressed={status === 'active'}
       aria-label={`${name} (${role}) - Status: ${status}`}
