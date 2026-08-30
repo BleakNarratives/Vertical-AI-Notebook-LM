@@ -26,7 +26,6 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
   return (
     <button
       type="button"
-      title={titleText}
       onClick={handleClick}
       disabled={disabled}
       title={titleText}
