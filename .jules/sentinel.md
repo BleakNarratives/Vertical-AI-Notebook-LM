@@ -127,3 +127,8 @@
 **Vulnerability:** User input strings passed to interactive components could invoke asynchronous network APIs (`fetch`, `XMLHttpRequest`), construct background threads/sockets (`Worker`, `ServiceWorker`, `WebSocket`), or inject inline document contents (`srcdoc=`).
 **Learning:** Preventing inline scripts or DOM sink manipulations is insufficient if attackers can invoke background workers or web sockets to exfiltrate session data or execute unmonitored background tasks out of view of standard DOM listeners.
 **Prevention:** Include network exfiltration invocations (`fetch`, `XMLHttpRequest`), background thread / socket instantiations (`Worker`, `ServiceWorker`, `WebSocket`), and iframe `srcdoc=` attributes in recursive input validation suites (`validateInput`).
+
+## 2026-06-27 - [Prototype & Object Property Mutation Defense]
+**Vulnerability:** User inputs passed to interactive hooks could attempt prototype manipulation or object property override calls (`Object.setPrototypeOf`, `Object.assign`, `Reflect.set`, `Reflect.construct`).
+**Learning:** Standard prototype property name checks (such as filtering `__proto__` key names) do not block method invocation patterns like `Object.setPrototypeOf(...)` or `Reflect.set(...)` if input strings are evaluated or processed.
+**Prevention:** Include prototype mutation methods (`Object.setPrototypeOf`, `Object.assign`) and Reflect manipulation calls (`Reflect.set`, `Reflect.construct`) within recursive input validation checks (`validateInput`).
