@@ -337,7 +337,7 @@ export const useSentinel = () => {
       /\b(innerHTML|outerHTML|insertAdjacentHTML)\s*=/i, // DOM sink assignment
       /\bdocument\.write\s*\(/i,   // DOM write sink execution
       /\b(location\.href|window\.open)\b/i, // Unsafe redirection vector
-      /\b(__defineGetter__|__defineSetter__|Object\.(defineProperty|setPrototypeOf|assign)|Reflect\.(set|construct))\b/i, // Prototype & object property mutation
+      /\b(__defineGetter__|__defineSetter__|__lookupGetter__|__lookupSetter__|Object\.(defineProperty|setPrototypeOf|assign)|Reflect\.(set|construct|defineProperty|deleteProperty|apply))\b/i, // Prototype & object property mutation / Object API tampering
       /\bstyle\s*=/i,              // CSS injection / inline style exfiltration
       /@import\b/i,                 // CSS import exfiltration vector
       /<!(ENTITY|ELEMENT|DOCTYPE)\b/i, // XXE / XML Entity Injection vector
@@ -345,7 +345,8 @@ export const useSentinel = () => {
       /\b(fetch|XMLHttpRequest)\s*\(/i, // Network exfiltration invocation
       /\bnew\s+(Worker|ServiceWorker|WebSocket)\b/i, // Dynamic background worker / socket construction
       /\b(Worker|ServiceWorker|WebSocket)\s*\(/i, // Direct worker instantiation
-      /srcdoc\s*=/i                // Inline iframe HTML document injection
+      /srcdoc\s*=/i,               // Inline iframe HTML document injection
+      /\b(URL\.createObjectURL|new\s+Blob|blob:)/i // Blob URL exfiltration / execution scheme
     ];
 
     for (const pattern of maliciousPatterns) {

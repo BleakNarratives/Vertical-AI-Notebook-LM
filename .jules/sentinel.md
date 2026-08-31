@@ -132,3 +132,8 @@
 **Vulnerability:** User inputs passed to interactive hooks could attempt prototype manipulation or object property override calls (`Object.setPrototypeOf`, `Object.assign`, `Reflect.set`, `Reflect.construct`).
 **Learning:** Standard prototype property name checks (such as filtering `__proto__` key names) do not block method invocation patterns like `Object.setPrototypeOf(...)` or `Reflect.set(...)` if input strings are evaluated or processed.
 **Prevention:** Include prototype mutation methods (`Object.setPrototypeOf`, `Object.assign`) and Reflect manipulation calls (`Reflect.set`, `Reflect.construct`) within recursive input validation checks (`validateInput`).
+
+## 2026-06-28 - [Object API & Reflect Method Tampering & Blob Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted legacy getter/setter lookup methods (`__lookupGetter__`, `__lookupSetter__`), Reflect property manipulation / apply methods (`Reflect.defineProperty`, `Reflect.deleteProperty`, `Reflect.apply`), and Blob URL creation/execution schemes (`URL.createObjectURL`, `new Blob`, `blob:`).
+**Learning:** Preventing standard property mutation methods is insufficient if attackers can invoke legacy Object API lookup functions, reflective property definition/deletion calls, or dynamically create Blob URIs to exfiltrate data or bypass CSP script execution boundaries.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept legacy getter/setter lookups (`__lookupGetter__`, `__lookupSetter__`), Reflect property definition/deletion methods (`Reflect.defineProperty`, `Reflect.deleteProperty`, `Reflect.apply`), and Blob URL exfiltration / execution schemes (`URL.createObjectURL`, `new Blob`, `blob:`).
