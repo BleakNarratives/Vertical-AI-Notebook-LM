@@ -147,3 +147,7 @@
 **Vulnerability:** Input validation allowlist permitted dynamic `AsyncFunction`, `GeneratorFunction`, `AsyncGeneratorFunction` constructor invocations and WebAssembly binary execution schemes (`WebAssembly.instantiate`, `WebAssembly.compile`).
 **Learning:** Blocking standard `Function` constructors or `eval()` is insufficient if attackers can instantiate `AsyncFunction` / `GeneratorFunction` constructors or compile arbitrary WebAssembly bytecode to bypass client-side code evaluation restrictions and CSP boundaries.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept `AsyncFunction`, `GeneratorFunction`, `AsyncGeneratorFunction` constructors and WebAssembly compilation/instantiation methods (`WebAssembly.instantiate`, `WebAssembly.compile`).
+## 2026-06-30 - [Async & Generator Function Constructor Tampering Defense]
+**Vulnerability:** Input validation allowlist blocked basic `Function(...)` evaluation but permitted asynchronous and generator function constructor references/instantiations (`AsyncFunction`, `GeneratorFunction`, `AsyncGeneratorFunction`).
+**Learning:** Filtering standard `Function` dynamic evaluation is ineffective if an attacker can instantiate asynchronous or generator function constructors (`AsyncFunction`, `GeneratorFunction`) via global object constructors or prototype chains to execute dynamic, unmonitored script strings.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept dynamic function constructor variants (`AsyncFunction`, `GeneratorFunction`, `AsyncGeneratorFunction`).
