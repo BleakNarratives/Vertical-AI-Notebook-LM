@@ -900,11 +900,31 @@
  * CYCLE 185: SINGULARITY V16 ABSOLUTE ASYNC & GENERATOR FUNCTION SECURITY (FINAL CONVERGENCE)
  * - Consolidate Function, AsyncFunction, and GeneratorFunction dynamic constructor safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V16_ABSOLUTE_ASYNC_FUNCTION_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 186: WORKER SCRIPT LOADING & WASM INSTANTIATION DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit worker script loading (`importScripts`), worker variants (`SharedWorker`, `Worklet`), and WebAssembly module instantiations (`WebAssembly.Module`, `WebAssembly.Instance`).
+ * - Log any intercepted worker script loading or Wasm module instantiation attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 187: WORKSTATION FORENSIC HUD WORKER/WASM OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize worker script loading and WebAssembly module instantiation threats in real-time.
+ * - Display a pulsing neon-amber warning badge when importScripts or WebAssembly.Module vectors are intercepted.
+ *
+ * CYCLE 188: CROSS-TAB SWARM WORKER/WASM THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast importScripts/SharedWorker/Wasm threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted worker script attempt.
+ *
+ * CYCLE 189: AUTONOMOUS WORKER/WASM DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to Worker script and Wasm instantiation threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "WORKER_SCRIPT_WASM_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 190: SINGULARITY V17 ABSOLUTE WORKER SCRIPT & WASM INSTANTIATION SECURITY (FINAL CONVERGENCE)
+ * - Consolidate Worker script loading, SharedWorker/Worklet, and WebAssembly Module/Instance instantiation safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V17_ABSOLUTE_WORKER_WASM_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '16.0.0-singularity-async-function-defense',
-  status: 'SINGULARITY_V16_ABSOLUTE_ASYNC_FUNCTION_SECURITY',
-  engine: 'Molt-V16-Sentinel-Async-Function-Defense',
+  version: '17.0.0-singularity-worker-wasm-defense',
+  status: 'SINGULARITY_V17_ABSOLUTE_WORKER_WASM_SECURITY',
+  engine: 'Molt-V17-Sentinel-Worker-Wasm-Defense',
   lastAudit: new Date().toISOString(),
 };
