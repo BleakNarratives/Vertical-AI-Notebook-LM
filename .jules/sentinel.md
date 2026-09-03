@@ -151,3 +151,8 @@
 **Vulnerability:** Input validation allowlist blocked basic `Function(...)` evaluation but permitted asynchronous and generator function constructor references/instantiations (`AsyncFunction`, `GeneratorFunction`, `AsyncGeneratorFunction`).
 **Learning:** Filtering standard `Function` dynamic evaluation is ineffective if an attacker can instantiate asynchronous or generator function constructors (`AsyncFunction`, `GeneratorFunction`) via global object constructors or prototype chains to execute dynamic, unmonitored script strings.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept dynamic function constructor variants (`AsyncFunction`, `GeneratorFunction`, `AsyncGeneratorFunction`).
+
+## 2026-07-01 - [Worker Script Loading & WebAssembly Instantiation Defense]
+**Vulnerability:** Input validation allowlist blocked basic `new Worker` and `WebAssembly.compile/instantiate` calls, but permitted worker script loading via `importScripts(...)`, worker variants (`SharedWorker`, `Worklet`), and direct WebAssembly module/instance creation (`WebAssembly.Module`, `WebAssembly.Instance`).
+**Learning:** Standard worker or WebAssembly filters are easily bypassed if attackers can load unmonitored external worker scripts via `importScripts`, instantiate shared worker threads, or instantiate pre-compiled WebAssembly bytecode using `new WebAssembly.Module(...)` or `new WebAssembly.Instance(...)`.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept `importScripts(...)` invocations, `SharedWorker` & `Worklet` constructors, and `WebAssembly.Module` & `WebAssembly.Instance` instantiations.

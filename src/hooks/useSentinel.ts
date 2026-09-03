@@ -344,12 +344,12 @@ export const useSentinel = () => {
       /<!(ENTITY|ELEMENT|DOCTYPE)\b/i, // XXE / XML Entity Injection vector
       /data:(text\/html|application\/javascript|text\/javascript)/i, // Executable data URI scheme
       /\b(fetch|XMLHttpRequest)\s*\(/i, // Network exfiltration invocation
-      /\bnew\s+(Worker|ServiceWorker|WebSocket)\b/i, // Dynamic background worker / socket construction
-      /\b(Worker|ServiceWorker|WebSocket)\s*\(/i, // Direct worker instantiation
+      /\bnew\s+(Worker|SharedWorker|ServiceWorker|Worklet|WebSocket)\b/i, // Dynamic background worker / socket construction
+      /\b(Worker|SharedWorker|ServiceWorker|Worklet|WebSocket|importScripts)\s*\(/i, // Direct worker instantiation / worker script loading
       /srcdoc\s*=/i,               // Inline iframe HTML document injection
       /\b(URL\.createObjectURL|new\s+Blob|blob:)/i, // Blob URL exfiltration / execution scheme
       /\b(new\s+Proxy|Proxy\.revocable|Object\.(freeze|seal|preventExtensions))\b/i, // Proxy object creation & Object immutability tampering
-      /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction|WebAssembly\.(instantiate|compile|instantiateStreaming|compileStreaming))\b/i // Async & Generator constructor & WebAssembly execution vector
+      /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction|WebAssembly\.(instantiate|compile|instantiateStreaming|compileStreaming|Module|Instance))\b/i // Async & Generator constructor & WebAssembly execution vector
     ];
 
     for (const pattern of maliciousPatterns) {
