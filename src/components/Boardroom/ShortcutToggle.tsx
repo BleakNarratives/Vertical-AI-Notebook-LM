@@ -26,11 +26,17 @@ export const ShortcutToggle: React.FC = () => {
       }
     };
 
+    const handleRequestState = () => {
+      window.dispatchEvent(new CustomEvent('sentinel-toggle-hints-state', { detail: { enabled } }));
+    };
+
     window.addEventListener('sentinel-toggle-hints', handleToggle);
     window.addEventListener('sentinel-toggle-hints-state', handleStateChange);
+    window.addEventListener('sentinel-request-hints-state', handleRequestState);
     return () => {
       window.removeEventListener('sentinel-toggle-hints', handleToggle);
       window.removeEventListener('sentinel-toggle-hints-state', handleStateChange);
+      window.removeEventListener('sentinel-request-hints-state', handleRequestState);
     };
   }, [enabled]);
 

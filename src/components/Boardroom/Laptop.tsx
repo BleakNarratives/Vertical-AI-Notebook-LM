@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
 import { useSentinel } from '@/hooks/useSentinel';
+import { useShortcutHints } from '@/hooks/useShortcutHints';
 
 interface BoardroomEvent extends CustomEvent {
   detail: {
@@ -17,6 +18,7 @@ export const Laptop: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
+  const hintsEnabled = useShortcutHints();
   const { validateInput, sanitizeInput } = useSentinel();
 
   const handleRemoteAction = useCallback((e: Event) => {
@@ -94,8 +96,12 @@ export const Laptop: React.FC = () => {
           <div className="absolute inset-2 grid grid-cols-6 gap-0.5 opacity-20">{Array.from({ length: 12 }).map((_, i) => (<div key={i} className="bg-grey-medium h-1" />))}</div>
         </div>
 
-        {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        {/* Label hidden until focus/hover unless hints are enabled */}
+        <span className={`absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red whitespace-nowrap transition-all duration-300 uppercase tracking-tighter z-50 ${
+          hintsEnabled
+            ? 'opacity-100 bg-obsidian/90 px-1.5 py-0.5 border border-neon-red/60 rounded shadow-[0_0_10px_rgba(255,0,0,0.3)] animate-pulse'
+            : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
+        }`}>
           Terminal / IDEal / 4ward [L]
         </span>
       </button>
