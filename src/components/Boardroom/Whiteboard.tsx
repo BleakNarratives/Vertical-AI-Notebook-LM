@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import { FocusIndicator } from './FocusIndicator';
-import { useShortcutHints } from '@/hooks/useShortcutHints';
 
 export const Whiteboard: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
-  const hintsEnabled = useShortcutHints();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -57,11 +55,7 @@ export const Whiteboard: React.FC = () => {
              <div className="mt-auto flex justify-between items-end"><div className="text-[8px] font-mono text-neon-amber/40">v2.6.0</div></div>
           </div>
         </div>
-        <span className={`absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber transition-all duration-300 uppercase whitespace-nowrap z-50 ${
-          hintsEnabled
-            ? 'opacity-100 bg-obsidian/90 px-1.5 py-0.5 border border-neon-amber/60 rounded shadow-[0_0_10px_rgba(255,191,0,0.3)] animate-pulse'
-            : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
-        }`}>
+        <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity uppercase whitespace-nowrap z-50">
           Whiteboard [W]
         </span>
 

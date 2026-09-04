@@ -2,13 +2,11 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
-import { useShortcutHints } from '@/hooks/useShortcutHints';
 
 const MESSAGES = ['SYSTEM_SNAPSHOT_SAVED', 'CACHE_PURGED', 'STATE_LOADED', 'LOGS_ARCHIVED', 'MEMORY_SYNCHRONIZED', 'SESSION_RECONSTRUCTED'];
 
 export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
-  const hintsEnabled = useShortcutHints();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleAction = useCallback(() => {
@@ -56,12 +54,8 @@ export const CoffeeMug: React.FC = () => {
         </div>
         <div className="absolute top-2 -right-3 w-4 h-6 border-2 border-grey-medium rounded-r-full" />
 
-        {/* Label hidden until focus/hover unless hints are enabled */}
-        <span className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber whitespace-nowrap transition-all duration-300 z-50 ${
-          hintsEnabled
-            ? 'opacity-100 bg-obsidian/90 px-1.5 py-0.5 border border-neon-amber/60 rounded shadow-[0_0_10px_rgba(255,191,0,0.3)] animate-pulse'
-            : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'
-        }`}>
+        {/* Label hidden until focus/hover */}
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-amber opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity z-50">
           SAVE / LOAD / SETTINGS [C]
         </span>
       </button>
