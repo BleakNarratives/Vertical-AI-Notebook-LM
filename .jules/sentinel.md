@@ -156,3 +156,8 @@
 **Vulnerability:** Input validation allowlist blocked basic `new Worker` and `WebAssembly.compile/instantiate` calls, but permitted worker script loading via `importScripts(...)`, worker variants (`SharedWorker`, `Worklet`), and direct WebAssembly module/instance creation (`WebAssembly.Module`, `WebAssembly.Instance`).
 **Learning:** Standard worker or WebAssembly filters are easily bypassed if attackers can load unmonitored external worker scripts via `importScripts`, instantiate shared worker threads, or instantiate pre-compiled WebAssembly bytecode using `new WebAssembly.Module(...)` or `new WebAssembly.Instance(...)`.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept `importScripts(...)` invocations, `SharedWorker` & `Worklet` constructors, and `WebAssembly.Module` & `WebAssembly.Instance` instantiations.
+
+## 2026-07-02 - [Dynamic Function Construction & WebAssembly Compilation Defense]
+**Vulnerability:** Input validation allowlist permitted dynamic Function constructor calls and WebAssembly bytecode compilation/instantiation methods.
+**Learning:** Filtering basic eval or string evaluation is insufficient if attackers can instantiate dynamic Function constructors or compile WebAssembly bytecode streams.
+**Prevention:** Expand validateInput's pattern suite to explicitly intercept new Function calls and WebAssembly.compile / instantiate methods.
