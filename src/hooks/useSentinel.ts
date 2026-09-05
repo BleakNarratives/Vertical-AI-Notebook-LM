@@ -349,7 +349,8 @@ export const useSentinel = () => {
       /srcdoc\s*=/i,               // Inline iframe HTML document injection
       /\b(URL\.createObjectURL|new\s+Blob|blob:)/i, // Blob URL exfiltration / execution scheme
       /\b(new\s+Proxy|Proxy\.revocable|Object\.(freeze|seal|preventExtensions))\b/i, // Proxy object creation & Object immutability tampering
-      /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction|WebAssembly\.(instantiate|compile|instantiateStreaming|compileStreaming|Module|Instance))\b/i // Async & Generator constructor & WebAssembly execution vector
+      /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction|WebAssembly\.(instantiate|compile|instantiateStreaming|compileStreaming|Module|Instance))\b/i, // Async & Generator constructor & WebAssembly execution vector
+      /\bnew\s+Function\b|\bFunction\s*\(\s*['"`]/i // Dynamic Function constructor evaluation
     ];
 
     for (const pattern of maliciousPatterns) {
