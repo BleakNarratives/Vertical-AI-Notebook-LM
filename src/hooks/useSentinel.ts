@@ -327,7 +327,7 @@ export const useSentinel = () => {
       /constructor\.prototype/i, // Prototype pollution
       /\bimport\s*\(/i,     // Dynamic Module Imports Injection
       /\brequire\s*\(/i,    // CommonJS dynamic require
-      /\b(Async|Generator|AsyncGenerator)?Function\s*\(/i, // Dynamic Function / Async / Generator construction
+      /\bnew\s+Function\b|\bFunction\s*\(\s*['"`]/, // Dynamic Function constructor evaluation (case-sensitive)
       /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction)\b/i, // Async / Generator Function constructor reference
       /\bset(Timeout|Interval)\s*\(\s*['"`]/i, // Dynamic timers evaluation
       /<\s*(iframe|object|embed|svg|svg\s+onload)/i, // Dangerous bypass elements
