@@ -161,3 +161,8 @@
 **Vulnerability:** Input validation allowlist permitted dynamic Function constructor calls and WebAssembly bytecode compilation/instantiation methods.
 **Learning:** Filtering basic eval or string evaluation is insufficient if attackers can instantiate dynamic Function constructors or compile WebAssembly bytecode streams.
 **Prevention:** Expand validateInput's pattern suite to explicitly intercept new Function calls and WebAssembly.compile / instantiate methods.
+
+## 2026-07-03 - [Service Worker Registration & Cache Interception Defense]
+**Vulnerability:** Input validation allowlist permitted Service Worker API registration invocations (`navigator.serviceWorker`, `serviceWorker.register`).
+**Learning:** Even when standard background worker script creation (`new Worker`) is blocked, attackers can attempt to invoke `navigator.serviceWorker.register(...)` to register persistent Service Workers that hijack network requests and cache storage across page reloads.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept Service Worker registration invocations (`navigator.serviceWorker` and `serviceWorker.register`).
