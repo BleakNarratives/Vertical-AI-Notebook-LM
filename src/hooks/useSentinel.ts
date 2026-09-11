@@ -346,6 +346,7 @@ export const useSentinel = () => {
       /\b(fetch|XMLHttpRequest)\s*\(/i, // Network exfiltration invocation
       /\bnew\s+(Worker|SharedWorker|ServiceWorker|Worklet|WebSocket)\b/i, // Dynamic background worker / socket construction
       /\b(Worker|SharedWorker|ServiceWorker|Worklet|WebSocket|importScripts)\s*\(/i, // Direct worker instantiation / worker script loading
+      /\b(navigator\.serviceWorker|serviceWorker\.register)\b/i, // Service Worker API registration & cache interception vector
       /srcdoc\s*=/i,               // Inline iframe HTML document injection
       /\b(URL\.createObjectURL|new\s+Blob|blob:)/i, // Blob URL exfiltration / execution scheme
       /\b(new\s+Proxy|Proxy\.revocable|Object\.(freeze|seal|preventExtensions))\b/i, // Proxy object creation & Object immutability tampering
