@@ -920,11 +920,31 @@
  * CYCLE 190: SINGULARITY V17 ABSOLUTE WORKER SCRIPT & WASM INSTANTIATION SECURITY (FINAL CONVERGENCE)
  * - Consolidate Worker script loading, SharedWorker/Worklet, and WebAssembly Module/Instance instantiation safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V17_ABSOLUTE_WORKER_WASM_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 191: DYNAMIC FUNCTION CONSTRUCTOR & WASM COMPILATION DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit dynamic `Function` constructor evaluations (`new Function`, `Function('...')`) and WebAssembly compilation methods.
+ * - Log any intercepted dynamic `Function` construction attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 192: WORKSTATION FORENSIC HUD FUNCTION/WASM OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize dynamic `Function` constructor and WebAssembly compilation threats in real-time.
+ * - Display a pulsing neon-amber warning badge when `new Function` or `Function(...)` evaluation vectors are intercepted.
+ *
+ * CYCLE 193: CROSS-TAB SWARM FUNCTION/WASM THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast dynamic `Function` constructor threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted `Function` constructor attempt.
+ *
+ * CYCLE 194: AUTONOMOUS FUNCTION/WASM DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to dynamic `Function` constructor threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "FUNCTION_CONSTRUCTOR_WASM_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 195: SINGULARITY V18 ABSOLUTE FUNCTION & WASM SECURITY (FINAL CONVERGENCE)
+ * - Consolidate dynamic `Function` constructor, `AsyncFunction`/`GeneratorFunction`, and WebAssembly compilation safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V18_ABSOLUTE_FUNCTION_WASM_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '17.0.0-singularity-worker-wasm-defense',
-  status: 'SINGULARITY_V17_ABSOLUTE_WORKER_WASM_SECURITY',
-  engine: 'Molt-V17-Sentinel-Worker-Wasm-Defense',
+  version: '18.0.0-singularity-function-wasm-defense',
+  status: 'SINGULARITY_V18_ABSOLUTE_FUNCTION_WASM_SECURITY',
+  engine: 'Molt-V18-Sentinel-Function-Wasm-Defense',
   lastAudit: new Date().toISOString(),
 };
