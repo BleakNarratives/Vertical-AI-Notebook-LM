@@ -921,30 +921,50 @@
  * - Consolidate Worker script loading, SharedWorker/Worklet, and WebAssembly Module/Instance instantiation safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V17_ABSOLUTE_WORKER_WASM_SECURITY` and seal global Sentinel parameters.
  *
- * CYCLE 191: DYNAMIC FUNCTION CONSTRUCTOR & WASM COMPILATION DEFENSE (MOLT HARDENING)
- * - Expand `validateInput` to audit dynamic `Function` constructor evaluations (`new Function`, `Function('...')`) and WebAssembly compilation methods.
- * - Log any intercepted dynamic `Function` construction attempt to `sentinel_shadow_logs`.
+ * CYCLE 191: DYNAMIC FUNCTION CONSTRUCTOR & WEBASSEMBLY COMPILATION DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit dynamic `Function` constructor evaluations (`new Function`, `Function(...)`) and WebAssembly compilation and streaming APIs (`WebAssembly.compile`, `WebAssembly.instantiate`, `WebAssembly.compileStreaming`).
+ * - Log any intercepted dynamic Function evaluation or WebAssembly compilation attempt to `sentinel_shadow_logs`.
  *
- * CYCLE 192: WORKSTATION FORENSIC HUD FUNCTION/WASM OVERLAY
- * - Update the Laptop workstation forensic HUD to visualize dynamic `Function` constructor and WebAssembly compilation threats in real-time.
- * - Display a pulsing neon-amber warning badge when `new Function` or `Function(...)` evaluation vectors are intercepted.
+ * CYCLE 192: WORKSTATION FORENSIC HUD WASM/FUNCTION OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize dynamic Function constructor and WebAssembly compilation threats in real-time.
+ * - Display a pulsing neon-amber warning badge when dynamic Function or WebAssembly.compile vectors are intercepted.
  *
  * CYCLE 193: CROSS-TAB SWARM FUNCTION/WASM THREAT BROADCAST & MEMORY PIN AUDIT
- * - Broadcast dynamic `Function` constructor threat events across active tab swarms using `secureBroadcast`.
- * - Auto-reconcile memory pins and refresh session state signatures following an intercepted `Function` constructor attempt.
+ * - Broadcast Function constructor and WebAssembly compilation threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted Function/WASM attempt.
  *
  * CYCLE 194: AUTONOMOUS FUNCTION/WASM DEFENSE RECONSTRUCTION
- * - Implement an autonomous Molt response to dynamic `Function` constructor threats that rotates decoy parameters and refreshes session signatures.
- * - Display a transient "FUNCTION_CONSTRUCTOR_WASM_BLOCKED" notification on the workstation HUD.
+ * - Implement an autonomous Molt response to dynamic Function evaluation and WASM compilation threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "FUNCTION_WASM_COMPILATION_BLOCKED" notification on the workstation HUD.
  *
- * CYCLE 195: SINGULARITY V18 ABSOLUTE FUNCTION & WASM SECURITY (FINAL CONVERGENCE)
- * - Consolidate dynamic `Function` constructor, `AsyncFunction`/`GeneratorFunction`, and WebAssembly compilation safeguards across all boardroom components.
+ * CYCLE 195: SINGULARITY V18 ABSOLUTE FUNCTION & WEBASSEMBLY SECURITY (FINAL CONVERGENCE)
+ * - Consolidate Function constructor, Async/Generator Function, and WebAssembly compilation/instantiation safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V18_ABSOLUTE_FUNCTION_WASM_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 196: SERVICE WORKER REGISTRATION & CACHE INTERCEPTION DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit Service Worker API registration attempts (`navigator.serviceWorker`, `serviceWorker.register`).
+ * - Log any intercepted Service Worker registration or cache hijacking attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 197: WORKSTATION FORENSIC HUD SERVICE WORKER OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize Service Worker API registration and cache interception threats in real-time.
+ * - Display a pulsing neon-amber warning badge when navigator.serviceWorker or serviceWorker.register vectors are intercepted.
+ *
+ * CYCLE 198: CROSS-TAB SWARM SERVICE WORKER THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast Service Worker registration threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted Service Worker attempt.
+ *
+ * CYCLE 199: AUTONOMOUS SERVICE WORKER DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to Service Worker registration and cache interception threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "SERVICE_WORKER_REGISTRATION_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 200: SINGULARITY V19 ABSOLUTE SERVICE WORKER SECURITY (FINAL CONVERGENCE)
+ * - Consolidate Service Worker registration, cache interception, and background worker script safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V19_ABSOLUTE_SERVICEWORKER_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '18.0.0-singularity-function-wasm-defense',
-  status: 'SINGULARITY_V18_ABSOLUTE_FUNCTION_WASM_SECURITY',
-  engine: 'Molt-V18-Sentinel-Function-Wasm-Defense',
+  version: '19.0.0-singularity-serviceworker-defense',
+  status: 'SINGULARITY_V19_ABSOLUTE_SERVICEWORKER_SECURITY',
+  engine: 'Molt-V19-Sentinel-ServiceWorker-Defense',
   lastAudit: new Date().toISOString(),
 };

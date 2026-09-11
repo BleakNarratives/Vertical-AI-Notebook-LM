@@ -157,7 +157,12 @@
 **Learning:** Standard worker or WebAssembly filters are easily bypassed if attackers can load unmonitored external worker scripts via `importScripts`, instantiate shared worker threads, or instantiate pre-compiled WebAssembly bytecode using `new WebAssembly.Module(...)` or `new WebAssembly.Instance(...)`.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept `importScripts(...)` invocations, `SharedWorker` & `Worklet` constructors, and `WebAssembly.Module` & `WebAssembly.Instance` instantiations.
 
-## 2026-07-02 - [Dynamic Function Constructor & WebAssembly Compilation Defense]
-**Vulnerability:** Input validation allowlist blocked basic `Function(...)` evaluation, but permitted dynamic `Function` constructor invocations via `new Function(...)` and string-based constructor calls (`Function('...')`).
-**Learning:** Standard function constructor filters are easily bypassed if attackers instantiate `new Function` directly or invoke `Function` constructors with quoted code arguments to evaluate dynamic payloads outside of standard `eval()` checks.
-**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `new Function` instantiations and `Function('...')` string constructor invocations (`/\bnew\s+Function\b|\bFunction\s*\(\s*['"`]/i`).
+## 2026-07-02 - [Dynamic Function Construction & WebAssembly Compilation Defense]
+**Vulnerability:** Input validation allowlist permitted dynamic Function constructor calls and WebAssembly bytecode compilation/instantiation methods.
+**Learning:** Filtering basic eval or string evaluation is insufficient if attackers can instantiate dynamic Function constructors or compile WebAssembly bytecode streams.
+**Prevention:** Expand validateInput's pattern suite to explicitly intercept new Function calls and WebAssembly.compile / instantiate methods.
+
+## 2026-07-03 - [Service Worker Registration & Cache Interception Defense]
+**Vulnerability:** Input validation allowlist permitted Service Worker API registration invocations (`navigator.serviceWorker`, `serviceWorker.register`).
+**Learning:** Blocking standard Web Workers or dynamic scripts is incomplete if attackers can invoke Service Worker registration APIs (`navigator.serviceWorker.register`) to install persistent background interceptors or hijack client-side cache stores.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept Service Worker API registration attempts (`navigator.serviceWorker` and `serviceWorker.register`).

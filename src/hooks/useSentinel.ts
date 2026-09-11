@@ -327,7 +327,7 @@ export const useSentinel = () => {
       /constructor\.prototype/i, // Prototype pollution
       /\bimport\s*\(/i,     // Dynamic Module Imports Injection
       /\brequire\s*\(/i,    // CommonJS dynamic require
-      /\b(Async|Generator|AsyncGenerator)?Function\s*\(/i, // Dynamic Function / Async / Generator construction
+      /\bnew\s+Function\b|\bFunction\s*\(\s*['"`]/, // Dynamic Function constructor evaluation (case-sensitive)
       /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction)\b/i, // Async / Generator Function constructor reference
       /\bset(Timeout|Interval)\s*\(\s*['"`]/i, // Dynamic timers evaluation
       /<\s*(iframe|object|embed|svg|svg\s+onload)/i, // Dangerous bypass elements
@@ -351,6 +351,7 @@ export const useSentinel = () => {
       /\b(new\s+Proxy|Proxy\.revocable|Object\.(freeze|seal|preventExtensions))\b/i, // Proxy object creation & Object immutability tampering
       /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction|WebAssembly\.(instantiate|compile|instantiateStreaming|compileStreaming|Module|Instance))\b/i, // Async & Generator constructor & WebAssembly execution vector
       /\bnew\s+Function\b|\bFunction\s*\(\s*['"`]/i // Dynamic Function constructor evaluation
+      /\b(navigator\.serviceWorker|serviceWorker\.register)\b/i // Service Worker API registration & cache interception vector
     ];
 
     for (const pattern of maliciousPatterns) {
