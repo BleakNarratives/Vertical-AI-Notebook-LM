@@ -164,5 +164,5 @@
 
 ## 2026-07-03 - [Service Worker Registration & Cache Interception Defense]
 **Vulnerability:** Input validation allowlist permitted Service Worker API registration invocations (`navigator.serviceWorker`, `serviceWorker.register`).
-**Learning:** Even when standard background worker script creation (`new Worker`) is blocked, attackers can attempt to invoke `navigator.serviceWorker.register(...)` to register persistent Service Workers that hijack network requests and cache storage across page reloads.
-**Prevention:** Expand `validateInput`'s pattern matching suite to intercept Service Worker registration invocations (`navigator.serviceWorker` and `serviceWorker.register`).
+**Learning:** Blocking standard Web Workers or dynamic scripts is incomplete if attackers can invoke Service Worker registration APIs (`navigator.serviceWorker.register`) to install persistent background interceptors or hijack client-side cache stores.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept Service Worker API registration attempts (`navigator.serviceWorker` and `serviceWorker.register`).
