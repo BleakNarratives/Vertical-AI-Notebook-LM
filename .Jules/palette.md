@@ -1,3 +1,7 @@
+## 2026-08-25 - [Accessible Hidden Easter Egg Tooltips and ESC Dismissal]
+**Learning:** Rendering revealed popovers or tooltips inside interactive `<button>` controls using `<div>` tags violates HTML semantics and causes screen reader tree corruption. Using a block-styled `<span>` container with `role="status"` and `aria-live="polite"` ensures semantic validity and immediate screen reader announcement. Furthermore, adding an `Escape` key listener on open state and setting `pointer-events-none` on the popup prevents accidental click dismissal while preserving keyboard accessibility.
+**Action:** Render interactive secret popups or tooltips inside `<button>` tags using block `<span>` elements with `role="status"`/`aria-live="polite"` and support `Escape` key dismissal for keyboard accessibility.
+
 ## 2026-08-21 - [Semantic HTML for Interactive Persona Controls]
 **Learning:** Nesting heading elements (`<h3>`) inside interactive `<button>` elements violates HTML semantics and causes confusion in screen reader accessibility trees. Using a block-styled `<span>` instead of `<h3>` inside buttons preserves exact visual styling while maintaining valid semantic HTML. Additionally, adding dynamic action/disabled `title` tooltips gives desktop users clear context before interaction.
 **Action:** Avoid nesting heading elements inside `<button>` tags; use styled `<span>` tags and include descriptive `title` tooltips for hover guidance on interactive controls.
