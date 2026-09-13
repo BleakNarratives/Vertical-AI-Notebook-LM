@@ -141,6 +141,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
             onClick={onClose}
             className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer focus-visible:ring-2 focus-visible:ring-neon-amber outline-none p-1"
             aria-label="Close Preview"
+            title="Close document preview [ESC]"
           >
             [ ESC ]
           </button>
