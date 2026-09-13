@@ -37,7 +37,7 @@ export const Whiteboard: React.FC = () => {
         style={{ transform: 'rotateX(-35deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative z-20 w-32 h-48 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu cursor-none"
       >
-        <FocusIndicator color="neon-amber" />
+        <FocusIndicator color="neon-amber" shortcutKey="W" />
         <div className="absolute inset-2 bg-obsidian/50 border border-grey-dark p-2 overflow-hidden">
           {/* Simulated Marker Tip (Delight) */}
           <div className="absolute w-2 h-2 bg-neon-amber rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 blur-[1px] pointer-events-none transition-opacity duration-300 z-50 mix-blend-screen"
