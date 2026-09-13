@@ -351,7 +351,7 @@ export const useSentinel = () => {
       /\b(new\s+Proxy|Proxy\.revocable|Object\.(freeze|seal|preventExtensions))\b/i, // Proxy object creation & Object immutability tampering
       /\b(AsyncFunction|GeneratorFunction|AsyncGeneratorFunction|WebAssembly\.(instantiate|compile|instantiateStreaming|compileStreaming|Module|Instance))\b/i, // Async & Generator constructor & WebAssembly execution vector
       /\b(navigator\.serviceWorker|serviceWorker\.register|caches\.open|CacheStorage)\b/i, // Service Worker API registration & CacheStorage interception vector
-      /\b(RTCPeerConnection|RTCDataChannel|createDataChannel|createOffer|createAnswer|new\s+BroadcastChannel|BroadcastChannel\s*\()\b/i // WebRTC peer connection & dynamic BroadcastChannel exfiltration vector
+      /\b(RTCPeerConnection|RTCDataChannel|createDataChannel|createOffer|createAnswer|BroadcastChannel)\b/i // WebRTC peer-to-peer exfiltration & dynamic BroadcastChannel tampering vector
     ];
 
     for (const pattern of maliciousPatterns) {

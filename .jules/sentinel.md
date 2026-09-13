@@ -171,3 +171,7 @@
 **Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
 **Learning:** Standard network exfiltration filters (e.g. `fetch`/`XMLHttpRequest`) do not prevent peer-to-peer data exfiltration via WebRTC data channels or covert inter-tab message tampering via dynamically instantiated `BroadcastChannel` instances.
 **Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept WebRTC API instantiations/methods and dynamic `BroadcastChannel` creation calls.
+## 2026-07-04 - [WebRTC P2P Data Channel & Dynamic BroadcastChannel Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`) and dynamic `BroadcastChannel` instantiation.
+**Learning:** Preventing standard fetch, XHR, WebSocket, and ServiceWorker exfiltration vectors is incomplete if attackers can instantiate WebRTC peer connections or dynamic BroadcastChannels to set up covert peer-to-peer exfiltration pipelines or intercept/spoof internal cross-tab messages.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept WebRTC API calls (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
