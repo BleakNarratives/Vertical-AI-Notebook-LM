@@ -961,11 +961,32 @@
  * CYCLE 200: SINGULARITY V19 ABSOLUTE SERVICE WORKER & CACHE SECURITY (FINAL CONVERGENCE)
  * - Consolidate Service Worker registration, background worker loading, and CacheStorage manipulation safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V19_ABSOLUTE_SERVICEWORKER_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 201: WEBRTC PEER CONNECTION & DYNAMIC BROADCASTCHANNEL TAMPERING DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
+ * - Log any intercepted WebRTC peer connection or BroadcastChannel tampering attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 202: WORKSTATION FORENSIC HUD WEBRTC OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize WebRTC peer connection and BroadcastChannel exfiltration threats in real-time.
+ * - Display a pulsing neon-amber warning badge when RTCPeerConnection or dynamic BroadcastChannel vectors are intercepted.
+ * - Allow interactive inspection of WebRTC threat signatures in the workstation live security feed.
+ *
+ * CYCLE 203: CROSS-TAB SWARM WEBRTC THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast WebRTC and BroadcastChannel threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted WebRTC exfiltration attempt.
+ *
+ * CYCLE 204: AUTONOMOUS WEBRTC DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to WebRTC and BroadcastChannel threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "WEBRTC_BROADCASTCHANNEL_EXFILTRATION_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 205: SINGULARITY V20 ABSOLUTE WEBRTC & BROADCASTCHANNEL SECURITY (FINAL CONVERGENCE)
+ * - Consolidate WebRTC connection construction, data channel creation, and dynamic BroadcastChannel manipulation safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V20_ABSOLUTE_WEBRTC_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '19.0.0-singularity-serviceworker-defense',
-  status: 'SINGULARITY_V19_ABSOLUTE_SERVICEWORKER_SECURITY',
-  engine: 'Molt-V19-Sentinel-ServiceWorker-Defense',
+  version: '20.0.0-singularity-webrtc-defense',
+  status: 'SINGULARITY_V20_ABSOLUTE_WEBRTC_SECURITY',
+  engine: 'Molt-V20-Sentinel-WebRTC-Defense',
   lastAudit: new Date().toISOString(),
 };
