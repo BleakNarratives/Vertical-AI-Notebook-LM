@@ -166,3 +166,8 @@
 **Vulnerability:** Input validation allowlist permitted Service Worker registration invocations (`navigator.serviceWorker.register`) and CacheStorage API manipulations (`caches.open`).
 **Learning:** Preventing standard web worker and network exfiltration vectors is insufficient if attackers can register persistent Service Workers or manipulate CacheStorage APIs to hijack client-side fetch requests and intercept application resources offline.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept Service Worker registration invocations (`navigator.serviceWorker`, `serviceWorker.register`) and CacheStorage API calls (`caches.open`, `CacheStorage`).
+
+## 2026-07-04 - [WebRTC & BroadcastChannel Peer-to-Peer Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
+**Learning:** Standard network exfiltration filters (e.g. `fetch`/`XMLHttpRequest`) do not prevent peer-to-peer data exfiltration via WebRTC data channels or covert inter-tab message tampering via dynamically instantiated `BroadcastChannel` instances.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept WebRTC API instantiations/methods and dynamic `BroadcastChannel` creation calls.
