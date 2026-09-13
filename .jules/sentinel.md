@@ -167,6 +167,10 @@
 **Learning:** Preventing standard web worker and network exfiltration vectors is insufficient if attackers can register persistent Service Workers or manipulate CacheStorage APIs to hijack client-side fetch requests and intercept application resources offline.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept Service Worker registration invocations (`navigator.serviceWorker`, `serviceWorker.register`) and CacheStorage API calls (`caches.open`, `CacheStorage`).
 
+## 2026-07-04 - [WebRTC & BroadcastChannel Peer-to-Peer Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
+**Learning:** Standard network exfiltration filters (e.g. `fetch`/`XMLHttpRequest`) do not prevent peer-to-peer data exfiltration via WebRTC data channels or covert inter-tab message tampering via dynamically instantiated `BroadcastChannel` instances.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept WebRTC API instantiations/methods and dynamic `BroadcastChannel` creation calls.
 ## 2026-07-04 - [WebRTC P2P Data Channel & Dynamic BroadcastChannel Exfiltration Defense]
 **Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`) and dynamic `BroadcastChannel` instantiation.
 **Learning:** Preventing standard fetch, XHR, WebSocket, and ServiceWorker exfiltration vectors is incomplete if attackers can instantiate WebRTC peer connections or dynamic BroadcastChannels to set up covert peer-to-peer exfiltration pipelines or intercept/spoof internal cross-tab messages.
