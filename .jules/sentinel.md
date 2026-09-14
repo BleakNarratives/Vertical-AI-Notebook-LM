@@ -175,3 +175,8 @@
 **Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`) and dynamic `BroadcastChannel` instantiation.
 **Learning:** Preventing standard fetch, XHR, WebSocket, and ServiceWorker exfiltration vectors is incomplete if attackers can instantiate WebRTC peer connections or dynamic BroadcastChannels to set up covert peer-to-peer exfiltration pipelines or intercept/spoof internal cross-tab messages.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept WebRTC API calls (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
+
+## 2026-07-05 - [Asynchronous Beacon & Message Channel Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted asynchronous exfiltration via `sendBeacon` / `navigator.sendBeacon`, `MessageChannel` / `MessagePort` creation, and browser DB exfiltration (`indexedDB`, `openDatabase`).
+**Learning:** Preventing standard fetch, XHR, WebSocket, and WebRTC calls is incomplete if attackers can invoke `sendBeacon` to exfiltrate session data asynchronously during page unload or instantiate `MessageChannel` / `indexedDB` to establish unmonitored messaging channels or local database storage.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept `sendBeacon`, `navigator.sendBeacon`, `MessageChannel`, `MessagePort`, `indexedDB`, and `openDatabase` vectors.
