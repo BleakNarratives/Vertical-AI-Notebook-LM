@@ -126,7 +126,8 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-lg p-8 bg-obsidian border border-neon-amber/30 shadow-[0_0_50px_rgba(255,191,0,0.2)] transition-transform duration-500 scale-100"
+        tabIndex={-1}
+        className="relative w-full max-w-lg p-8 bg-obsidian border border-neon-amber/30 shadow-[0_0_50px_rgba(255,191,0,0.2)] transition-transform duration-500 scale-100 outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-amber/50 to-transparent" />
@@ -139,7 +140,7 @@ const DocumentPreview: React.FC<DocumentPreviewProps> = ({ title, content, onClo
           <button
             ref={closeButtonRef}
             onClick={onClose}
-            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer focus-visible:ring-2 focus-visible:ring-neon-amber outline-none p-1"
+            className="text-neon-amber/60 hover:text-neon-amber transition-colors font-mono text-xs uppercase cursor-pointer focus-visible:ring-2 focus-visible:ring-neon-amber focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian outline-none p-1"
             aria-label="Close Preview"
             title="Close document preview [ESC]"
           >
