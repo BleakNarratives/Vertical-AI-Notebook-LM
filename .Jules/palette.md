@@ -1,3 +1,7 @@
+## 2026-09-16 - [Assertive Live Regions for Dynamic Security Alerts]
+**Learning:** Dynamic overlay modals that appear asynchronously (such as high-severity security alerts or breach notifications) will fail to announce to screen reader users if rendered without ARIA alert roles. Adding `role="alert"`, `aria-live="assertive"`, `aria-atomic="true"`, and `aria-labelledby` ensures screen readers immediately interrupt and announce critical security state changes.
+**Action:** Always wrap dynamic security or status overlays in assertive live regions (`role="alert" aria-live="assertive" aria-atomic="true"`) with heading associations (`aria-labelledby`).
+
 ## 2026-08-25 - [Accessible Hidden Easter Egg Tooltips and ESC Dismissal]
 **Learning:** Rendering revealed popovers or tooltips inside interactive `<button>` controls using `<div>` tags violates HTML semantics and causes screen reader tree corruption. Using a block-styled `<span>` container with `role="status"` and `aria-live="polite"` ensures semantic validity and immediate screen reader announcement. Furthermore, adding an `Escape` key listener on open state and setting `pointer-events-none` on the popup prevents accidental click dismissal while preserving keyboard accessibility.
 **Action:** Render interactive secret popups or tooltips inside `<button>` tags using block `<span>` elements with `role="status"`/`aria-live="polite"` and support `Escape` key dismissal for keyboard accessibility.
