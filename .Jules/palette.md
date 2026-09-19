@@ -1,3 +1,7 @@
+## 2026-09-20 - [ARIA Keyshortcuts Mapping for HUD Legend Triggers]
+**Learning:** Adding visual shortcut indicators on UI legend buttons (such as `[C]` or `[L]`) aids discoverability for mouse users, but screen readers require `aria-keyshortcuts` (e.g. `aria-keyshortcuts="c"`) to explicitly announce mapped global hotkeys during element inspection or keyboard navigation.
+**Action:** Always include `aria-keyshortcuts={key.toLowerCase()}` on interactive buttons that trigger or visually represent global keyboard shortcuts.
+
 ## 2026-09-15 - [Interactive State Feedback for 3D Boardroom Strategy Props]
 **Learning:** In a perspective-transformed 3D boardroom environment, interactive SVG/canvas props (such as the Whiteboard) require synchronized state feedback across three layers: `aria-pressed={isActive}` for screen reader accessibility, dynamic `title` tooltip attributes for mouse hover guidance, and SVG path stroke highlights with border glow (`border-neon-amber shadow-[...]`) for visual clarity.
 **Action:** Always pair `aria-pressed` with dynamic `title` tooltips and SVG/border state styling on interactive boardroom props when actions trigger active feedback states.

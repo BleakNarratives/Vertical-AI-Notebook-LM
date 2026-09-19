@@ -37,6 +37,7 @@ export const ShortcutLegend: React.FC = () => {
           type="button"
           onClick={() => handleTrigger(key, label, targetId)}
           aria-label={`Trigger [${key}] ${label}`}
+          aria-keyshortcuts={key.toLowerCase()}
           title={`Focus and trigger ${label} [${key}]`}
           className="hover:text-neon-amber focus-visible:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber active:scale-95 transition-all cursor-pointer text-[10px] font-mono uppercase tracking-widest outline-none"
         >
