@@ -175,3 +175,8 @@
 **Vulnerability:** Input validation allowlist permitted WebRTC API construction (`RTCPeerConnection`, `RTCDataChannel`) and dynamic `BroadcastChannel` instantiation.
 **Learning:** Preventing standard fetch, XHR, WebSocket, and ServiceWorker exfiltration vectors is incomplete if attackers can instantiate WebRTC peer connections or dynamic BroadcastChannels to set up covert peer-to-peer exfiltration pipelines or intercept/spoof internal cross-tab messages.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept WebRTC API calls (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
+
+## 2026-07-05 - [EventSource Streaming & FileReader Data Reader Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data reader calls (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
+**Learning:** Standard network exfiltration filters (such as `fetch` or `XMLHttpRequest`) do not prevent covert streaming data exfiltration via Server-Sent Events (`EventSource`) or asynchronous local file/blob data reading via `FileReader` / `FileReaderSync`.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept Server-Sent Events streaming (`EventSource`) and asynchronous data reader calls (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
