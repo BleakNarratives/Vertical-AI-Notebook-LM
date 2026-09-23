@@ -1,3 +1,7 @@
+## 2026-09-23 - [Clear ARIA & Disabled States on Async Workstation Action Controls]
+**Learning:** On interactive boardroom controls that execute async state sequences (such as terminal synchronization), combining `disabled={status !== null}` with `aria-busy={status !== null}` and dynamic `title` tooltips provides clear, unambiguous screen reader feedback without polluting ARIA semantics with conflicting `aria-pressed` or `aria-disabled` attributes.
+**Action:** Use `disabled` with `aria-busy` and dynamic `title` tooltips on async action controls, avoiding redundant or contradictory ARIA toggle attributes.
+
 ## 2026-09-15 - [Interactive State Feedback for 3D Boardroom Strategy Props]
 **Learning:** In a perspective-transformed 3D boardroom environment, interactive SVG/canvas props (such as the Whiteboard) require synchronized state feedback across three layers: `aria-pressed={isActive}` for screen reader accessibility, dynamic `title` tooltip attributes for mouse hover guidance, and SVG path stroke highlights with border glow (`border-neon-amber shadow-[...]`) for visual clarity.
 **Action:** Always pair `aria-pressed` with dynamic `title` tooltips and SVG/border state styling on interactive boardroom props when actions trigger active feedback states.
