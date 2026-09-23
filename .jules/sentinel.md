@@ -180,3 +180,8 @@
 **Vulnerability:** Input validation allowlist permitted Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
 **Learning:** Standard network and async beacon filters (e.g. `fetch`, `sendBeacon`, `MessageChannel`) do not prevent covert streaming exfiltration via `EventSource` or client-side file/blob content reading via `FileReader` and its sync/data variants.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
+
+## 2026-07-06 - [CookieStore API & Web Storage Clearing Defense]
+**Vulnerability:** Input validation allowlist permitted CookieStore API access (`cookieStore`) and Web Storage clearing/removal calls (`localStorage.clear`, `sessionStorage.clear`, `localStorage.removeItem`, `sessionStorage.removeItem`).
+**Learning:** Client-side storage wiping (`localStorage.clear()`, `sessionStorage.clear()`) and CookieStore API operations can be abused in malicious inputs to wipe security blocklists, clear active lockdowns, or asynchronously tamper with cookie credentials.
+**Prevention:** Intercept CookieStore API methods and Web Storage clearing/removal invocations inside `validateInput`'s pattern suite and back storage states with Quantum Memory Shadow Pinning.
