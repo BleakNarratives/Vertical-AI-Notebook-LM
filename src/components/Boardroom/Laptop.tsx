@@ -43,6 +43,9 @@ export const Laptop: React.FC = () => {
 
   const handleAccess = () => {
     if (status) return;
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: 'LAPTOP', action: 'TERMINAL_ACCESS' }
+    }));
     setStatus('Synchronizing...');
     setIsFlashing(true);
     setTimeout(() => { setStatus('Authenticating...'); setIsFlashing(false); }, 800);
