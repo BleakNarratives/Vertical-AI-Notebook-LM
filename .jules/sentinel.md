@@ -180,3 +180,8 @@
 **Vulnerability:** Input validation allowlist permitted Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
 **Learning:** Standard network and async beacon filters (e.g. `fetch`, `sendBeacon`, `MessageChannel`) do not prevent covert streaming exfiltration via `EventSource` or client-side file/blob content reading via `FileReader` and its sync/data variants.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
+
+## 2026-07-06 - [SharedArrayBuffer & Atomics Shared Memory Defense]
+**Vulnerability:** Input validation allowlist permitted `SharedArrayBuffer` and `Atomics` API invocations (`SharedArrayBuffer`, `Atomics`).
+**Learning:** Standard network, worker, and file reader filters do not block shared memory buffer creation or high-precision atomic operations, which can be leveraged for client-side timing side-channel attacks (Spectre) or multi-threaded memory tampering across web workers.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept `SharedArrayBuffer` and `Atomics` shared memory vectors.
