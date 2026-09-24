@@ -37,6 +37,7 @@ export const CoffeeMug: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-label="System Settings (Coffee Break) [C]"
+        aria-keyshortcuts="C"
         aria-busy={isActive}
         title="Save / Load System Settings [C]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}

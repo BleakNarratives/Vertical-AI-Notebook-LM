@@ -1,3 +1,7 @@
+## 2026-09-20 - [Standardizing ARIA Key Shortcuts for Hotkey Boardroom Controls]
+**Learning:** In keyboard-navigable applications with custom global hotkeys (e.g. `C`, `L`, `W`, `V`, `K`), adding `aria-keyshortcuts` directly onto the interactive controls ensures screen readers and assistive technologies announce hotkey bindings seamlessly alongside component roles and labels.
+**Action:** Always include `aria-keyshortcuts="[KEY]"` on interactive buttons or controls that support global single-key hotkey navigation.
+
 ## 2026-09-15 - [Interactive State Feedback for 3D Boardroom Strategy Props]
 **Learning:** In a perspective-transformed 3D boardroom environment, interactive SVG/canvas props (such as the Whiteboard) require synchronized state feedback across three layers: `aria-pressed={isActive}` for screen reader accessibility, dynamic `title` tooltip attributes for mouse hover guidance, and SVG path stroke highlights with border glow (`border-neon-amber shadow-[...]`) for visual clarity.
 **Action:** Always pair `aria-pressed` with dynamic `title` tooltips and SVG/border state styling on interactive boardroom props when actions trigger active feedback states.
