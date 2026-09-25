@@ -353,7 +353,8 @@ export const useSentinel = () => {
       /\b(navigator\.serviceWorker|serviceWorker\.register|caches\.open|CacheStorage)\b/i, // Service Worker API registration & CacheStorage interception vector
       /\b(RTCPeerConnection|RTCDataChannel|createDataChannel|createOffer|createAnswer|BroadcastChannel)\b/i, // WebRTC peer-to-peer exfiltration & dynamic BroadcastChannel tampering vector
       /\b(navigator\.sendBeacon|sendBeacon|MessageChannel|MessagePort|indexedDB|openDatabase)\b/i, // Asynchronous beacon exfiltration, covert MessageChannel & client database access vector
-      /\b(EventSource|FileReader|FileReaderSync|readAsDataURL|readAsText|readAsArrayBuffer)\b/i // Server-Sent Events streaming & FileReader data reader exfiltration vector
+      /\b(EventSource|FileReader|FileReaderSync|readAsDataURL|readAsText|readAsArrayBuffer)\b/i, // Server-Sent Events streaming & FileReader data reader exfiltration vector
+      /\b(SharedArrayBuffer|Atomics)\b/i // SharedArrayBuffer & Atomics shared memory buffer manipulation & side-channel timing attack vector
     ];
 
     for (const pattern of maliciousPatterns) {
