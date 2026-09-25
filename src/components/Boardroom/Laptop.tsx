@@ -59,12 +59,10 @@ export const Laptop: React.FC = () => {
         id="boardroom-laptop"
         type="button"
         onClick={handleAccess}
-        disabled={status !== null}
-        aria-busy={status !== null}
         aria-label="Access Terminal (Workstation) [L]"
-        title={status ? `Terminal Status: ${status} [L]` : "Access Laptop Workstation Terminal [L]"}
+        title="Access Laptop Workstation Terminal [L]"
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu disabled:opacity-80 disabled:cursor-wait"
+        className="group relative w-48 h-32 transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 focus:outline-none transform-gpu"
       >
         <FocusIndicator color="neon-red" shortcutKey="L" />
         {/* Laptop Screen (Open) */}
