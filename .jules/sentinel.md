@@ -181,7 +181,7 @@
 **Learning:** Standard network and async beacon filters (e.g. `fetch`, `sendBeacon`, `MessageChannel`) do not prevent covert streaming exfiltration via `EventSource` or client-side file/blob content reading via `FileReader` and its sync/data variants.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
 
-## 2026-07-06 - [CookieStore API & Web Storage Clearing Defense]
-**Vulnerability:** Input validation allowlist permitted CookieStore API invocations (`cookieStore`, `cookieStore.get`, `cookieStore.set`, `cookieStore.delete`) and Web Storage clearing/removal calls (`localStorage.clear`, `sessionStorage.clear`, `localStorage.removeItem`, `sessionStorage.removeItem`).
-**Learning:** Standard storage integrity pinning protects against storage deletion/tampering at runtime, but user inputs passed to dynamic evaluation or interactive tools can attempt asynchronous cookie manipulation via `cookieStore` or client storage erasure via `localStorage.clear()`.
-**Prevention:** Expand `validateInput`'s pattern matching suite to intercept CookieStore API calls (`cookieStore`) and Web Storage clearing/removal methods (`localStorage.clear`, `sessionStorage.clear`, `localStorage.removeItem`, `sessionStorage.removeItem`).
+## 2026-07-06 - [SharedArrayBuffer & Atomics Shared Memory Defense]
+**Vulnerability:** Input validation allowlist permitted `SharedArrayBuffer` and `Atomics` API invocations (`SharedArrayBuffer`, `Atomics`).
+**Learning:** Standard network, worker, and file reader exfiltration filters do not block shared memory buffer manipulation or high-precision side-channel timing attack vectors using `SharedArrayBuffer` and `Atomics` APIs.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `SharedArrayBuffer` and `Atomics` API invocations (`/\b(SharedArrayBuffer|Atomics)\b/i`).
