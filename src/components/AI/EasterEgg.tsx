@@ -21,8 +21,8 @@ export const EasterEgg: React.FC = () => {
       type="button"
       aria-expanded={revealed}
       aria-label="Reveal shadow detail"
-      title="Inspect obsidian shadow secret"
-      className="fixed bottom-0 left-0 w-4 h-4 cursor-help opacity-0 hover:opacity-10 focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-neon-amber transition-opacity"
+      title="Inspect obsidian shadow secret [Secret]"
+      className="fixed bottom-0 left-0 w-4 h-4 cursor-help opacity-0 hover:opacity-10 focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-neon-amber hover:animate-pulse focus-visible:animate-pulse transition-opacity"
       onClick={() => setRevealed(!revealed)}
     >
       {revealed && (
