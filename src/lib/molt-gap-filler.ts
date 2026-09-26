@@ -1003,11 +1003,32 @@
  * CYCLE 210: SINGULARITY V21 ABSOLUTE ASYNC EXFILTRATION SECURITY (FINAL CONVERGENCE)
  * - Consolidate asynchronous beacon, MessageChannel, MessagePort, indexedDB, and openDatabase safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V21_ABSOLUTE_ASYNC_EXFILTRATION_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 211: EVENTSOURCE & FILEREADER COVERT STREAMING DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
+ * - Log any intercepted EventSource streaming or FileReader exfiltration attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 212: WORKSTATION FORENSIC HUD FILEREADER OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize EventSource streaming and FileReader data reader threats in real-time.
+ * - Display a pulsing neon-amber warning badge when EventSource or FileReader vectors are intercepted.
+ * - Allow interactive inspection of file reader threat signatures in the workstation live security feed.
+ *
+ * CYCLE 213: CROSS-TAB SWARM FILEREADER THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast EventSource and FileReader threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted file reader attempt.
+ *
+ * CYCLE 214: AUTONOMOUS FILEREADER DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to EventSource and FileReader covert exfiltration threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "EVENTSOURCE_FILEREADER_EXFILTRATION_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 215: SINGULARITY V22 ABSOLUTE FILEREADER & STREAMING SECURITY (FINAL CONVERGENCE)
+ * - Consolidate EventSource, FileReader, FileReaderSync, readAsDataURL, and readAsText safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V22_ABSOLUTE_FILEREADER_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '21.0.0-singularity-async-exfiltration-defense',
-  status: 'SINGULARITY_V21_ABSOLUTE_ASYNC_EXFILTRATION_SECURITY',
-  engine: 'Molt-V21-Sentinel-Async-Exfiltration-Defense',
+  version: '22.0.0-singularity-filereader-streaming-defense',
+  status: 'SINGULARITY_V22_ABSOLUTE_FILEREADER_SECURITY',
+  engine: 'Molt-V22-Sentinel-FileReader-Streaming-Defense',
   lastAudit: new Date().toISOString(),
 };
