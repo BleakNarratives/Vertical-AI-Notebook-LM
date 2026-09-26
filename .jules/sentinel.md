@@ -185,3 +185,8 @@
 **Vulnerability:** Input validation allowlist permitted `SharedArrayBuffer` and `Atomics` API invocations (`SharedArrayBuffer`, `Atomics`).
 **Learning:** Standard network, worker, and file reader exfiltration filters do not block shared memory buffer manipulation or high-precision side-channel timing attack vectors using `SharedArrayBuffer` and `Atomics` APIs.
 **Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `SharedArrayBuffer` and `Atomics` API invocations (`/\b(SharedArrayBuffer|Atomics)\b/i`).
+
+## 2026-07-07 - [Clipboard API & Clipboard Hijacking Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted Clipboard API invocations (`navigator.clipboard`, `ClipboardItem`, `readText`, `writeText`).
+**Learning:** Standard network, worker, file reader, and shared memory exfiltration filters do not block silent clipboard inspection or credential hijacking vectors using Clipboard API calls.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept Clipboard API invocations (`/\b(navigator\.clipboard|ClipboardItem|readText|writeText)\b/i`).
