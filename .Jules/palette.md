@@ -1,3 +1,7 @@
+## 2026-09-15 - [Interactive State Feedback for 3D Boardroom Strategy Props]
+**Learning:** In a perspective-transformed 3D boardroom environment, interactive SVG/canvas props (such as the Whiteboard) require synchronized state feedback across three layers: `aria-pressed={isActive}` for screen reader accessibility, dynamic `title` tooltip attributes for mouse hover guidance, and SVG path stroke highlights with border glow (`border-neon-amber shadow-[...]`) for visual clarity.
+**Action:** Always pair `aria-pressed` with dynamic `title` tooltips and SVG/border state styling on interactive boardroom props when actions trigger active feedback states.
+
 ## 2026-08-25 - [Accessible Hidden Easter Egg Tooltips and ESC Dismissal]
 **Learning:** Rendering revealed popovers or tooltips inside interactive `<button>` controls using `<div>` tags violates HTML semantics and causes screen reader tree corruption. Using a block-styled `<span>` container with `role="status"` and `aria-live="polite"` ensures semantic validity and immediate screen reader announcement. Furthermore, adding an `Escape` key listener on open state and setting `pointer-events-none` on the popup prevents accidental click dismissal while preserving keyboard accessibility.
 **Action:** Render interactive secret popups or tooltips inside `<button>` tags using block `<span>` elements with `role="status"`/`aria-live="polite"` and support `Escape` key dismissal for keyboard accessibility.

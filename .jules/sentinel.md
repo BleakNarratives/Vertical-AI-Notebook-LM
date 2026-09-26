@@ -176,7 +176,12 @@
 **Learning:** Preventing standard fetch, XHR, WebSocket, and ServiceWorker exfiltration vectors is incomplete if attackers can instantiate WebRTC peer connections or dynamic BroadcastChannels to set up covert peer-to-peer exfiltration pipelines or intercept/spoof internal cross-tab messages.
 **Prevention:** Expand `validateInput`'s pattern matching suite to intercept WebRTC API calls (`RTCPeerConnection`, `RTCDataChannel`, `createDataChannel`, `createOffer`, `createAnswer`) and dynamic `BroadcastChannel` instantiations.
 
-## 2026-07-05 - [Async Beacon, Covert Message Channel & Client-Side DB Exfiltration Defense]
-**Vulnerability:** Input validation allowlist permitted asynchronous beacon exfiltration (`sendBeacon`, `navigator.sendBeacon`), covert message channel construction (`MessageChannel`, `MessagePort`), and client-side database access (`indexedDB`, `openDatabase`).
-**Learning:** Standard network and WebSocket exfiltration filters fail to block asynchronous background beacon transfers that fire on unload/pagehide (`navigator.sendBeacon`), covert channel communications (`MessageChannel`/`MessagePort`), or direct client-side database access (`indexedDB`/`openDatabase`).
-**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `sendBeacon`, `MessageChannel`, `MessagePort`, `indexedDB`, and `openDatabase` calls.
+## 2026-07-05 - [EventSource Streaming & FileReader Exfiltration Defense]
+**Vulnerability:** Input validation allowlist permitted Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
+**Learning:** Standard network and async beacon filters (e.g. `fetch`, `sendBeacon`, `MessageChannel`) do not prevent covert streaming exfiltration via `EventSource` or client-side file/blob content reading via `FileReader` and its sync/data variants.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept Server-Sent Events streaming (`EventSource`) and asynchronous file/blob data readers (`FileReader`, `FileReaderSync`, `readAsDataURL`, `readAsText`, `readAsArrayBuffer`).
+
+## 2026-07-06 - [SharedArrayBuffer & Atomics Shared Memory Defense]
+**Vulnerability:** Input validation allowlist permitted `SharedArrayBuffer` and `Atomics` API invocations (`SharedArrayBuffer`, `Atomics`).
+**Learning:** Standard network, worker, and file reader exfiltration filters do not block shared memory buffer manipulation or high-precision side-channel timing attack vectors using `SharedArrayBuffer` and `Atomics` APIs.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `SharedArrayBuffer` and `Atomics` API invocations (`/\b(SharedArrayBuffer|Atomics)\b/i`).
