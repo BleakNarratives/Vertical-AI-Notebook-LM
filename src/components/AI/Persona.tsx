@@ -21,6 +21,8 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
 
   const titleText = disabled
     ? `Consultation for ${name} is unavailable during active system restrictions`
+    : status === 'active'
+    ? `Consultation with ${name} (${role}) in progress...`
     : `Consult ${name} (${role})`;
 
   return (
