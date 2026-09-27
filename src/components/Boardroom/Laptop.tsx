@@ -45,6 +45,9 @@ export const Laptop: React.FC = () => {
     if (status) return;
     setStatus('Synchronizing...');
     setIsFlashing(true);
+    window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
+      detail: { source: 'WORKSTATION', action: 'TERMINAL_SYNC', payload: 'AUTHENTICATED' }
+    }));
     setTimeout(() => { setStatus('Authenticating...'); setIsFlashing(false); }, 800);
     setTimeout(() => { setStatus('Terminal Synchronized'); setIsFlashing(true); }, 1600);
     setTimeout(() => { setStatus(null); setIsFlashing(false); }, 3000);
@@ -97,7 +100,7 @@ export const Laptop: React.FC = () => {
         </div>
 
         {/* Label hidden until focus/hover */}
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap transition-opacity uppercase tracking-tighter z-50">
           Terminal / IDEal / 4ward [L]
         </span>
       </button>
