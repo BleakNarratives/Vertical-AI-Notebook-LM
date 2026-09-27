@@ -1,3 +1,7 @@
+## 2026-10-04 - [Self-Referential Central Hub Environmental Event Dispatching]
+**Learning:** In interactive 3D environmental dashboards where a central terminal hub logs activities from peripheral boardroom props via CustomEvents, direct activations on the central hub itself must also dispatch to the global event bus. This guarantees self-referential workstation actions immediately update the central terminal log feed in real time and trigger synchronized environmental feedback across layout listeners.
+**Action:** Always dispatch custom action events from central hub controls so self-referential user interactions are captured in the global log feed and trigger ambient environmental feedback.
+
 ## 2026-09-23 - [Clear ARIA & Disabled States on Async Workstation Action Controls]
 **Learning:** On interactive boardroom controls that execute async state sequences (such as terminal synchronization), combining `disabled={status !== null}` with `aria-busy={status !== null}` and dynamic `title` tooltips provides clear, unambiguous screen reader feedback without polluting ARIA semantics with conflicting `aria-pressed` or `aria-disabled` attributes.
 **Action:** Use `disabled` with `aria-busy` and dynamic `title` tooltips on async action controls, avoiding redundant or contradictory ARIA toggle attributes.
