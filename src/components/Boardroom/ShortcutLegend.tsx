@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ShortcutItem {
   key: string;
@@ -16,6 +16,34 @@ const SHORTCUTS: ShortcutItem[] = [
 ];
 
 export const ShortcutLegend: React.FC = () => {
+  const [activeKey, setActiveKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const handleAction = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const source = customEvent.detail?.source || '';
+      let keyToHighlight: string | null = null;
+      if (source.includes('COFFEE')) keyToHighlight = 'C';
+      else if (source.includes('WORKSTATION') || source.includes('LAPTOP')) keyToHighlight = 'L';
+      else if (source.includes('WHITEBOARD')) keyToHighlight = 'W';
+      else if (source.includes('MONITOR')) keyToHighlight = 'V';
+      else if (source.startsWith('LEGEND_[')) keyToHighlight = source.slice(8, 9);
+
+      if (keyToHighlight) {
+        if (timeoutId) clearTimeout(timeoutId);
+        setActiveKey(keyToHighlight);
+        timeoutId = setTimeout(() => setActiveKey(null), 800);
+      }
+    };
+
+    window.addEventListener('sentinel-boardroom-action', handleAction);
+    return () => {
+      window.removeEventListener('sentinel-boardroom-action', handleAction);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
+
   const handleTrigger = (key: string, label: string, targetId: string) => {
     window.dispatchEvent(
       new CustomEvent('sentinel-boardroom-action', {
@@ -39,7 +67,9 @@ export const ShortcutLegend: React.FC = () => {
           aria-keyshortcuts={key}
           aria-label={`Trigger [${key}] ${label}`}
           title={`Focus and trigger ${label} [${key}]`}
-          className="hover:text-neon-amber focus-visible:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber active:scale-95 transition-all cursor-pointer text-[10px] font-mono uppercase tracking-widest outline-none"
+          className={`hover:text-neon-amber focus-visible:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber active:scale-95 transition-all cursor-pointer text-[10px] font-mono uppercase tracking-widest outline-none ${
+            activeKey === key ? 'text-neon-amber font-bold drop-shadow-[0_0_8px_rgba(255,191,0,0.8)] animate-pulse' : ''
+          }`}
         >
           [{key}] {label}
         </button>
