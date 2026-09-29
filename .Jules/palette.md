@@ -1,3 +1,7 @@
+## 2026-09-30 - [Active Persona Consultation State Feedback & Interaction Guard]
+**Learning:** For interactive AI persona cards executing async consultation procedures, disabling button controls when `status === 'active'` (`disabled={disabled || status === 'active'}`) prevents accidental multi-click execution. Pair this with `aria-busy={status === 'active'}`, `cursor-wait`, dynamic `title` tooltips, and an inline 'BUSY' badge to provide complete visual and screen reader clarity.
+**Action:** Always set `disabled={disabled || isBusy}` on interactive persona/AI controls during active async consultation sequences, pairing `aria-busy` with explicit busy indicator badges and `cursor-wait`.
+
 ## 2026-09-23 - [Clear ARIA & Disabled States on Async Workstation Action Controls]
 **Learning:** On interactive boardroom controls that execute async state sequences (such as terminal synchronization), combining `disabled={status !== null}` with `aria-busy={status !== null}` and dynamic `title` tooltips provides clear, unambiguous screen reader feedback without polluting ARIA semantics with conflicting `aria-pressed` or `aria-disabled` attributes.
 **Action:** Use `disabled` with `aria-busy` and dynamic `title` tooltips on async action controls, avoiding redundant or contradictory ARIA toggle attributes.
@@ -78,7 +82,7 @@
 **Action:** When using inline transforms for 3D perspective, always include Tailwind's transform variables: `style={{ transform: 'rotateX(-20deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}`.
 
 ## 2025-05-20 - [Tactile Fanning Stacks]
-**Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
+**Learning:** In a 3D boardroom UI, "stacked" items can feel static and flat. Implementing a "fan-out" interaction using `group-hover` and `group-focus-within` on a container allows overlapping elements to reveal themeselves dynamically. This provides a satisfying tactile response that mimics physical interaction with a pile of papers.
 **Action:** Use container-level `group` states with relative/absolute positioning and negative margins to create "exploding" or "fanning" layouts for overlapping 3D props.
 
 ## 2025-05-21 - [Unified Focus Mechanics for 3D Props]

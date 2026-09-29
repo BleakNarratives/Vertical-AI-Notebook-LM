@@ -12,6 +12,9 @@ interface PersonaProps {
 }
 
 export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, disabled }) => {
+  const isBusy = status === 'active';
+  const isControlDisabled = disabled || isBusy;
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) onClick(e);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
@@ -21,7 +24,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
 
   const titleText = disabled
     ? `Consultation for ${name} is unavailable during active system restrictions`
-    : status === 'active'
+    : isBusy
     ? `Consultation with ${name} (${role}) in progress...`
     : `Consult ${name} (${role})`;
 
@@ -29,13 +32,18 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
     <button
       type="button"
       onClick={handleClick}
-      disabled={disabled}
+      disabled={isControlDisabled}
       title={titleText}
-      aria-busy={status === 'active'}
-      aria-pressed={status === 'active'}
+      aria-busy={isBusy}
       aria-label={`${name} (${role}) - Status: ${status}`}
       style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-      className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
+      className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none active:enabled:translate-y-1 ${
+        disabled
+          ? 'opacity-50 cursor-not-allowed'
+          : isBusy
+          ? 'opacity-80 cursor-wait shadow-[0_0_15px_rgba(255,0,0,0.3)]'
+          : ''
+      }`}
     >
       {/* Persistent Name Label */}
       <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap drop-shadow-[0_0_5px_rgba(255,0,0,0.5)] z-10">
@@ -44,12 +52,20 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
 
       <div className={`
         w-24 h-32 bg-grey-dark relative overflow-hidden transition-all duration-500
-        ${status === 'active' ? 'border-neon-red border-2 animate-pulse shadow-[0_0_20px_rgba(255,0,0,0.4)]' : 'border-grey-medium border'}
+        ${isBusy ? 'border-neon-red border-2 animate-pulse shadow-[0_0_20px_rgba(255,0,0,0.4)]' : 'border-grey-medium border'}
         ${status === 'distorted' ? 'animate-pulse scale-95 opacity-50' : ''}
       `}>
         {/* Floor Glow */}
-        {status === 'active' && (
+        {isBusy && (
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,0,0,0.4)_0%,transparent_70%)] animate-pulse" />
+        )}
+
+        {/* Active Processing Indicator */}
+        {isBusy && (
+          <div className="absolute top-2 right-2 z-20 flex items-center gap-1 bg-obsidian/80 px-1.5 py-0.5 border border-neon-red/60 text-[8px] font-mono text-neon-red tracking-tighter">
+            <span className="w-1.5 h-1.5 rounded-full bg-neon-red animate-ping" />
+            <span>BUSY</span>
+          </div>
         )}
 
         {/* Ragtag Business Suit Aesthetic (Abstract) */}
@@ -66,7 +82,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       </div>
 
       {/* Focus indicator */}
-      {!disabled && <FocusIndicator color="neon-red" />}
+      {!isControlDisabled && <FocusIndicator color="neon-red" />}
     </button>
   );
 };

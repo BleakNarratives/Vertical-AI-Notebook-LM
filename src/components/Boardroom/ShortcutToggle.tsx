@@ -47,6 +47,7 @@ export const ShortcutToggle: React.FC = () => {
         type="button"
         role="switch"
         onClick={handleClick}
+        aria-keyshortcuts="K"
         aria-label="Toggle Keyboard Shortcut Hints [K]"
         title="Toggle shortcut visual indicators on interactive boardroom elements [K]"
         aria-checked={enabled}
