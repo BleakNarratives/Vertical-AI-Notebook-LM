@@ -1,3 +1,7 @@
+## 2026-10-03 - [Synchronized Title Tooltips for Interactive Boardroom Props]
+**Learning:** In interactive 3D perspective dashboards with multiple props (coffee mug, papers, whiteboard, laptop), providing dynamic `title` tooltips that dynamically update based on active state (e.g. `System Snapshot Active: [status] [C]`) ensures consistent hover state feedback for desktop mouse users alongside `aria-busy` and `aria-pressed` screen reader announcements.
+**Action:** Always complement active state indicators (`aria-busy`, `aria-pressed`) with dynamic `title` tooltip attributes on interactive boardroom controls.
+
 ## 2026-09-23 - [Clear ARIA & Disabled States on Async Workstation Action Controls]
 **Learning:** On interactive boardroom controls that execute async state sequences (such as terminal synchronization), combining `disabled={status !== null}` with `aria-busy={status !== null}` and dynamic `title` tooltips provides clear, unambiguous screen reader feedback without polluting ARIA semantics with conflicting `aria-pressed` or `aria-disabled` attributes.
 **Action:** Use `disabled` with `aria-busy` and dynamic `title` tooltips on async action controls, avoiding redundant or contradictory ARIA toggle attributes.
