@@ -46,7 +46,8 @@ export const Honeytoken = () => {
       type="button"
       onClick={() => triggerHoneytoken('click')}
       onFocus={() => triggerHoneytoken('focus')}
-      className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-neon-amber/30 transition-all duration-1000`}
+      title="Decoy System Credential Fragment [SECURITY_DECOY]"
+      className={`group absolute ${posClasses[config.posIndex] || posClasses[0]} p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian focus-visible:ring-neon-amber active:scale-95 transition-all duration-1000`}
       aria-label="System credentials fragment"
     >
       <div className="flex flex-col gap-1 opacity-5 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500">

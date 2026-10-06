@@ -1,3 +1,7 @@
+## 2026-10-01 - [Dynamic Hover Tooltips on Boardroom Document Stacks]
+**Learning:** For interactive document stacks rendered as individual `<button>` elements in a 3D boardroom environment, providing explicit dynamic `title` hover tooltips (`title={isActive ? 'Currently viewing...' : 'View...'}`) complements `aria-label` and `aria-pressed` states by giving desktop users instant contextual feedback on hover without cluttering the visual UI layout.
+**Action:** Always include dynamic `title` hover tooltips on stacked or grouped interactive button elements to ensure desktop hover clarity alongside ARIA accessibility attributes.
+
 ## 2026-09-23 - [Clear ARIA & Disabled States on Async Workstation Action Controls]
 **Learning:** On interactive boardroom controls that execute async state sequences (such as terminal synchronization), combining `disabled={status !== null}` with `aria-busy={status !== null}` and dynamic `title` tooltips provides clear, unambiguous screen reader feedback without polluting ARIA semantics with conflicting `aria-pressed` or `aria-disabled` attributes.
 **Action:** Use `disabled` with `aria-busy` and dynamic `title` tooltips on async action controls, avoiding redundant or contradictory ARIA toggle attributes.

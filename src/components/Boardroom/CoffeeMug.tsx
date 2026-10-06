@@ -38,7 +38,7 @@ export const CoffeeMug: React.FC = () => {
         onClick={handleAction}
         aria-label="System Settings (Coffee Break) [C]"
         aria-busy={isActive}
-        title={status ? `System Snapshot Active: ${status} [C]` : "Save / Load System Settings [C]"}
+        title={isActive ? `System Snapshot Active: ${status} [C]` : "Save / Load System Settings [C]"}
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
         className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
       >
