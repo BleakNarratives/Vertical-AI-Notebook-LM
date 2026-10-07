@@ -1,3 +1,7 @@
+## 2026-10-07 - [Exposing Global Boardroom Hotkeys with ARIA Keyshortcuts]
+**Learning:** In interactive boardroom environments with global single-key hotkey navigation (`C`, `L`, `W`, `V`, `K`), adding explicit `aria-keyshortcuts` attributes to target interactive `<button>` elements ensures assistive technologies (screen readers) explicitly announce available shortcuts during focus and navigation.
+**Action:** Always include `aria-keyshortcuts` attributes on interactive button controls whenever custom global hotkeys or shortcut HUD indicators are bound to them.
+
 ## 2026-10-01 - [Dynamic Hover Tooltips on Boardroom Document Stacks]
 **Learning:** For interactive document stacks rendered as individual `<button>` elements in a 3D boardroom environment, providing explicit dynamic `title` hover tooltips (`title={isActive ? 'Currently viewing...' : 'View...'}`) complements `aria-label` and `aria-pressed` states by giving desktop users instant contextual feedback on hover without cluttering the visual UI layout.
 **Action:** Always include dynamic `title` hover tooltips on stacked or grouped interactive button elements to ensure desktop hover clarity alongside ARIA accessibility attributes.
