@@ -26,6 +26,7 @@ export const VideoViewer: React.FC = () => {
         type="button"
         onClick={handleAction}
         aria-pressed={isActive}
+        aria-keyshortcuts="V"
         aria-label="Remote Feed / Video Monitor [V]"
         title={isActive ? "Remote Feed Synchronized [V]" : "Synchronize Remote Video Feed [V]"}
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
