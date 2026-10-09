@@ -35,6 +35,7 @@ export const Whiteboard: React.FC = () => {
         onMouseMove={handleMouseMove}
         onClick={handleAction}
         aria-pressed={isActive}
+        aria-keyshortcuts="W"
         aria-label="Iteration Whiteboard (Strategy) [W]"
         title={isActive ? "Strategy Iteration Logged [W]" : "Log Strategy Iteration on Whiteboard [W]"}
         style={{ transform: 'rotateX(-35deg) rotateZ(var(--tw-rotate, -3deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
