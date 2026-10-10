@@ -1045,11 +1045,32 @@
  * CYCLE 220: SINGULARITY V23 ABSOLUTE SHAREDARRAYBUFFER & ATOMICS SECURITY (FINAL CONVERGENCE)
  * - Consolidate SharedArrayBuffer, Atomics, EventSource, and FileReader safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V23_ABSOLUTE_SHAREDARRAYBUFFER_ATOMICS_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 221: HIGH-RESOLUTION PERFORMANCE TIMING & SIDE-CHANNEL DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit high-resolution performance timing and side-channel analysis calls (`performance.now`, `PerformanceObserver`, `performance.mark`, `performance.measure`, `PerformanceEntry`, `PerformanceResourceTiming`).
+ * - Log any intercepted timing profiling or side-channel measurement attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 222: WORKSTATION FORENSIC HUD PERFORMANCE TIMING OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize performance timing and side-channel analysis threats in real-time.
+ * - Display a pulsing neon-amber warning badge when performance.now or PerformanceObserver vectors are intercepted.
+ * - Allow interactive inspection of timing attack threat signatures in the workstation live security feed.
+ *
+ * CYCLE 223: CROSS-TAB SWARM PERFORMANCE TIMING THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast performance timing threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted performance timing measurement attempt.
+ *
+ * CYCLE 224: AUTONOMOUS PERFORMANCE TIMING DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to high-resolution performance timing threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "PERFORMANCE_TIMING_EXFILTRATION_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 225: SINGULARITY V24 ABSOLUTE PERFORMANCE TIMING SECURITY (FINAL CONVERGENCE)
+ * - Consolidate performance timing, side-channel measurement, SharedArrayBuffer, and Atomics safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V24_ABSOLUTE_PERFORMANCE_TIMING_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '23.0.0-singularity-sharedarraybuffer-atomics-defense',
-  status: 'SINGULARITY_V23_ABSOLUTE_SHAREDARRAYBUFFER_ATOMICS_SECURITY',
-  engine: 'Molt-V23-Sentinel-SharedArrayBuffer-Atomics-Defense',
+  version: '24.0.0-singularity-performance-timing-defense',
+  status: 'SINGULARITY_V24_ABSOLUTE_PERFORMANCE_TIMING_SECURITY',
+  engine: 'Molt-V24-Sentinel-Performance-Timing-Defense',
   lastAudit: new Date().toISOString(),
 };
