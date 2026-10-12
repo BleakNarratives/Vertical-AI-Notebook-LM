@@ -1,18 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { FocusIndicator } from './FocusIndicator';
 
 export const VideoViewer: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleAction = () => {
+  const handleAction = useCallback(() => {
+    if (status !== null) return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setStatus('FEED_SYNCHRONIZED');
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: 'MONITOR', action: 'FEED_SYNC' }
     }));
-    setTimeout(() => setStatus(null), 2000);
-  };
+    timeoutRef.current = setTimeout(() => {
+      setStatus(null);
+      timeoutRef.current = null;
+    }, 2000);
+  }, [status]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const isActive = status === 'FEED_SYNCHRONIZED';
 
@@ -25,11 +37,13 @@ export const VideoViewer: React.FC = () => {
         id="boardroom-videoviewer"
         type="button"
         onClick={handleAction}
+        disabled={isActive}
+        aria-busy={isActive}
         aria-pressed={isActive}
         aria-label="Remote Feed / Video Monitor [V]"
         title={isActive ? "Remote Feed Synchronized [V]" : "Synchronize Remote Video Feed [V]"}
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:scale-105 focus-visible:scale-105 active:translate-y-1 outline-none transform-gpu cursor-pointer"
+        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 active:enabled:translate-y-1 outline-none transform-gpu cursor-pointer disabled:opacity-80 disabled:cursor-wait"
       >
         <FocusIndicator color={isActive ? 'neon-amber' : 'neon-red'} shortcutKey="V" />
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">

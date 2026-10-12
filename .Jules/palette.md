@@ -1,3 +1,7 @@
+## 2026-10-05 - [State Protection and Re-entrancy Guard on Async Video Monitor Controls]
+**Learning:** For interactive boardroom props that execute asynchronous status transitions (like remote video feed synchronization), combining `disabled={isActive}` and `aria-busy={isActive}` with re-entrancy checks (`if (status !== null) return;`) and `useRef` timer cleanup prevents multi-click race conditions and orphaned `setTimeout` callbacks while giving screen readers and pointer users clear feedback with a `disabled:cursor-wait` state.
+**Action:** Always include `disabled={isActive}`, `aria-busy={isActive}`, re-entrancy protection, and `useRef` timer cleanup on interactive async controls.
+
 ## 2026-10-01 - [Dynamic Hover Tooltips on Boardroom Document Stacks]
 **Learning:** For interactive document stacks rendered as individual `<button>` elements in a 3D boardroom environment, providing explicit dynamic `title` hover tooltips (`title={isActive ? 'Currently viewing...' : 'View...'}`) complements `aria-label` and `aria-pressed` states by giving desktop users instant contextual feedback on hover without cluttering the visual UI layout.
 **Action:** Always include dynamic `title` hover tooltips on stacked or grouped interactive button elements to ensure desktop hover clarity alongside ARIA accessibility attributes.
