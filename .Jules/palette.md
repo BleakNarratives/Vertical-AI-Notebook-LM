@@ -1,3 +1,7 @@
+## 2026-10-08 - [Interactive State Protection & Visual BUSY Badges on 3D Persona Cards]
+**Learning:** In interactive 3D persona controls where asynchronous consultations occur, leaving the control enabled allows accidental rapid multi-clicks that duplicate events. Combining `disabled={disabled || status === 'active'}` with `disabled:cursor-wait` and rendering a compact, atmospheric 'BUSY' status badge on the card provides clear tactile and visual state feedback for both mouse and screen reader users.
+**Action:** Always disable action triggers during active asynchronous state sequences, pairing `disabled:cursor-wait` with explicit visual status badges on interactive persona controls.
+
 ## 2026-10-01 - [Dynamic Hover Tooltips on Boardroom Document Stacks]
 **Learning:** For interactive document stacks rendered as individual `<button>` elements in a 3D boardroom environment, providing explicit dynamic `title` hover tooltips (`title={isActive ? 'Currently viewing...' : 'View...'}`) complements `aria-label` and `aria-pressed` states by giving desktop users instant contextual feedback on hover without cluttering the visual UI layout.
 **Action:** Always include dynamic `title` hover tooltips on stacked or grouped interactive button elements to ensure desktop hover clarity alongside ARIA accessibility attributes.
