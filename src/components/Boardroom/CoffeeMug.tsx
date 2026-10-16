@@ -9,23 +9,24 @@ export const CoffeeMug: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const isActive = status !== null;
+
   const handleAction = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (status !== null) return;
     const randomMessage = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     setStatus(randomMessage);
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: 'COFFEE_MUG', action: 'SNAPSHOT', payload: randomMessage }
     }));
 
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setStatus(null);
       timeoutRef.current = null;
     }, 2000);
-  }, []);
+  }, [status]);
 
   useEffect(() => { return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }; }, []);
-
-  const isActive = status !== null;
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -36,11 +37,13 @@ export const CoffeeMug: React.FC = () => {
         id="boardroom-coffeemug"
         type="button"
         onClick={handleAction}
-        aria-label="System Settings (Coffee Break) [C]"
+        disabled={isActive}
         aria-busy={isActive}
+        aria-keyshortcuts="C"
+        aria-label="System Settings (Coffee Break) [C]"
         title={isActive ? `System Snapshot Active: ${status} [C]` : "Save / Load System Settings [C]"}
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
+        className="group relative w-16 h-12 transition-all hover:enabled:scale-110 focus-visible:enabled:scale-110 active:enabled:scale-95 focus:outline-none transform-gpu cursor-pointer disabled:cursor-wait disabled:opacity-90"
       >
         <FocusIndicator color="neon-amber" shortcutKey="C" />
         {/* Steam animation */}
