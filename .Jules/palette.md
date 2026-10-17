@@ -1,3 +1,7 @@
+## 2026-10-15 - [Disabled States and Re-entrancy Guards on Async Boardroom Props]
+**Learning:** In perspective-transformed 3D boardroom controls that execute timed action cycles (like CoffeeMug system snapshots), combining `disabled={isActive}` with `enabled:` modifier classes (e.g. `hover:enabled:scale-110`, `active:enabled:scale-95`) and `disabled:cursor-wait` prevents multi-click re-entrancy while preserving clear hover/press visual feedback and screen-reader busy cues.
+**Action:** Always pair `disabled` attributes with re-entrancy guards in callbacks and `enabled:` Tailwind modifiers on interactive async boardroom props.
+
 ## 2026-10-01 - [Dynamic Hover Tooltips on Boardroom Document Stacks]
 **Learning:** For interactive document stacks rendered as individual `<button>` elements in a 3D boardroom environment, providing explicit dynamic `title` hover tooltips (`title={isActive ? 'Currently viewing...' : 'View...'}`) complements `aria-label` and `aria-pressed` states by giving desktop users instant contextual feedback on hover without cluttering the visual UI layout.
 **Action:** Always include dynamic `title` hover tooltips on stacked or grouped interactive button elements to ensure desktop hover clarity alongside ARIA accessibility attributes.
