@@ -185,3 +185,8 @@
 **Vulnerability:** Input validation allowlist permitted `SharedArrayBuffer` and `Atomics` API invocations (`SharedArrayBuffer`, `Atomics`).
 **Learning:** Standard network, worker, and file reader exfiltration filters do not block shared memory buffer manipulation or high-precision side-channel timing attack vectors using `SharedArrayBuffer` and `Atomics` APIs.
 **Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `SharedArrayBuffer` and `Atomics` API invocations (`/\b(SharedArrayBuffer|Atomics)\b/i`).
+
+## 2026-07-07 - [High-Resolution Performance Timing & Side-Channel Analysis Defense]
+**Vulnerability:** Input validation allowlist permitted high-resolution performance timing and profiling API calls (`performance.now`, `PerformanceObserver`, `performance.mark`, `performance.measure`, `PerformanceEntry`, `PerformanceResourceTiming`).
+**Learning:** Preventing standard shared memory buffers (`SharedArrayBuffer`) and timers (`setTimeout`) is incomplete if attackers can invoke high-precision performance timing APIs (`performance.now`, `PerformanceObserver`) to measure execution micro-deltas for side-channel analysis or covert timing exfiltration.
+**Prevention:** Expand `validateInput`'s pattern matching suite to intercept high-precision performance timing and side-channel profiling calls (`/\b(performance\.now|PerformanceObserver|performance\.mark|performance\.measure|PerformanceEntry|PerformanceResourceTiming)\b/i`).
