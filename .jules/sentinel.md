@@ -185,3 +185,8 @@
 **Vulnerability:** Input validation allowlist permitted `SharedArrayBuffer` and `Atomics` API invocations (`SharedArrayBuffer`, `Atomics`).
 **Learning:** Standard network, worker, and file reader exfiltration filters do not block shared memory buffer manipulation or high-precision side-channel timing attack vectors using `SharedArrayBuffer` and `Atomics` APIs.
 **Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `SharedArrayBuffer` and `Atomics` API invocations (`/\b(SharedArrayBuffer|Atomics)\b/i`).
+
+## 2026-07-07 - [CookieStore API & Web Storage Clearing Defense]
+**Vulnerability:** Input validation allowlist permitted CookieStore API invocations (`cookieStore`) and Web Storage clearing/removal calls (`localStorage.clear`, `sessionStorage.clear`, `localStorage.removeItem`, `sessionStorage.removeItem`).
+**Learning:** Preventing standard DOM sink, worker, and shared memory exfiltration vectors is incomplete if attackers can invoke the asynchronous CookieStore API or execute Web Storage clearing methods from user inputs to wipe client session states or bypass memory pinned security flags.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept CookieStore API calls and Web Storage clearing/removal methods (`/\b(cookieStore|localStorage\.clear|sessionStorage\.clear|localStorage\.removeItem|sessionStorage\.removeItem)\b/i`).
