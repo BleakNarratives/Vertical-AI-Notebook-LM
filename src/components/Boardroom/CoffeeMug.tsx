@@ -36,6 +36,7 @@ export const CoffeeMug: React.FC = () => {
         id="boardroom-coffeemug"
         type="button"
         onClick={handleAction}
+        aria-keyshortcuts="C"
         aria-label="System Settings (Coffee Break) [C]"
         aria-busy={isActive}
         title={isActive ? `System Snapshot Active: ${status} [C]` : "Save / Load System Settings [C]"}
