@@ -1045,11 +1045,32 @@
  * CYCLE 220: SINGULARITY V23 ABSOLUTE SHAREDARRAYBUFFER & ATOMICS SECURITY (FINAL CONVERGENCE)
  * - Consolidate SharedArrayBuffer, Atomics, EventSource, and FileReader safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V23_ABSOLUTE_SHAREDARRAYBUFFER_ATOMICS_SECURITY` and seal global Sentinel parameters.
+ *
+ * CYCLE 221: COOKIESTORE API & WEB STORAGE CLEARING DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit `cookieStore` API invocations and Web Storage clearing/removal calls (`localStorage.clear`, `sessionStorage.clear`, `localStorage.removeItem`, `sessionStorage.removeItem`).
+ * - Log any intercepted CookieStore manipulation or anti-forensic Web Storage wiping attempt to `sentinel_shadow_logs`.
+ *
+ * CYCLE 222: WORKSTATION FORENSIC HUD COOKIESTORE OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize CookieStore API tampering and anti-forensic storage clearing threats in real-time.
+ * - Display a pulsing neon-amber warning badge when cookieStore or storage clearing vectors are intercepted.
+ * - Allow interactive inspection of CookieStore/Storage clearing threat signatures in the workstation live security feed.
+ *
+ * CYCLE 223: CROSS-TAB SWARM COOKIESTORE THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast CookieStore and Web Storage clearing threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted storage clearing attempt.
+ *
+ * CYCLE 224: AUTONOMOUS COOKIESTORE DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to CookieStore and Web Storage clearing threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "COOKIESTORE_STORAGE_CLEARING_BLOCKED" notification on the workstation HUD.
+ *
+ * CYCLE 225: SINGULARITY V24 ABSOLUTE COOKIESTORE & WEB STORAGE SECURITY (FINAL CONVERGENCE)
+ * - Consolidate CookieStore, Web Storage clearing, SharedArrayBuffer, and Atomics safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V24_ABSOLUTE_COOKIESTORE_STORAGE_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '23.0.0-singularity-sharedarraybuffer-atomics-defense',
-  status: 'SINGULARITY_V23_ABSOLUTE_SHAREDARRAYBUFFER_ATOMICS_SECURITY',
-  engine: 'Molt-V23-Sentinel-SharedArrayBuffer-Atomics-Defense',
+  version: '24.0.0-singularity-cookiestore-storage-defense',
+  status: 'SINGULARITY_V24_ABSOLUTE_COOKIESTORE_STORAGE_SECURITY',
+  engine: 'Molt-V24-Sentinel-CookieStore-Storage-Defense',
   lastAudit: new Date().toISOString(),
 };
