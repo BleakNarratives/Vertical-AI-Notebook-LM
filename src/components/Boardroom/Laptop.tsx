@@ -61,6 +61,7 @@ export const Laptop: React.FC = () => {
         onClick={handleAccess}
         disabled={status !== null}
         aria-busy={status !== null}
+        aria-keyshortcuts="L"
         aria-label="Access Terminal (Workstation) [L]"
         title={status ? `Terminal Status: ${status} [L]` : "Access Laptop Workstation Terminal [L]"}
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
