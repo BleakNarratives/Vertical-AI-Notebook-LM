@@ -1,3 +1,7 @@
+## 2026-10-24 - [Exposing Single-Key Hotkeys for Boardroom Shortcuts]
+**Learning:** For interactive controls and legend toggles in 3D perspective environments bound to single-key hotkeys (e.g. [C], [L], [W], [V], [K]), specifying explicit `aria-keyshortcuts` on the controls and `aria-pressed` on the footer legend indicators ensures assistive technologies immediately communicate shortcut availability and active state synchronization without visual layout changes.
+**Action:** Always include `aria-keyshortcuts` on hotkey-driven controls and `aria-pressed` on associated shortcut legend indicators.
+
 ## 2026-10-01 - [Dynamic Hover Tooltips on Boardroom Document Stacks]
 **Learning:** For interactive document stacks rendered as individual `<button>` elements in a 3D boardroom environment, providing explicit dynamic `title` hover tooltips (`title={isActive ? 'Currently viewing...' : 'View...'}`) complements `aria-label` and `aria-pressed` states by giving desktop users instant contextual feedback on hover without cluttering the visual UI layout.
 **Action:** Always include dynamic `title` hover tooltips on stacked or grouped interactive button elements to ensure desktop hover clarity alongside ARIA accessibility attributes.
