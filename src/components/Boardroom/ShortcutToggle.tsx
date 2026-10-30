@@ -6,36 +6,25 @@ export const ShortcutToggle: React.FC = () => {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent('sentinel-toggle-hints-state', { detail: { enabled } }));
+  }, [enabled]);
+
+  useEffect(() => {
     const handleToggle = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const targetState = typeof customEvent.detail?.enabled === 'boolean'
-        ? customEvent.detail.enabled
-        : !enabled;
-
-      if (targetState !== enabled) {
-        setEnabled(targetState);
-        window.dispatchEvent(new CustomEvent('sentinel-toggle-hints-state', { detail: { enabled: targetState } }));
-      }
-    };
-
-    const handleStateChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const targetState = customEvent.detail?.enabled;
-      if (typeof targetState === 'boolean' && targetState !== enabled) {
-        setEnabled(targetState);
+      if (typeof customEvent.detail?.enabled === 'boolean') {
+        setEnabled(customEvent.detail.enabled);
+      } else {
+        setEnabled(prev => !prev);
       }
     };
 
     window.addEventListener('sentinel-toggle-hints', handleToggle);
-    window.addEventListener('sentinel-toggle-hints-state', handleStateChange);
-    return () => {
-      window.removeEventListener('sentinel-toggle-hints', handleToggle);
-      window.removeEventListener('sentinel-toggle-hints-state', handleStateChange);
-    };
-  }, [enabled]);
+    return () => window.removeEventListener('sentinel-toggle-hints', handleToggle);
+  }, []);
 
   const handleClick = () => {
-    window.dispatchEvent(new CustomEvent('sentinel-toggle-hints', { detail: { enabled: !enabled } }));
+    setEnabled(prev => !prev);
   };
 
   return (
@@ -47,10 +36,11 @@ export const ShortcutToggle: React.FC = () => {
         type="button"
         role="switch"
         onClick={handleClick}
+        aria-keyshortcuts="K"
         aria-label="Toggle Keyboard Shortcut Hints [K]"
-        title="Toggle shortcut visual indicators on interactive boardroom elements [K]"
+        title={enabled ? "Disable shortcut visual indicators on interactive boardroom elements [K]" : "Enable shortcut visual indicators on interactive boardroom elements [K]"}
         aria-checked={enabled}
-        className={`px-2 py-0.5 border font-mono text-[10px] transition-all hover:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber outline-none cursor-pointer ${
+        className={`px-2 py-0.5 border font-mono text-[10px] transition-all active:scale-95 hover:text-neon-amber focus-visible:ring-1 focus-visible:ring-neon-amber outline-none cursor-pointer ${
           enabled
             ? 'bg-neon-amber/20 text-neon-amber border-neon-amber shadow-[0_0_8px_rgba(255,191,0,0.3)]'
             : 'bg-transparent text-grey-medium border-grey-dark hover:border-grey-medium'
