@@ -14,6 +14,7 @@ export const VideoViewer: React.FC = () => {
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: 'MONITOR', action: 'FEED_SYNC' }
     }));
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setStatus(null);
       timeoutRef.current = null;
@@ -40,10 +41,11 @@ export const VideoViewer: React.FC = () => {
         disabled={isActive}
         aria-busy={isActive}
         aria-pressed={isActive}
+        aria-keyshortcuts="V"
         aria-label="Remote Feed / Video Monitor [V]"
         title={isActive ? "Remote Feed Synchronized [V]" : "Synchronize Remote Video Feed [V]"}
         style={{ transform: 'rotateX(-20deg) rotateZ(var(--tw-rotate, 2deg)) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 active:enabled:translate-y-1 outline-none transform-gpu cursor-pointer disabled:opacity-80 disabled:cursor-wait"
+        className="group relative z-20 w-40 h-28 bg-grey-dark border border-grey-medium shadow-2xl transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 active:enabled:translate-y-1 outline-none transform-gpu cursor-pointer disabled:cursor-wait disabled:opacity-90"
       >
         <FocusIndicator color={isActive ? 'neon-amber' : 'neon-red'} shortcutKey="V" />
         <div className="absolute inset-1 bg-obsidian overflow-hidden flex items-center justify-center">

@@ -19,9 +19,12 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
     }));
   };
 
+  const isBusy = status === 'active';
+  const isActuallyDisabled = disabled || isBusy;
+
   const titleText = disabled
     ? `Consultation for ${name} is unavailable during active system restrictions`
-    : status === 'active'
+    : isBusy
     ? `Consultation with ${name} (${role}) in progress...`
     : `Consult ${name} (${role})`;
 
@@ -29,13 +32,13 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
     <button
       type="button"
       onClick={handleClick}
-      disabled={disabled}
+      disabled={isActuallyDisabled}
       title={titleText}
-      aria-busy={status === 'active'}
-      aria-pressed={status === 'active'}
+      aria-busy={isBusy}
+      aria-pressed={isBusy}
       aria-label={`${name} (${role}) - Status: ${status}`}
       style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-      className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${status === 'active' ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)]' : ''}`}
+      className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${isBusy ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)] disabled:cursor-wait' : ''}`}
     >
       {/* Persistent Name Label */}
       <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap drop-shadow-[0_0_5px_rgba(255,0,0,0.5)] z-10">
@@ -59,6 +62,11 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
         </div>
         <div className="absolute top-1/4 left-1/3 w-0.5 h-6 bg-neon-amber/40 rotate-45" />
         <div className="absolute top-1/2 left-2/3 w-0.5 h-8 bg-neon-red/40 -rotate-12" />
+        {isBusy && (
+          <div className="absolute top-2 right-2 px-1 py-0.5 bg-neon-red/80 text-obsidian font-mono text-[8px] font-bold uppercase tracking-wider animate-pulse z-20 rounded-xs">
+            BUSY
+          </div>
+        )}
       </div>
       <div className="text-center mt-2">
         <p className="text-xs font-mono text-white/40 uppercase transition-colors">{role}</p>
@@ -66,7 +74,7 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       </div>
 
       {/* Focus indicator */}
-      {!disabled && <FocusIndicator color="neon-red" />}
+      {!isActuallyDisabled && <FocusIndicator color="neon-red" />}
     </button>
   );
 };
