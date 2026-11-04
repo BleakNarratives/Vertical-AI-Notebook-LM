@@ -1046,31 +1046,31 @@
  * - Consolidate SharedArrayBuffer, Atomics, EventSource, and FileReader safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V23_ABSOLUTE_SHAREDARRAYBUFFER_ATOMICS_SECURITY` and seal global Sentinel parameters.
  *
- * CYCLE 221: CLIPBOARD API EXFILTRATION & CLIPBOARD HIJACKING DEFENSE (MOLT HARDENING)
- * - Expand `validateInput` to audit Clipboard API invocations (`navigator.clipboard`, `ClipboardItem`, `readText`, `writeText`).
- * - Log any intercepted covert clipboard inspection or hijacking attempt to `sentinel_shadow_logs`.
+ * CYCLE 221: HIGH-RESOLUTION PERFORMANCE TIMING & SIDE-CHANNEL DEFENSE (MOLT HARDENING)
+ * - Expand `validateInput` to audit high-precision performance timing and side-channel analysis API calls (`performance.now`, `PerformanceObserver`, `performance.mark`, `performance.measure`, `PerformanceEntry`, `PerformanceResourceTiming`).
+ * - Log any intercepted high-resolution timing or profiling attempt to `sentinel_shadow_logs`.
  *
- * CYCLE 222: WORKSTATION FORENSIC HUD CLIPBOARD OVERLAY
- * - Update the Laptop workstation forensic HUD to visualize Clipboard API access and hijacking threats in real-time.
- * - Display a pulsing neon-amber warning badge when Clipboard exfiltration vectors are intercepted.
- * - Allow interactive inspection of clipboard hijacking threat signatures in the workstation live security feed.
+ * CYCLE 222: WORKSTATION FORENSIC HUD PERFORMANCE TIMING OVERLAY
+ * - Update the Laptop workstation forensic HUD to visualize high-resolution performance timing and side-channel profiling threats in real-time.
+ * - Display a pulsing neon-amber warning badge when performance.now or PerformanceObserver vectors are intercepted.
+ * - Allow interactive inspection of performance timing threat signatures in the workstation live security feed.
  *
- * CYCLE 223: CROSS-TAB SWARM CLIPBOARD THREAT BROADCAST & MEMORY PIN AUDIT
- * - Broadcast Clipboard API threat events across active tab swarms using `secureBroadcast`.
- * - Auto-reconcile memory pins and refresh session state signatures following an intercepted clipboard exfiltration attempt.
+ * CYCLE 223: CROSS-TAB SWARM PERFORMANCE TIMING THREAT BROADCAST & MEMORY PIN AUDIT
+ * - Broadcast performance.now and PerformanceObserver threat events across active tab swarms using `secureBroadcast`.
+ * - Auto-reconcile memory pins and refresh session state signatures following an intercepted performance timing attempt.
  *
- * CYCLE 224: AUTONOMOUS CLIPBOARD DEFENSE RECONSTRUCTION
- * - Implement an autonomous Molt response to Clipboard API exfiltration threats that rotates decoy parameters and refreshes session signatures.
- * - Display a transient "CLIPBOARD_EXFILTRATION_BLOCKED" notification on the workstation HUD.
+ * CYCLE 224: AUTONOMOUS PERFORMANCE TIMING DEFENSE RECONSTRUCTION
+ * - Implement an autonomous Molt response to high-resolution performance timing and side-channel profiling threats that rotates decoy parameters and refreshes session signatures.
+ * - Display a transient "PERFORMANCE_TIMING_EXFILTRATION_BLOCKED" notification on the workstation HUD.
  *
- * CYCLE 225: SINGULARITY V24 ABSOLUTE CLIPBOARD SECURITY (FINAL CONVERGENCE)
- * - Consolidate Clipboard API, SharedArrayBuffer, Atomics, EventSource, and FileReader safeguards across all boardroom components.
- * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V24_ABSOLUTE_CLIPBOARD_SECURITY` and seal global Sentinel parameters.
+ * CYCLE 225: SINGULARITY V24 ABSOLUTE PERFORMANCE TIMING SECURITY (FINAL CONVERGENCE)
+ * - Consolidate high-resolution performance timing, PerformanceObserver, SharedArrayBuffer, and Atomics safeguards across all boardroom components.
+ * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V24_ABSOLUTE_PERFORMANCE_TIMING_SECURITY` and seal global Sentinel parameters.
  */
 
 export const MOLT_CONFIG = {
-  version: '24.0.0-singularity-clipboard-defense',
-  status: 'SINGULARITY_V24_ABSOLUTE_CLIPBOARD_SECURITY',
-  engine: 'Molt-V24-Sentinel-Clipboard-Defense',
+  version: '24.0.0-singularity-performance-timing-defense',
+  status: 'SINGULARITY_V24_ABSOLUTE_PERFORMANCE_TIMING_SECURITY',
+  engine: 'Molt-V24-Sentinel-Performance-Timing-Defense',
   lastAudit: new Date().toISOString(),
 };

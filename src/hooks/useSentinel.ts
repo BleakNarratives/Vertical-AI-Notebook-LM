@@ -355,7 +355,7 @@ export const useSentinel = () => {
       /\b(navigator\.sendBeacon|sendBeacon|MessageChannel|MessagePort|indexedDB|openDatabase)\b/i, // Asynchronous beacon exfiltration, covert MessageChannel & client database access vector
       /\b(EventSource|FileReader|FileReaderSync|readAsDataURL|readAsText|readAsArrayBuffer)\b/i, // Server-Sent Events streaming & FileReader data reader exfiltration vector
       /\b(SharedArrayBuffer|Atomics)\b/i, // SharedArrayBuffer & Atomics shared memory buffer manipulation & side-channel timing attack vector
-      /\b(navigator\.clipboard|ClipboardItem|readText|writeText)\b/i // Clipboard API exfiltration & clipboard hijacking vector
+      /\b(performance\.now|PerformanceObserver|performance\.mark|performance\.measure|PerformanceEntry|PerformanceResourceTiming)\b/i // High-precision performance timing & side-channel profiling API vector
     ];
 
     for (const pattern of maliciousPatterns) {
