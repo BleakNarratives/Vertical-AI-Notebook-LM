@@ -41,8 +41,11 @@ export const Persona: React.FC<PersonaProps> = ({ name, role, status, onClick, d
       className={`relative flex flex-col items-center gap-2 p-4 border border-grey-medium bg-obsidian group transform-gpu transition-all hover:enabled:scale-105 focus-visible:enabled:scale-105 hover:enabled:border-neon-red focus-visible:enabled:border-neon-red outline-none disabled:opacity-50 disabled:cursor-not-allowed active:enabled:translate-y-1 ${isBusy ? 'shadow-[0_0_15px_rgba(255,0,0,0.3)] disabled:cursor-wait' : ''}`}
     >
       {/* Persistent Name Label */}
-      <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap drop-shadow-[0_0_5px_rgba(255,0,0,0.5)] z-10">
-        {name}
+      <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-mono text-neon-red uppercase tracking-[0.2em] whitespace-nowrap drop-shadow-[0_0_5px_rgba(255,0,0,0.5)] z-10 flex items-center gap-1">
+        <span>{name}</span>
+        {isBusy && (
+          <span className="text-[9px] text-neon-amber font-mono animate-pulse tracking-tight">[BUSY]</span>
+        )}
       </div>
 
       <div className={`
