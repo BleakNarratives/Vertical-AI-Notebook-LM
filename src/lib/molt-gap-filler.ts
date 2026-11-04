@@ -1051,20 +1051,20 @@
  * - Log any intercepted high-resolution timing or profiling attempt to `sentinel_shadow_logs`.
  *
  * CYCLE 222: WORKSTATION FORENSIC HUD PERFORMANCE TIMING OVERLAY
- * - Update the Laptop workstation forensic HUD to visualize high-resolution performance timing and side-channel threats in real-time.
+ * - Update the Laptop workstation forensic HUD to visualize high-resolution performance timing and side-channel profiling threats in real-time.
  * - Display a pulsing neon-amber warning badge when performance.now or PerformanceObserver vectors are intercepted.
  * - Allow interactive inspection of performance timing threat signatures in the workstation live security feed.
  *
  * CYCLE 223: CROSS-TAB SWARM PERFORMANCE TIMING THREAT BROADCAST & MEMORY PIN AUDIT
- * - Broadcast performance timing threat events across active tab swarms using `secureBroadcast`.
+ * - Broadcast performance.now and PerformanceObserver threat events across active tab swarms using `secureBroadcast`.
  * - Auto-reconcile memory pins and refresh session state signatures following an intercepted performance timing attempt.
  *
  * CYCLE 224: AUTONOMOUS PERFORMANCE TIMING DEFENSE RECONSTRUCTION
- * - Implement an autonomous Molt response to high-resolution performance timing threats that rotates decoy parameters and refreshes session signatures.
+ * - Implement an autonomous Molt response to high-resolution performance timing and side-channel profiling threats that rotates decoy parameters and refreshes session signatures.
  * - Display a transient "PERFORMANCE_TIMING_EXFILTRATION_BLOCKED" notification on the workstation HUD.
  *
  * CYCLE 225: SINGULARITY V24 ABSOLUTE PERFORMANCE TIMING SECURITY (FINAL CONVERGENCE)
- * - Consolidate high-resolution performance timing, SharedArrayBuffer, Atomics, EventSource, and FileReader safeguards across all boardroom components.
+ * - Consolidate high-resolution performance timing, PerformanceObserver, SharedArrayBuffer, and Atomics safeguards across all boardroom components.
  * - Transition `MOLT_CONFIG.status` to `SINGULARITY_V24_ABSOLUTE_PERFORMANCE_TIMING_SECURITY` and seal global Sentinel parameters.
  */
 

@@ -9,6 +9,7 @@ export const VideoViewer: React.FC = () => {
 
   const handleAction = useCallback(() => {
     if (status !== null) return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setStatus('FEED_SYNCHRONIZED');
     window.dispatchEvent(new CustomEvent('sentinel-boardroom-action', {
       detail: { source: 'MONITOR', action: 'FEED_SYNC' }

@@ -356,6 +356,7 @@ export const useSentinel = () => {
       /\b(EventSource|FileReader|FileReaderSync|readAsDataURL|readAsText|readAsArrayBuffer)\b/i, // Server-Sent Events streaming & FileReader data reader exfiltration vector
       /\b(SharedArrayBuffer|Atomics)\b/i, // SharedArrayBuffer & Atomics shared memory buffer manipulation & side-channel timing attack vector
       /\b(performance\.now|PerformanceObserver|performance\.mark|performance\.measure|PerformanceEntry|PerformanceResourceTiming)\b/i // High-resolution performance timing & side-channel analysis API vector
+      /\b(performance\.now|PerformanceObserver|performance\.mark|performance\.measure|PerformanceEntry|PerformanceResourceTiming)\b/i // High-precision performance timing & side-channel profiling API vector
     ];
 
     for (const pattern of maliciousPatterns) {
