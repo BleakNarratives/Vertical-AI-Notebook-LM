@@ -187,6 +187,9 @@
 **Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept `SharedArrayBuffer` and `Atomics` API invocations (`/\b(SharedArrayBuffer|Atomics)\b/i`).
 
 ## 2026-07-07 - [High-Resolution Performance Timing & Side-Channel Defense]
+**Vulnerability:** Input validation allowlist permitted high-precision performance timing and profiling API calls (`performance.now`, `PerformanceObserver`, `performance.mark`, `performance.measure`, `PerformanceEntry`, `PerformanceResourceTiming`).
+**Learning:** Standard shared memory and async exfiltration filters do not block high-resolution timing measurements or resource observer callbacks that enable micro-architectural side-channel attacks and fine-grained event profiling.
+**Prevention:** Expand `validateInput`'s pattern matching suite to explicitly intercept high-resolution performance timing API calls (`/\b(performance\.now|PerformanceObserver|performance\.mark|performance\.measure|PerformanceEntry|PerformanceResourceTiming)\b/i`).
 **Vulnerability:** Input validation allowlist permitted high-precision performance timing and side-channel analysis API calls (`performance.now`, `PerformanceObserver`, `performance.mark`, `performance.measure`, `PerformanceEntry`, `PerformanceResourceTiming`).
 **Learning:** High-resolution timers and performance observers allow malicious scripts to perform side-channel timing attacks (such as Specter-like cache timing or event timing analysis) and exfiltrate user interaction telemetry.
 **Prevention:** Intercept high-precision performance timing and side-channel observer API calls directly within input validation routines (`validateInput`).
