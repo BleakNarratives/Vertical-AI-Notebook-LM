@@ -10,6 +10,7 @@ export const CoffeeMug: React.FC = () => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleAction = useCallback(() => {
+    if (status !== null) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     const randomMessage = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     setStatus(randomMessage);
@@ -21,7 +22,7 @@ export const CoffeeMug: React.FC = () => {
       setStatus(null);
       timeoutRef.current = null;
     }, 2000);
-  }, []);
+  }, [status]);
 
   useEffect(() => { return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }; }, []);
 
@@ -36,11 +37,13 @@ export const CoffeeMug: React.FC = () => {
         id="boardroom-coffeemug"
         type="button"
         onClick={handleAction}
-        aria-label="System Settings (Coffee Break) [C]"
+        disabled={isActive}
         aria-busy={isActive}
+        aria-keyshortcuts="C"
+        aria-label="System Settings (Coffee Break) [C]"
         title={isActive ? `System Snapshot Active: ${status} [C]` : "Save / Load System Settings [C]"}
         style={{ transform: 'rotateX(-35deg) translateY(var(--tw-translate-y, 0)) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1))' }}
-        className="group relative w-16 h-12 transition-all hover:scale-110 focus-visible:scale-110 active:translate-y-1 focus:outline-none transform-gpu"
+        className="group relative w-16 h-12 transition-all hover:enabled:scale-110 focus-visible:enabled:scale-110 active:enabled:translate-y-1 focus:outline-none transform-gpu disabled:opacity-80 disabled:cursor-wait"
       >
         <FocusIndicator color="neon-amber" shortcutKey="C" />
         {/* Steam animation */}
